@@ -1,0 +1,17 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Add Clients{% endblock %}
+
+{% block content %}
+<div class="py-6 px-6">
+    <h1 class="tet-xl"> Add Client Page</h1>
+
+    <form method="post" action=".">
+        {% csrf_token %}
+
+        {{ form.as_p }}
+
+        <button type="submit" class="py-4 px-8 bg-teal-500 text-white rounded-xl">Update</button>
+    </form>
+</div>
+{% endblock %}

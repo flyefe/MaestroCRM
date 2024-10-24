@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page Not Found - 404</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 6rem;
+            color: #e3342f;
+            margin-bottom: 0.5rem;
+        }
+
+        p {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        a {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            font-size: 1rem;
+            color: #fff;
+            background-color: #3490dc;
+            border-radius: 5px;
+            text-decoration: none;
+        }
+
+        a:hover {
+            background-color: #2779bd;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        
+            <h1>404</h1>
+
+            {% if messages %}
+                <div class="py-6 px-6">
+                    {% for message in messages %}
+                    <div class="py-4 px-4 bg-teal-300 text-white rounded-xl">
+                        {{ message }}
+                    </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p>Oops! The page you're looking for doesn't exist.</p>
+                <p>It might have been moved or deleted.</p>
+                <a href="{% url 'index' %}">Back to Home</a>
+            {% endif %}
+            
+    </div>
+</body>
+
+</html>

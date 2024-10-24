@@ -1,0 +1,32 @@
+- Make form add/create roles/group
+- make it possible to edit/Update roles
+- make it possible to delet roles
+- make it possible to edit user
+- make it possible to delete user
+- create user profile (optional)
+
+- Create status Table (new group)
+    -Make it possible to know number of persons in status
+- Create Tag Table (find out)
+    - Make it possible to know number of person in Tags
+
+-Create Contact Table
+    - create contact app
+    - create model for Contact
+    - migrate to databse
+    - create forms to create contact - C
+    - create views for contact creation
+    - create template - R
+    - create url pattern for creation of contact
+    - make it possible to edit contact - U
+    - make it possible to delete contact - D
+    - make it possible to query list based on status
+    - make it possible to query list based on tag
+- Create Contact detail page 
+    - Make it possible to see contact details
+    - Make it possible to log in comment
+    - Make it possible to query list based on last log
+- Make it possible to create Segmentations based on status and tags
+    - Make form for creating segments based on status and tag values
+        - conditional Logics i.e, if has status xys + multiple tags
+

@@ -1,0 +1,85 @@
+{% extends 'core/base.html' %}
+
+{% block title %} {{ lead.first_name}} {% endblock %}
+
+{% block content %}
+    <div class="py-6 px-6">
+        <h1 class="mb-4 tet-xl font-semibold text-xl"> {{ lead.first_name}} </h1>
+
+        {% if lead.description %}
+            <p class="font-semibold">Lead Description</p>
+            <p class="mb-4"> {{ lead.description }} </p>
+        {% endif %}
+        
+        <p class="font-semibold">Priority</p>
+        <p class="mb-4"> {{ lead.get_priority_display }} </p>
+
+        <p class="font-semibold">Status</p>
+        <p class="mb-4"> {{ lead.get_status_display }} </p>
+
+        <p class="font-semibold">Created at</p>
+        <p class="mb-4"> {{ lead.created_at }} </p>
+
+        <p class="font-semibold">Moddified at</p>
+        <p class="mb-4"> {{ lead.modified_at }} </p>
+
+        <hr class="my-4">
+
+        <div class="flex space-x-4 ">
+            <a href=" {% url 'leads:edit' lead.id %} " class="py-2 px-4 rounded-xl bg-teal-500 text-white">Edit Leads</a>
+            <a href=" {% url 'leads:delete' lead.id %}" class="py-2 px-4 rounded-xl bg-red-500 text-white">Delete Leads</a>
+            <!-- <a href=" {% url 'leads:convert_to' lead.id %} " class="py-2 px-4 rounded-xl bg-blue-500 text-white">Convert to
+                        client</a> -->
+            
+            <form action="{% url 'leads:convert_to' lead.pk %}" method="post">
+                {% csrf_token %}
+                <button class="py-2 px-4 rounded-xl bg-blue-500 text-white" type="submit">Convert to Client</button>
+            </form>
+            <a href="{% url 'leads:list' %}">Back to leads</a>
+        </div>
+
+        <hr class="my-4">
+
+    </div>
+
+    <hr class="my-4">
+
+
+
+
+    <h2 class="text-xl mb-6">Comments</h2>
+    <div class="flex space-x-4 mb-6">
+        <hr class="my-4">
+
+        <form method="post" action="{% url 'leads:comment' lead.id %}">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button class="py-2 px-4 rounded-xl bg-blue-500 text-white" type="submit">Add Comment</button>
+        </form>
+
+
+        <hr class="my-4">
+
+
+        <div class="space-y-4">
+            {% for comment in lead.comments.all %}
+            <div class="bg-gray-100 py-6 px-6 rounded-xl">
+                <div class="mb-4">
+                    <p class="mb-2">
+                        <strong>{{ comment.created_by }}</strong> @ {{ comment.created_at}} 
+                    </p>
+                    <p>
+                    {{comment.content}}
+                    </p>
+                </div>
+                <div>
+                    <p>
+                        <a href=" {% url 'leads:edit_comment' pk=comment.pk %} " class="py-2 px-4 rounded-xl bg-teal-500 text-white">Edit</a>
+                        <a href=" {% url 'leads:delete_comment' pk=comment.pk %}" class="py-2 px-4 rounded-xl bg-red-500 text-white">Delet</a>
+                    </p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>  
+    </div>
+{% endblock %}

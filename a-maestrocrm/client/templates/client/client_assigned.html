@@ -1,0 +1,48 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Client List{% endblock %}
+
+{% block content %}
+<div class="py-6 px-6">
+    <h1 class="mb-4 text-xl">All Clients</h1>
+
+    <a href="{% url 'clients:add' %}" class="inline-block py-4 px-4 bg-teal-600 rounded-xl text-white">Add Customers</a>
+
+    <div class="mt-6 flex justify-between">
+        <p class="py-4 px-2 bg-gray-200 font-semibold w-full">Conv. Date</p>
+        <p class="py-4 px-2 bg-gray-200 font-semibold w-full">First Name</p>
+        <p class="py-4 px-2 bg-gray-200 font-semibold w-full">Last Name</p>
+        <p class="py-4 px-2 bg-gray-200 font-semibold w-full">Email</p>
+        <p class="py-4 px-2 bg-gray-200 font-semibold w-full">Phone Number</p>
+        <p class="py-4 px-2 bg-gray-200 font-semibold w-full">Service</p>
+        <p class="py-4 px-2 bg-gray-200 font-semibold w-full">Status</p>
+        <p class="py-4 px-2 bg-gray-200 font-semibold w-full">Assigned To</p>
+        <p class="py-4 px-2 bg-gray-200 font-semibold w-full">Last Modified</p>
+        <p class="py-4 px-2 bg-gray-200 font-semibold w-full">Created By</p>
+
+    </div>
+
+    {% for client in clients %}
+    <div class="flex justify-between">
+        <p class="py-4 px-2 w-full {% cycle 'bg-gray-100' '' %}">{{ client.created_at }}</p>
+        <p class="py-4 px-2 w-full {% cycle 'bg-gray-100' '' %}">
+            <a href="{% url 'clients:detail' client.id %}">{{ client.first_name }}</a>
+        </p>
+        <p class="py-4 px-2 w-full {% cycle 'bg-gray-100' '' %}">
+            <a href="{% url 'clients:detail' client.id %}">{{ client.last_name }}</a>
+        </p>
+        <p class="py-4 px-2 w-full {% cycle 'bg-gray-100' '' %}">{{ client.email }}</p>
+        <p class="py-4 px-2 w-full {% cycle 'bg-gray-100' '' %}">{{ client.phone_number }}</p>
+        <p class="py-4 px-2 w-full {% cycle 'bg-gray-100' '' %}">{{ client.get_services_display }}</p>
+        <p class="py-4 px-2 w-full {% cycle 'bg-gray-100' '' %}">{{ client.get_status_display }}</p>
+        <p class="py-4 px-2 w-full {% cycle 'bg-gray-100' '' %}">{{ client.assigned_to }}</p>
+        <p class="py-4 px-2 w-full {% cycle 'bg-gray-100' '' %}">{{ client.modified_at }}</p>
+        <p class="py-4 px-2 w-full {% cycle 'bg-gray-100' '' %}">{{ client.created_by }}</p>
+
+    </div>
+    {% empty %}
+    <p>There are no clients in the database yet...</p>
+    {% endfor %}
+
+</div>
+{% endblock %}

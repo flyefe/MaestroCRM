@@ -1,0 +1,86 @@
+{% extends 'core/base.html' %}
+
+{% block title %} My Account {% endblock %}
+
+{% block content %}
+    <div class="py-6 px-6">
+        <h1 class="mb-6 text-xl">My Account</h1>
+        <hr class="mb-4">
+        <p class="mb-2">
+            <strong>Username:</strong>{{ request.user.username }}
+        </p>
+        
+        <p class="mb-2">
+            <strong>Team:</strong>
+            {% if team %}
+                {{ team.name }}
+                {% if team.id %}
+                    <a class="text-blue" href="{% url 'team:edit' team.id %}">(Edit)</a>
+                {% endif %}
+            {% else %}
+                No team found.
+            {% endif %}
+        </p>
+
+        <hr class="mb-4">
+
+        <strong>Team Membership:</strong>
+        {% if teams %}
+        <ul>
+            {% for team in teams %}
+            <li>
+                {{ team.name }}
+                {% if team.created_by == request.user %}
+                (Owner)
+                <a class="text-blue" href="{% url 'team:edit' team.id %}">(Edit)</a>
+                {% endif %}
+            </li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p>No teams found.</p>
+        {% endif %}
+        </p>
+        
+        <hr class="mb-4">
+
+        {% if team %}
+        <hr class="mb-4">
+        <p>
+            <strong>Team Members:</strong>
+            {% if team_members %}
+        <ul>
+            {% for member in team_members %}
+            <li class="mb-2">
+                <strong>Username :</strong> {{ member.username }}
+                <a href="{% url 'team:remove_member' member.id %}" class="text-red-500 py-2 px-4 inline-block bg-red-400 rounded-xl text-white"
+                    onclick="return confirm('Are you sure you want to remove this member?');">Remove</a>
+                    
+            </li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        No members in this team.
+        {% endif %}
+
+        
+        </p>
+        {% endif %}
+
+
+        <hr class="mb-4">
+
+        <p>
+            <a href="{% url 'team:add_member' %}" class="py-2 px-4 inline-block bg-red-400 rounded-xl text-white">
+                <strong>Add team member</strong>
+            </a>
+        </p>
+        <hr class="mb-4">
+
+        <form method="post" action="{% url 'logout' %}">
+            {% csrf_token %}
+            <button type="submit" class="py-2 px-4 inline-block bg-red-400 rounded-xl text-white">Logout</button>
+        </form>
+
+    </div>
+{% endblock %}

@@ -1,0 +1,18 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Edit Lead{% endblock %}
+
+{% block content %}
+<div class="py-6 px-6">
+    <h1 class="tet-xl"> Edit Comment Page</h1>
+
+    <form method="post" action=".">
+        {% csrf_token %}
+
+        {{ form.as_p }}
+
+        <button type="submit" class="py-4 px-8 bg-teal-500 text-white rounded-xl">Save</button>
+        <a href="{% url 'clients:detail' pk=object.client.pk %}" class="bg-gray-500 text-white px-4 py-2 rounded-lg">Cancel</a>
+    </form>
+</div>
+{% endblock %}

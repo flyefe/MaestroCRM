@@ -1,0 +1,28 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Add Clients{% endblock %}
+
+{% block content %}
+<div class="py-6 px-6">
+    <h1 class="tet-xl"> Add Client Page</h1>
+
+    <p>Num Clients: {{team.clients.all|length}}</p>
+    <p>Max Clients: {{team.plan.max_client}}</p>
+
+
+    {% if team.clients.all|length < team.plan.max_client %}
+        <form method="post" action=".">
+            {% csrf_token %}
+
+            {{ form.as_p }}
+            
+            <button type="submit" class="py-4 px-8 bg-teal-500 text-white rounded-xl">Create Customer</button>
+        </form>
+    {% else %}
+    <div class="mt-6 px-6 py-6 bg-red-400 rounded-xl text-white">
+        <p>You have reached your limit</p>
+    </div>    
+    
+    {%endif%}
+</div> 
+{% endblock %}

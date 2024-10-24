@@ -1,0 +1,14 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Delete Lead{% endblock %}
+
+{% block content %}
+<div class="py-6 px-6">
+    <h1 class="mb-4 text-xl">Are you sure you want to delete {{ object.first_name }}?</h1>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="py-4 px-8 bg-teal-500 text-white rounded-xl">Confirm Delete</button>
+        <a href="{% url 'clients:list' %}"  class="py-4 px-8 bg-teal-500 text-white rounded-xl">Cancel</a>
+    </form>
+</div>
+{% endblock %}
