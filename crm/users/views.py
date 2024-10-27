@@ -8,6 +8,10 @@ from django.contrib.auth.models import User, Group
 
 from .forms import UserEditForm, RegisterForm, RoleCreationForm
 
+from django.urls import reverse_lazy
+from django.views.generic.edit import DeleteView
+from django.contrib.auth.models import User
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 
 # views.py
 
@@ -32,7 +36,7 @@ def create_group(request):
         if form.is_valid():
             form.save()
             messages.success(request, 'New role created successfully.')
-            return redirect('create_roles')  # Redirect to a page that lists groups or any desired page
+            return redirect('create_group')  # Redirect to a page that lists groups or any desired page
     else:
         form = RoleCreationForm()
 
@@ -43,13 +47,26 @@ def create_group(request):
 
     return render(request, 'create_role.html', context)
 
+
+
+class UserDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = User
+    template_name = 'users/user_confirm_delete.html'
+    success_url = reverse_lazy('user-list')  # Redirect to the user list page after deletion
+
+    # Ensure that only the user or an admin can delete the account
+    def test_func(self):
+        user = self.get_object()
+        return self.request.user == user or self.request.user.is_staff
+
+
 def register_user(request):
 
-    staff_group = Group.objects.all(name='staff')
     if request.method == 'POST':
         form = RegisterForm(request.POST)
         if form.is_valid():
-            form.save()
+            user = form.save()
+            staff_group = Group.objects.get(name='Contact')
             user.groups.add(staff_group)
             messages.success(request, 'User registered successfully.')
             return redirect('user_list')  # Redirect to user list or any desired page
@@ -71,10 +88,10 @@ def edit_user(request, user_id):
         form = UserEditForm(request.POST, instance=user)
         if form.is_valid():
             form.save()
+            messages.success(request, 'User has been editted successfully.')
             return redirect('user_list')  # Redirect to a page that lists all users or any preferred page
     else:
         form = UserEditForm(instance=user)
-    
     return render(request, 'edit_user.html', {'form': form, 'user': user})
 
 @login_required
@@ -122,8 +139,10 @@ def login_view(request):
                 # Get the 'next' parameter from the query string
                 next_url = request.GET.get('next')
                 if next_url:
+                    messages.success(request, 'Logged in successfully.')
                     return redirect(next_url)  # Redirect to the page the user was trying to access
                 else:
+                    messages.success(request, 'Logged in successfully.')
                     return redirect('/')  # Or use a default page like 'index'
             else:
                 messages.error(request, 'Invalid username or password.')

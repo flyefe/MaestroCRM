@@ -6,7 +6,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- <script src="https://cdn.tailwindcss.com"></script> -->
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="{% static 'main.min.css' %}">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <title> {% block title %} {% endblock %} </title>
@@ -17,7 +17,7 @@
     {% include 'core/partials/nav.html' %}
     
     <!-- Notification Messages -->
-    <!-- {% if messages %}
+    {% if messages %}
     <div class="py-6 px-6">
         {% for message in messages %}
         <div class="py-4 px-4 bg-teal-300 text-white rounded-xl">
@@ -25,7 +25,7 @@
         </div>
             {% endfor %}
     </div>
-    {% endif %} -->
+    {% endif %}
 
     {% block content %}
     {% endblock %}
