@@ -1,0 +1,26 @@
+<!-- register.html -->
+{% extends 'core/base.html' %}
+
+{% block title %}Register User{% endblock %}
+
+{% block content %}
+<h2>Register User</h2>
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Register</button>
+</form>
+
+{% if form.errors %}
+<div class="errorlist">
+    <ul>
+        {% for field, errors in form.errors.items %}
+        {% for error in errors %}
+        <li>{{ field }}: {{ error }}</li>
+        {% endfor %}
+        {% endfor %}
+    </ul>
+</div>
+{% endif %}
+{% endblock %}

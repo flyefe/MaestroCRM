@@ -1,0 +1,31 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Create New Role{% endblock %}
+
+{% block content %}
+<h2>Create New Role</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Create Role</button>
+</form>
+<hr>
+
+<h1>Roles</h1>
+<table>
+    <thead>
+        <tr>
+            <th>Role Name</th>
+            <th>User Count</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for group in groups %}
+        <tr>
+            <td>{{ group.name }}</td>
+            <td><a href= "{% url 'users_in_group' group.id %}">{{ group.user_set.count }}</a></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

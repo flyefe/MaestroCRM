@@ -17,13 +17,17 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from core.views import index, about
-from users.views import login_view,logout_view, users_table
+from users.views import login_view,logout_view, users_table, edit_user, register_user, create_group, users_in_group
 from django.urls import include
 
 urlpatterns = [
     path("", index, name='index'),
     path("about/", about, name='about'),
-    path("users/", users_table, name='users'),
+    path('register/', register_user, name='register'),
+    path("users/", users_table, name='user_list'),
+    path("edit-user/<int:user_id>/", edit_user, name='edit_user'),
+    path("create_role/", create_group, name='create_group'),
+    path('group/<int:group_id>/users/', users_in_group, name='users_in_group'),
     path("accounts/login/", login_view, name='login'),
     path("accounts/logout/", logout_view, name='logout'),
     path("admin/", admin.site.urls),

@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login, logout, authenticate
@@ -6,26 +6,97 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.auth.models import User, Group
 
+from .forms import UserEditForm, RegisterForm, RoleCreationForm
+
 
 # views.py
 
 @login_required
+def users_in_group(request, group_id):
+    group = get_object_or_404(Group, id=group_id)
+    users = group.user_set.all()  # Retrieve all users in the specified group
+
+    context = {
+        'group': group,
+        'users': users
+    }
+    return render(request, 'users_in_group.html', context)
+
+@login_required
+def create_group(request):
+    
+    groups = Group.objects.all()
+
+    if request.method == 'POST':
+        form = RoleCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'New role created successfully.')
+            return redirect('create_roles')  # Redirect to a page that lists groups or any desired page
+    else:
+        form = RoleCreationForm()
+
+    context = {
+        'form':form,
+        'groups':groups
+    }
+
+    return render(request, 'create_role.html', context)
+
+def register_user(request):
+
+    staff_group = Group.objects.all(name='staff')
+    if request.method == 'POST':
+        form = RegisterForm(request.POST)
+        if form.is_valid():
+            form.save()
+            user.groups.add(staff_group)
+            messages.success(request, 'User registered successfully.')
+            return redirect('user_list')  # Redirect to user list or any desired page
+        else:
+            messages.error(request, 'please correct the errors below.')
+    else:
+        form = RegisterForm()
+
+
+    
+    return render(request, 'register.html', {'form': form})
+
+
+@login_required
+def edit_user(request, user_id):
+    user = get_object_or_404(User, id=user_id)
+    
+    if request.method == 'POST':
+        form = UserEditForm(request.POST, instance=user)
+        if form.is_valid():
+            form.save()
+            return redirect('user_list')  # Redirect to a page that lists all users or any preferred page
+    else:
+        form = UserEditForm(instance=user)
+    
+    return render(request, 'edit_user.html', {'form': form, 'user': user})
+
+@login_required
 def users_table(request):
     users = User.objects.all()  # Fetch all users
-    user_roles = []  # This will hold user data with roles
+    user_list = []  # This will hold user data with roles
 
     for user in users:
         groups = user.groups.all()  # Fetch all roles (groups) for each user
-        user_roles.append({
+        user_list.append({
+            'user_id': user.id,
             'username': user.username,
+            'first_name': user.first_name,
+            'last_name': user.last_name,
             'email': user.email,
             'roles': [group.name for group in groups]  # Add roles (group names)
         })
 
     context = {
-        'user_roles': user_roles
+        'user_list': user_list
     }
-    return render(request, 'users.html', context)
+    return render(request, 'user_list.html', context)
 
 
 @login_required

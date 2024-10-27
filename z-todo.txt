@@ -1,7 +1,7 @@
 - Make form add/create roles/group
-- make it possible to edit/Update roles
+- make it possible to edit/Update roles of users
 - make it possible to delet roles
-- make it possible to edit user
+- make it possible to edit users roles
 - make it possible to delete user
 - create user profile (optional)
 
