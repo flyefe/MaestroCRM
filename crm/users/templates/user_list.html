@@ -25,11 +25,21 @@
         <td>
             {% if user.user_id %}
             <a href="{% url 'edit_user' user.user_id %}">Edit</a>
+            <a href="{% url 'delete_user' user.user_id %}" onclick="return confirmDelete();" class="btn btn-danger">
+                Delete
+            </a>
             {% else %}
             No ID
             {% endif %}
         </td>
+
     </tr>
     {% endfor %}
 </table>
+
+<script>
+    function confirmDelete() {
+        return confirm("Are you sure you want to delete this user?");
+    }
+</script>
 {% endblock %}

@@ -8,10 +8,6 @@ from django.contrib.auth.models import User, Group
 
 from .forms import UserEditForm, RegisterForm, RoleCreationForm
 
-from django.urls import reverse_lazy
-from django.views.generic.edit import DeleteView
-from django.contrib.auth.models import User
-from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 
 # views.py
 
@@ -49,15 +45,28 @@ def create_group(request):
 
 
 
-class UserDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
-    model = User
-    template_name = 'users/user_confirm_delete.html'
-    success_url = reverse_lazy('user-list')  # Redirect to the user list page after deletion
+# Delete Users
 
-    # Ensure that only the user or an admin can delete the account
-    def test_func(self):
-        user = self.get_object()
-        return self.request.user == user or self.request.user.is_staff
+
+@login_required
+def delete_user(request, user_id):
+    # Check if the user has the appropriate permissions
+    if not request.user.is_superuser:  # or another permission check
+        messages.error(request, "You do not have permission to delete users.")
+        return redirect('user_list')  # Redirect to an appropriate page
+
+    # Get the user to be deleted
+    user = get_object_or_404(User, id=user_id)
+
+    # Prevent the logged-in user from deleting themselves
+    if user == request.user:
+        messages.error(request, "You cannot delete your own account.")
+        return redirect('user_list')
+
+    # Delete the user and display a success message
+    user.delete()
+    messages.success(request, f"User {user.username} has been deleted successfully.")
+    return redirect('user_list')  # Redirect to the list of users or another page
 
 
 def register_user(request):
