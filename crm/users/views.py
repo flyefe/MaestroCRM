@@ -9,8 +9,48 @@ from django.contrib.auth.models import User, Group
 from .forms import UserEditForm, RegisterForm, RoleCreationForm,RoleEditForm
 
 
-# views.py
 
+#Edit group
+@login_required
+def edit_group(request, group_id):
+    # Check if the user has the appropriate permissions
+    if not request.user.is_superuser:
+        messages.error(request, "You do not have permission to edit groups.")
+        return redirect('create_group')  # Redirect to the list of groups or another preferred page
+
+    # Fetch the group to be edited
+    group = get_object_or_404(Group, id=group_id)
+    
+    if request.method == 'POST':
+        form = RoleEditForm(request.POST, instance=group)
+        if form.is_valid():
+            form.save()
+            messages.success(request, f"Group '{group.name}' has been updated successfully.")
+            return redirect('create_group')  # Redirect to a group list or desired page
+    else:
+        form = RoleEditForm(instance=group)
+
+    return render(request, 'edit_role.html', {'form': form, 'group': group})
+
+
+#Delete Group
+@login_required
+def delete_group(request, group_id):
+    # Check if the user has the appropriate permissions
+    if not request.user.is_superuser:  # or another permission check
+        messages.error(request, "You do not have permission to delete groups.")
+        return redirect('create_group')  # Redirect to a page that lists groups or any preferred page
+
+    # Get the group to be deleted
+    group = get_object_or_404(Group, id=group_id)
+
+    # Delete the group and display a success message
+    group.delete()
+    messages.success(request, f"Group '{group.name}' has been deleted successfully.")
+    return redirect('create_group')  # Redirect to the list of groups or another page
+
+
+# group.users
 @login_required
 def users_in_group(request, group_id):
     group = get_object_or_404(Group, id=group_id)
@@ -21,21 +61,6 @@ def users_in_group(request, group_id):
         'users': users
     }
     return render(request, 'users_in_group.html', context)
-
-#Edit Role
-@login_required
-def edit_group(request, group_id):
-    group = get_object_or_404(Group, id=group_id)
-    
-    if request.method == 'POST':
-        form = RoleEditForm(request.POST, instance=group)
-        if form.is_valid():
-            form.save()
-            messages.success(request, 'Role has been editted successfully.')
-            return redirect('create_group')  # Redirect to a page that lists all users or any preferred page
-    else:
-        form = UserEditForm(instance=user)
-    return render(request, 'edit_role.html', {'form': form, 'group': group})
 
 #Create Role
 @login_required
@@ -62,8 +87,6 @@ def create_group(request):
 
 
 # Delete Users
-
-
 @login_required
 def delete_user(request, user_id):
     # Check if the user has the appropriate permissions
@@ -85,26 +108,8 @@ def delete_user(request, user_id):
     return redirect('user_list')  # Redirect to the list of users or another page
 
 
-def register_user(request):
 
-    if request.method == 'POST':
-        form = RegisterForm(request.POST)
-        if form.is_valid():
-            user = form.save()
-            staff_group = Group.objects.get(name='Contact')
-            user.groups.add(staff_group)
-            messages.success(request, 'User registered successfully.')
-            return redirect('user_list')  # Redirect to user list or any desired page
-        else:
-            messages.error(request, 'please correct the errors below.')
-    else:
-        form = RegisterForm()
-
-
-    
-    return render(request, 'register.html', {'form': form})
-
-
+#Edit Users
 @login_required
 def edit_user(request, user_id):
     user = get_object_or_404(User, id=user_id)
@@ -119,6 +124,7 @@ def edit_user(request, user_id):
         form = UserEditForm(instance=user)
     return render(request, 'edit_user.html', {'form': form, 'user': user})
 
+#Users Table
 @login_required
 def users_table(request):
     users = User.objects.all()  # Fetch all users
@@ -141,13 +147,14 @@ def users_table(request):
     return render(request, 'user_list.html', context)
 
 
+#Logout
 @login_required
 def logout_view(request):
     logout(request)
     messages.success(request, 'You have been successfully logged out.')
     return redirect('login')  # Redirect to login page after logout
 
-# Create your views here.
+# Login
 def login_view(request):
 
     form = AuthenticationForm()
@@ -175,5 +182,26 @@ def login_view(request):
             messages.error(request, 'Invalid username or password.')
 
     return render(request, 'login.html', {'form': form})
+
+
+
+#Register User
+def register_user(request):
+
+    if request.method == 'POST':
+        form = RegisterForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            staff_group = Group.objects.get(name='Contact')
+            user.groups.add(staff_group)
+            messages.success(request, 'User registered successfully.')
+            return redirect('user_list')  # Redirect to user list or any desired page
+        else:
+            messages.error(request, 'please correct the errors below.')
+    else:
+        form = RegisterForm()
+           
+    return render(request, 'register.html', {'form': form})
+
 
 

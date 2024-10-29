@@ -17,22 +17,26 @@
         <tr>
             <th>Role Name</th>
             <th>User Count</th>
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
         {% for group in groups %}
         <tr>
             <td>{{ group.name }}</td>
-            <td><a href= "{% url 'users_in_group' group.id %}">{{ group.user_set.count }}</a></td>
+            <td><a href="{% url 'users_in_group' group.id %}">{{ group.user_set.count }}</a></td>
             <td>
-                {% if user.user_id %}
-                <a href="{% url 'edit_role' group.group_id %}">Edit</a>
-                {% else %}
-                No ID
-                {% endif %}
+                <a href="{% url 'edit_group' group.id %}">Edit</a>
+                <a href="{% url 'delete_group' group.id %}" onclick="return confirmDelete();" class="btn btn-danger">Delete</a>
             </td>
         </tr>
         {% endfor %}
     </tbody>
 </table>
+
+<script>
+    function confirmDelete() {
+        return confirm("Are you sure you want to delete this role?");
+    }
+</script>
 {% endblock %}

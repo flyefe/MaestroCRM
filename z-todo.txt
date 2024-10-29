@@ -1,32 +1,27 @@
-- Make form add/create roles/group Done
-- make it possible to edit/Update roles of users
-- make it possible to delet roles
--DONE make it possible to edit users roles
+- Make it possible for users to register
+- Make form to add/create roles/groups
+- Make it possible to edit/Update groups
+- Make it possible to delet group
+-DONE Make it possible to edit users roles
 - DONE make it possible to delete user
-- create user profile (optional)
 
-- Create status Table (new group)
-    -Make it possible to know number of persons in status
-- Create Tag Table (find out)
-    - Make it possible to know number of person in Tags
 
--Create Contact Table
-    - create contact app
-    - create model for Contact
-    - migrate to databse
-    - create forms to create contact - C
-    - create views for contact creation
-    - create template - R
-    - create url pattern for creation of contact
-    - make it possible to edit contact - U
-    - make it possible to delete contact - D
-    - make it possible to query list based on status
-    - make it possible to query list based on tag
-- Create Contact detail page 
-    - Make it possible to see contact details
-    - Make it possible to log in comment
-    - Make it possible to query list based on last log
-- Make it possible to create Segmentations based on status and tags
-    - Make form for creating segments based on status and tag values
-        - conditional Logics i.e, if has status xys + multiple tags
+-DONE Create status Table (new group)
+    -DONE Make it possible to know number of persons in status
 
+-Make it possible to add Contact by
+    - Create Contact model with option to become a user later
+    - Create Contact form
+    - make contact form create user
+- Make it Possible to view contact list
+- Make it possible to view contact profile
+- Make it possible to edit/update contact detail
+- Make it possible to delete contact
+- Make it possible to for staff and admin users to add comments/logactivities on contact
+    - Make log form with various activities
+        -Call, Email, Note, etc
+- Make Segmentation/categorization possible
+- Make Tagging Possible
+- Make it possible to import data with mapping
+- Make it possible to add additional field
+- Deploy app to cloud for usage

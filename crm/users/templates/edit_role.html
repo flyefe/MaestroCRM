@@ -3,11 +3,11 @@
 {% block title %}Edit User{% endblock %}
 
 {% block content %}
-<h2>Edit Role: {{ user.username }}</h2>
+<h2>Edit Role: {{ group.name }}</h2>
 <form method="post">
     {% csrf_token %}
     {{ form.as_p }}
     <button type="submit">Save Changes</button>
 </form>
-<a href="{% url 'user_list' %}">Back to User List</a>
+<a href="{% url 'create_group' %}">Back to User List</a>
 {% endblock %}
