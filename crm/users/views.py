@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.auth.models import User, Group
 
-from .forms import UserEditForm, RegisterForm, RoleCreationForm
+from .forms import UserEditForm, RegisterForm, RoleCreationForm,RoleEditForm
 
 
 # views.py
@@ -22,6 +22,22 @@ def users_in_group(request, group_id):
     }
     return render(request, 'users_in_group.html', context)
 
+#Edit Role
+@login_required
+def edit_group(request, group_id):
+    group = get_object_or_404(Group, id=group_id)
+    
+    if request.method == 'POST':
+        form = RoleEditForm(request.POST, instance=group)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Role has been editted successfully.')
+            return redirect('create_group')  # Redirect to a page that lists all users or any preferred page
+    else:
+        form = UserEditForm(instance=user)
+    return render(request, 'edit_role.html', {'form': form, 'group': group})
+
+#Create Role
 @login_required
 def create_group(request):
     

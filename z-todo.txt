@@ -1,8 +1,8 @@
 - Make form add/create roles/group Done
 - make it possible to edit/Update roles of users
 - make it possible to delet roles
-- make it possible to edit users roles
-- make it possible to delete user
+-DONE make it possible to edit users roles
+- DONE make it possible to delete user
 - create user profile (optional)
 
 - Create status Table (new group)

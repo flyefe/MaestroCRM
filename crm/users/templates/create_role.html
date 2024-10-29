@@ -24,6 +24,13 @@
         <tr>
             <td>{{ group.name }}</td>
             <td><a href= "{% url 'users_in_group' group.id %}">{{ group.user_set.count }}</a></td>
+            <td>
+                {% if user.user_id %}
+                <a href="{% url 'edit_role' group.group_id %}">Edit</a>
+                {% else %}
+                No ID
+                {% endif %}
+            </td>
         </tr>
         {% endfor %}
     </tbody>
