@@ -1,27 +1,51 @@
-# forms.py
 from django import forms
 from django.contrib.auth.models import User
 from .models import ContactDetail
 
+# forms.py
+from django import forms
+from .models import Status
+
+# class StatusForm(forms.ModelForm):
+#     class Meta:
+#         model = Status
+#         fields = ['name']
+
+class StatusForm(forms.Form):
+    statuses = forms.CharField(
+        widget=forms.TextInput(attrs={
+            'placeholder': '"new", "old", "paid"',  # Placeholder text to guide users
+            'required': 'required',  # Make the field required
+        }),
+        label="Statuses (enclose each value in quotes, separate with commas):"  # Custom label
+    )
+
+
 class ContactDetailCreationForm(forms.ModelForm):
-    username = forms.CharField(max_length=150)
+    email = forms.EmailField(required=True)
     first_name = forms.CharField(max_length=30)
     last_name = forms.CharField(max_length=150)
     
     class Meta:
         model = ContactDetail
-        fields = ['status', 'tags', 'assigned_staff']  # Add any fields from ContactDetail
+        fields = ['status', 'tags', 'assigned_staff']  # Fields from ContactDetail
 
     def save(self, commit=True):
+        # Create user associated with the contact
         user = User(
-            username=self.cleaned_data['username'],
+            username='',  # username set to blank
+            email=self.cleaned_data['email'],
             first_name=self.cleaned_data['first_name'],
             last_name=self.cleaned_data['last_name']
         )
+        
         if commit:
             user.set_unusable_password()  # Ensures user will need to reset password
             user.save()
+
+            # Create the ContactDetail profile and link to user
             contact_profile = super().save(commit=False)
             contact_profile.user = user
             contact_profile.save()
         return contact_profile
+    
