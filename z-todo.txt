@@ -1,7 +1,90 @@
-- Make it possible for users to register
-- Make form to add/create roles/groups
-- Make it possible to edit/Update groups
-- Make it possible to delet group
+CRM/                      # Project Root
+│
+├── CRM/                 # Project Settings
+│   ├── __init__.py
+│   ├── settings.py
+│   ├── urls.py          # Project URL configurations
+│   ├── wsgi.py
+│   └── asgi.py
+│
+├── core/                # Core app for home and non-secured pages
+│   ├── migrations/
+│   ├── templates/
+│   │   └── core/
+│   │       └── home.html
+│   ├── __init__.py
+│   ├── admin.py
+│   ├── apps.py
+│   ├── models.py
+│   ├── tests.py
+│   ├── urls.py          # URL configurations for core app
+│   └── views.py
+│
+├── user/                # User management app for staff
+│   ├── migrations/
+│   ├── templates/
+│   │   └── user/
+│   │       ├── user_list.html
+│   │       ├── edit_user.html
+│   │       └── register.html
+│   ├── __init__.py
+│   ├── admin.py
+│   ├── apps.py
+│   ├── forms.py         # Forms for user registration, editing, etc.
+│   ├── models.py        # User models if extending default User model
+│   ├── tests.py
+│   ├── urls.py          # URL configurations for user app
+│   └── views.py
+│
+├── contacts/            # Contacts management app
+│   ├── migrations/
+│   ├── templates/
+│   │   └── contacts/
+│   │       ├── contact_list.html
+│   │       ├── edit_contact.html
+│   │       └── add_contact.html
+│   ├── __init__.py
+│   ├── admin.py
+│   ├── apps.py
+│   ├── forms.py         # Forms for contact management
+│   ├── models.py
+│   ├── tests.py
+│   ├── urls.py          # URL configurations for contacts app
+│   └── views.py
+│
+├── dashboard/           # Dashboard functionality app
+│   ├── migrations/
+│   ├── templates/
+│   │   └── dashboard/
+│   │       └── dashboard.html
+│   ├── __init__.py
+│   ├── admin.py
+│   ├── apps.py
+│   ├── models.py
+│   ├── tests.py
+│   ├── urls.py          # URL configurations for dashboard app
+│   └── views.py
+│
+└── client_portal/       # Client portal app
+    ├── migrations/
+    ├── templates/
+    │   └── client_portal/
+    │       ├── client_dashboard.html
+    │       └── login.html
+    ├── __init__.py
+    ├── admin.py
+    ├── apps.py
+    ├── forms.py         # Forms for client login, etc.
+    ├── models.py        # Models for client data if needed
+    ├── tests.py
+    ├── urls.py          # URL configurations for client portal app
+    └── views.py
+
+
+-DONE Make it possible for users to register
+-DONE Make form to add/create roles/groups
+-DONE Make it possible to edit/Update groups
+-DONE Make it possible to delet group
 -DONE Make it possible to edit users roles
 - DONE make it possible to delete user
 
@@ -25,3 +108,26 @@
 - Make it possible to import data with mapping
 - Make it possible to add additional field
 - Deploy app to cloud for usage
+
+
+
+
+
+Project
+-Make Login page for all; Login leads to
+    -Client Dashboard if Client
+        -Shows 3 vertical tabes
+            -Dashboad: showing Welcome to Dashboard
+            -Your Details: Showing Customers Details
+            -And Logout
+    -Admin Dashboard of staff showing:
+        -Total Number of Contacts
+        -Add customer
+        -View All contact
+
+How to 
+1.Make User groups (admin, staff, Contact)
+2. Make Front end Login
+
+
+

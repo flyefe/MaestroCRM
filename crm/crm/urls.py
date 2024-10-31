@@ -18,12 +18,14 @@ from django.contrib import admin
 from django.urls import path
 from core.views import index, about
 from users.views import login_view,logout_view, users_table, edit_user, register_user, create_group, users_in_group, delete_user, edit_group, delete_group
+from contacts.views import add_contact_Detail
 from django.urls import include
 
 urlpatterns = [
     path("", index, name='index'),
     path("about/", about, name='about'),
     path('register/', register_user, name='register'),
+    path('add-contact/', add_contact_Detail, name='add_contact'),
     path("users/", users_table, name='user_list'),
     path("edit-user/<int:user_id>/", edit_user, name='edit_user'),
     path("edit-role/<int:group_id>/", edit_group, name='edit_group'),

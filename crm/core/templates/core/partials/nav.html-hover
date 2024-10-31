@@ -14,8 +14,6 @@
             <div class="hidden group-hover:block absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10">
                 <a href="{% url 'user_list' %}" class="block px-4 py-2 text-gray-700 hover:bg-teal-100">Users</a>
                 <a href="{% url 'create_group' %}" class="block px-4 py-2 text-gray-700 hover:bg-teal-100">Add Role</a>
-                <a href="{% url 'add_contact' %}" class="block px-4 py-2 text-gray-700 hover:bg-teal-100">Add Contact</a>
-
             </div>
         </div>
 

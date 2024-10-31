@@ -33,13 +33,28 @@ def edit_group(request, group_id):
     return render(request, 'edit_role.html', {'form': form, 'group': group})
 
 
+# #Delete Group
+# @login_required
+# def delete_group(request, group_id):
+#     # Check if the user has the appropriate permissions
+#     if not request.user.is_superuser:  # or another permission check
+#         messages.error(request, "You do not have permission to delete groups.")
+#         return redirect('create_group')  # Redirect to a page that lists groups or any preferred page
+
+#     # Get the group to be deleted
+#     group = get_object_or_404(Group, id=group_id)
+
+#     # Delete the group and display a success message
+#     group.delete()
+#     messages.success(request, f"Group '{group.name}' has been deleted successfully.")
+#     return redirect('create_group')  # Redirect to the list of groups or another page
 #Delete Group
 @login_required
 def delete_group(request, group_id):
-    # Check if the user has the appropriate permissions
-    if not request.user.is_superuser:  # or another permission check
+    # Check if the user has permission to delete a group
+    if not request.user.has_perm('auth.delete_group'):  # Explicitly check for the 'delete group' permission
         messages.error(request, "You do not have permission to delete groups.")
-        return redirect('create_group')  # Redirect to a page that lists groups or any preferred page
+        return redirect('create_group')  # Redirect to an appropriate page
 
     # Get the group to be deleted
     group = get_object_or_404(Group, id=group_id)
@@ -90,7 +105,9 @@ def create_group(request):
 @login_required
 def delete_user(request, user_id):
     # Check if the user has the appropriate permissions
-    if not request.user.is_superuser:  # or another permission check
+    
+    # if not request.user.is_superuser:  # or another permission check
+    if not request.user.has_perm('auth.delete_user'):
         messages.error(request, "You do not have permission to delete users.")
         return redirect('user_list')  # Redirect to an appropriate page
 
