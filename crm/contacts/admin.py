@@ -1,9 +1,5 @@
 from django.contrib import admin
-from .models import ContactDetail, Status
-
-@admin.register(Status)
-class StatusAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name')  # Customize the displayed fields as needed
+from .models import ContactDetail
 
 @admin.register(ContactDetail)
 class ContactDetailadmin(admin.ModelAdmin):

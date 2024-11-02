@@ -11,16 +11,6 @@ from .models import Status
 #         model = Status
 #         fields = ['name']
 
-class StatusForm(forms.Form):
-    statuses = forms.CharField(
-        widget=forms.TextInput(attrs={
-            'placeholder': '"new", "old", "paid"',  # Placeholder text to guide users
-            'required': 'required',  # Make the field required
-        }),
-        label="Statuses (enclose each value in quotes, separate with commas):"  # Custom label
-    )
-
-
 class ContactDetailCreationForm(forms.ModelForm):
     email = forms.EmailField(required=True)
     first_name = forms.CharField(max_length=30)

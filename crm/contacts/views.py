@@ -4,34 +4,13 @@ from django.contrib import messages
 from .forms import ContactDetailCreationForm
 from .models import ContactDetail
 from django.contrib.auth.decorators import login_required
-from .forms import StatusForm, Status
+# from .forms import StatusForm, Status
 
 
 
 # Create your views here.
 
 
-def update_statuses(request):
-    if request.method == 'POST':
-        form = StatusForm(request.POST)
-        if form.is_valid():
-            # Clear all existing statuses
-            Status.objects.all().delete()
-
-            # Split input by commas, strip whitespace, and remove duplicates
-            status_list = form.cleaned_data['statuses'].split(',')
-            unique_statuses = set(status.strip() for status in status_list if status.strip())
-
-            # Add each status to the database
-            for status_name in unique_statuses:
-                Status.objects.create(name=status_name)
-
-            messages.success(request, "Statuses updated successfully.")
-            return redirect('add_contact')  # Replace with your redirect target
-    else:
-        form = StatusForm()
-
-    return render(request, 'contact/update_statuses.html', {'form': form})
 
 
 # def add_status(request):

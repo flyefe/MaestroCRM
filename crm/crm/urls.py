@@ -27,5 +27,7 @@ urlpatterns = [
     #includes
     path('contacts/', include('contacts.urls')),
     path('user/', include('users.urls')),
+    path('settings/', include('settings.urls')),
+
 
     ]

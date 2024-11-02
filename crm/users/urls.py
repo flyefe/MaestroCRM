@@ -1,7 +1,7 @@
 from django.urls import path
-from . import views
+# from . import views
 
-# from users.views import login_view,logout_view, users_table, edit_user, register_user, create_group, users_in_group, delete_user, edit_group, delete_group
+from .views import login_view,logout_view, users_table, edit_user, register_user, create_group, users_in_group, delete_user, edit_group, delete_group
 
 #Users
 urlpatterns = [
