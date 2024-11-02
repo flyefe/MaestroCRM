@@ -92,11 +92,11 @@ CRM/                      # Project Root
 -DONE Create status Table (new group)
     -DONE Make it possible to know number of persons in status
 
--Make it possible to add Contact by
-    - Create Contact model with option to become a user later
-    - Create Contact form
-    - make contact form create user
-- Make it Possible to view contact list
+-DONE Make it possible to add Contact by
+    -DONE Create Contact model with option to become a user later
+    -DONE Create Contact form
+    -DONE make contact form create user
+- DONE Make it Possible to view contact list
 - Make it possible to view contact profile
 - Make it possible to edit/update contact detail
 - Make it possible to delete contact
