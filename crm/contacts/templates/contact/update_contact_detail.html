@@ -1,0 +1,11 @@
+<!-- add_contact_profile.html -->
+{% extends 'core/base.html' %}
+
+{% block content %}
+<h2>Update Contact</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Save Contact</button>
+</form>
+{% endblock %}

@@ -10,15 +10,22 @@
             <th>Name</th>
             <th>Email</th>
             <th>Status</th>
+            <th>Tags</th>
             <th>Assigned Staff</th>
         </tr>
     </thead>
     <tbody>
         {% for contact in contacts %}
         <tr>
-            <td>{{ contact.user.first_name }} {{ contact.user.last_name }}</td>
+            <td>
+                <a href="{% url 'update_contact' contact.id %}" class="block px-4 py-2 text-gray-700 hover:bg-teal-100">
+                    {{ contact.user.first_name }} {{ contact.user.last_name }}
+                </a>
+            
+            </td>
             <td>{{ contact.user.email }}</td>
             <td>{{ contact.status }}</td>
+            <td>{{ contact.tags }}</td>
             <td>{{ contact.assigned_staff }}</td>
         </tr>
         {% empty %}
