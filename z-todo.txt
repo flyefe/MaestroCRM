@@ -97,9 +97,9 @@ CRM/                      # Project Root
     -DONE Create Contact form
     -DONE make contact form create user
 - DONE Make it Possible to view contact list
-- Make it possible to view contact profile
-- Make it possible to edit/update contact detail
-- Make it possible to delete contact
+-DONE Make it possible to view contact profile
+-DONE Make it possible to edit/update contact detail
+-DONE Make it possible to delete contact
 - Make it possible to for staff and admin users to add comments/logactivities on contact
     - Make log form with various activities
         -Call, Email, Note, etc

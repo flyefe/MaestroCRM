@@ -41,6 +41,30 @@ def update_contact_detail(request, contact_id):
 
     return render(request, 'contact/update_contact_detail.html', {'form': form})
 
+
+def contact_detail(request, contact_id):
+    contact = get_object_or_404(ContactDetail, id=contact_id)
+    context = {
+        'contact': contact,
+    }
+    return render(request, 'contact/contact_detail.html', context)
+
+@login_required
+def delete_contact(request, contact_id):
+     # Check if the user has permission to delete a group
+    if not request.user.has_perm('auth.delete_user'):  # Explicitly check for the 'delete group' permission
+        messages.error(request, "You do not have permission to delete contact.")
+        return redirect('contact_detail')  # Redirect to an appropriate page
+
+
+    #get contact
+    contact = get_object_or_404(ContactDetail, id=contact_id)
+    
+    #Delete Contact
+    contact.delete()
+    messages.success(request, f"'{contact.user.first_name}' has been successfully deleted")
+    return redirect('contact_list')
+
 @login_required
 def add_contact_detail(request):
     if request.method == 'POST':
