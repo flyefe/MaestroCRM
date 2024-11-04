@@ -1,38 +1,52 @@
+<!-- create_role.html -->
 {% extends 'core/base.html' %}
 
-{% block title %}Create New Role{% endblock %}
+{% block title %}MaestroCRM - Create New Role{% endblock %}
 
 {% block content %}
-<h2>Create New Role</h2>
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Create Role</button>
-</form>
-<hr>
+<div class="flex items-center justify-center min-h-screen bg-gray-100">
+    <div class="w-full max-w-2xl px-8 py-6 mt-4 bg-white rounded-lg shadow-lg">
+        <h2 class="text-2xl font-semibold text-center text-teal-500">Create New Role</h2>
+        <form method="POST" class="space-y-6 mt-4">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit"
+                class="w-full py-2 bg-teal-500 hover:bg-teal-600 text-white font-semibold rounded-lg focus:outline-none focus:ring focus:ring-teal-300">
+                Create Role
+            </button>
+        </form>
 
-<h1>Roles</h1>
-<table>
-    <thead>
-        <tr>
-            <th>Role Name</th>
-            <th>User Count</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for group in groups %}
-        <tr>
-            <td>{{ group.name }}</td>
-            <td><a href="{% url 'users_in_group' group.id %}">{{ group.user_set.count }}</a></td>
-            <td>
-                <a href="{% url 'edit_group' group.id %}">Edit</a>
-                <a href="{% url 'delete_group' group.id %}" onclick="return confirmDelete();" class="btn btn-danger">Delete</a>
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+        <hr class="my-6">
+
+        <h1 class="text-xl font-semibold text-teal-500">Roles</h1>
+        <div class="overflow-x-auto mt-4">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-4 py-2 text-left text-sm font-medium text-gray-500">Role Name</th>
+                        <th class="px-4 py-2 text-left text-sm font-medium text-gray-500">User Count</th>
+                        <th class="px-4 py-2 text-left text-sm font-medium text-gray-500">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                    {% for group in groups %}
+                    <tr>
+                        <td class="px-4 py-2">{{ group.name }}</td>
+                        <td class="px-4 py-2">
+                            <a href="{% url 'users_in_group' group.id %}" class="text-teal-600 hover:text-teal-800">{{group.user_set.count}}</a>
+                        </td>
+                        <td class="px-4 py-2">
+                            <a href="{% url 'edit_group' group.id %}" class="text-teal-600 hover:text-teal-800">Edit</a>
+                            <a href="{% url 'delete_group' group.id %}" onclick="return confirmDelete();"
+                                class="text-red-600 hover:text-red-800 ml-2">Delete</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
 
 <script>
     function confirmDelete() {

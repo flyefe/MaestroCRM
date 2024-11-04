@@ -1,11 +1,10 @@
 <nav class="py-4 px-6 flex justify-between items-center bg-teal-500">
     <a href="/" class="text-white font-semibold text-lg">MaestroCRM</a>
-
+    
     <!-- Mobile Menu Button -->
     <div class="flex items-center md:hidden">
         <button id="mobile-menu-toggle" class="text-white focus:outline-none">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
             </svg>
         </button>
@@ -15,21 +14,15 @@
         {% if request.user.is_authenticated %}
         <!-- Admin Dropdown -->
         <div class="relative">
-            <button id="settings-dropdown-toggle" class="flex items-center py-1 px-4 text-white focus:outline-none">
+            <button id="settings-dropdown-toggle" class="py-1 px-4 text-white focus:outline-none">
                 Settings
-                <svg class="ml-1 w-4 h-4 transition-transform duration-200 transform" id="arrow-icon" fill="none"
-                    stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 10l5 5 5-5"></path>
-                </svg>
             </button>
             <div id="settings-dropdown" class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10 hidden">
                 <a href="{% url 'user_list' %}" class="block px-4 py-2 text-gray-700 hover:bg-teal-100">Users</a>
                 <a href="{% url 'create_group' %}" class="block px-4 py-2 text-gray-700 hover:bg-teal-100">Add Role</a>
-                <a href="{% url 'add_contact' %}" class="block px-4 py-2 text-gray-700 hover:bg-teal-100">Add
-                    Contact</a>
+                <a href="{% url 'add_contact' %}" class="block px-4 py-2 text-gray-700 hover:bg-teal-100">Add Contact</a>
                 <a href="{% url 'contact_list' %}" class="block px-4 py-2 text-gray-700 hover:bg-teal-100">Contacts</a>
-                <a href="{% url 'update_statuses' %}" class="block px-4 py-2 text-gray-700 hover:bg-teal-100">Update
-                    Statuses</a>
+                <a href="{% url 'update_statuses' %}" class="block px-4 py-2 text-gray-700 hover:bg-teal-100">Update Statuses</a>
             </div>
         </div>
 
@@ -42,29 +35,21 @@
         <a href="{% url 'register' %}" class="py-2 px-4 bg-teal-400 rounded-xl text-white">Register</a>
         {% endif %}
     </div>
-
+    
     <!-- Mobile Menu -->
     <div id="mobile-menu" class="absolute top-16 left-0 w-full bg-teal-500 z-20 hidden md:hidden">
         <div class="flex flex-col">
             {% if request.user.is_authenticated %}
             <div class="relative">
-                <button id="mobile-settings-dropdown-toggle" class="flex items-center py-2 px-4 text-white">
+                <button id="mobile-settings-dropdown-toggle" class="py-2 px-4 text-white">
                     Settings
-                    <svg class="ml-1 w-4 h-4 transition-transform duration-200 transform" id="mobile-arrow-icon"
-                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 10l5 5 5-5"></path>
-                    </svg>
                 </button>
                 <div id="mobile-settings-dropdown" class="bg-white rounded-md shadow-lg hidden">
                     <a href="{% url 'user_list' %}" class="block px-4 py-2 text-gray-700 hover:bg-teal-100">Users</a>
-                    <a href="{% url 'create_group' %}" class="block px-4 py-2 text-gray-700 hover:bg-teal-100">Add
-                        Role</a>
-                    <a href="{% url 'add_contact' %}" class="block px-4 py-2 text-gray-700 hover:bg-teal-100">Add
-                        Contact</a>
-                    <a href="{% url 'contact_list' %}"
-                        class="block px-4 py-2 text-gray-700 hover:bg-teal-100">Contacts</a>
-                    <a href="{% url 'update_statuses' %}" class="block px-4 py-2 text-gray-700 hover:bg-teal-100">Update
-                        Statuses</a>
+                    <a href="{% url 'create_group' %}" class="block px-4 py-2 text-gray-700 hover:bg-teal-100">Add Role</a>
+                    <a href="{% url 'add_contact' %}" class="block px-4 py-2 text-gray-700 hover:bg-teal-100">Add Contact</a>
+                    <a href="{% url 'contact_list' %}" class="block px-4 py-2 text-gray-700 hover:bg-teal-100">Contacts</a>
+                    <a href="{% url 'update_statuses' %}" class="block px-4 py-2 text-gray-700 hover:bg-teal-100">Update Statuses</a>
                 </div>
             </div>
             <a href="{% url 'about' %}" class="py-2 px-4 text-white">About</a>
@@ -89,20 +74,12 @@
     document.getElementById('settings-dropdown-toggle').onclick = function () {
         var dropdown = document.getElementById('settings-dropdown');
         dropdown.classList.toggle('hidden');
-
-        // Toggle the arrow direction
-        var arrow = document.getElementById('arrow-icon');
-        arrow.classList.toggle('rotate-180'); // Rotate arrow up when dropdown is open
     }
 
     // Toggle for settings dropdown in mobile view
     document.getElementById('mobile-settings-dropdown-toggle').onclick = function () {
         var dropdown = document.getElementById('mobile-settings-dropdown');
         dropdown.classList.toggle('hidden');
-
-        // Toggle the arrow direction
-        var mobileArrow = document.getElementById('mobile-arrow-icon');
-        mobileArrow.classList.toggle('rotate-180'); // Rotate arrow up when dropdown is open
     }
 
     // Optional: Close dropdowns when clicking outside
@@ -110,13 +87,11 @@
         var dropdown = document.getElementById('settings-dropdown');
         if (!event.target.closest('#settings-dropdown-toggle') && !dropdown.contains(event.target)) {
             dropdown.classList.add('hidden');
-            document.getElementById('arrow-icon').classList.remove('rotate-180'); // Reset arrow rotation
         }
 
         var mobileDropdown = document.getElementById('mobile-settings-dropdown');
         if (!event.target.closest('#mobile-settings-dropdown-toggle') && !mobileDropdown.contains(event.target)) {
             mobileDropdown.classList.add('hidden');
-            document.getElementById('mobile-arrow-icon').classList.remove('rotate-180'); // Reset mobile arrow rotation
         }
 
         // Hide mobile menu when clicking outside
@@ -126,9 +101,3 @@
         }
     });
 </script>
-
-<style>
-    .rotate-180 {
-        transform: rotate(180deg);
-    }
-</style>

@@ -3,36 +3,40 @@
 {% block title %}Contact List{% endblock %}
 
 {% block content %}
-<h2>Contact List</h2>
-<table>
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Status</th>
-            <th>Tags</th>
-            <th>Assigned Staff</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for contact in contacts %}
-        <tr>
-            <td>
-                <a href="{% url 'update_contact' contact.id %}" class="block px-4 py-2 text-gray-700 hover:bg-teal-100">
-                    {{ contact.user.first_name }} {{ contact.user.last_name }}
-                </a>
-            
-            </td>
-            <td>{{ contact.user.email }}</td>
-            <td>{{ contact.status }}</td>
-            <td>{{ contact.tags }}</td>
-            <td>{{ contact.assigned_staff }}</td>
-        </tr>
-        {% empty %}
-        <tr>
-            <td colspan="4">No contacts found.</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+<div class="max-w-6xl mx-auto px-4 mt-10">
+    <h2 class="text-3xl font-bold mb-6 text-center">Contact List</h2>
+
+    <div class="overflow-x-auto rounded-lg shadow-lg">
+        <table class="min-w-full bg-white border border-gray-300">
+            <thead class="bg-teal-600 text-white">
+                <tr>
+                    <th class="py-3 px-4 text-left text-sm font-semibold">Name</th>
+                    <th class="py-3 px-4 text-left text-sm font-semibold">Email</th>
+                    <th class="py-3 px-4 text-left text-sm font-semibold">Status</th>
+                    <th class="py-3 px-4 text-left text-sm font-semibold">Tags</th>
+                    <th class="py-3 px-4 text-left text-sm font-semibold">Assigned Staff</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for contact in contacts %}
+                <tr class="hover:bg-teal-100 transition duration-200">
+                    <td class="py-2 px-4 border-b border-gray-200">
+                        <a href="{% url 'update_contact' contact.id %}" class="text-teal-600 hover:underline">
+                            {{ contact.user.first_name }} {{ contact.user.last_name }}
+                        </a>
+                    </td>
+                    <td class="py-2 px-4 border-b border-gray-200">{{ contact.user.email }}</td>
+                    <td class="py-2 px-4 border-b border-gray-200">{{ contact.status }}</td>
+                    <td class="py-2 px-4 border-b border-gray-200">{{ contact.tags }}</td>
+                    <td class="py-2 px-4 border-b border-gray-200">{{ contact.assigned_staff }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="py-4 text-center">No contacts found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
 {% endblock %}
