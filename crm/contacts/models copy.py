@@ -31,10 +31,6 @@ class ContactDetail(models.Model):
     updated_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='updated_contacts')
     
     def __str__(self):
-        if not self.pk:
-            self.created_by = kwargs.pop('created_by', None)
-        self.updated_by = kwargs.pop('updated_by', None)
-        super().save(*args, **kwargs)
         return f"{self.user.username} - {self.status.name if self.status else 'No Status'}"
 
 # Signal to automatically assign the Contact group to the user on creation

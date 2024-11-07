@@ -18,3 +18,9 @@ class Service(models.Model):
 
     def __str__(self):
         return self.name
+    
+class TrafickSource(models.Model):
+    name = models.CharField(max_length=50, unique=True)  # e.g., 'Active', 'Inactive', 'Pending'
+
+    def __str__(self):
+        return self.name

@@ -14,7 +14,7 @@ from django.contrib.auth.decorators import login_required
 
 
 @login_required
-def update_contact_detail(request, contact_id):
+def update_contact(request, contact_id):
     contact = get_object_or_404(ContactDetail, id=contact_id)
     user = contact.user
     
@@ -29,7 +29,10 @@ def update_contact_detail(request, contact_id):
                 return render(request, 'contact/update_contact_detail.html', {'form': form})
             
             # Save the user and contact details
-            form.save()
+            contact = form.save(commit=False)
+            contact.updated_by = request.user
+            contact.save()
+            form.save_m2m()
             messages.success(request, 'Contact details updated successfully.')
             return redirect('contact_list')
     else:
@@ -78,7 +81,11 @@ def add_contact_detail(request):
                 return render(request, 'contact/add_contact_detail.html', {'form': form})
             
             #if no existing user, save the form
-            form.save()
+            contact = form.save()
+            contact.created_by = request.user
+            contact.updated_by = request.user
+            contact.save()
+            form.save_m2m()
             messages.success(request, 'New contact detail created successfully.')
             return redirect('contact_list')
     else:
