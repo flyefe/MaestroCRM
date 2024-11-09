@@ -5,6 +5,8 @@ from django.contrib.auth.models import User, Group
 from .forms import ContactDetailCreationForm
 from .models import ContactDetail
 from django.contrib.auth.decorators import login_required
+from django.db import transaction
+
 # from .forms import StatusForm, Status
 
 
@@ -68,30 +70,60 @@ def delete_contact(request, contact_id):
     messages.success(request, f"'{contact.user.first_name}' has been successfully deleted")
     return redirect('contact_list')
 
+# @login_required
+# def add_contact_detail(request):
+#     if request.method == 'POST':
+#         form = ContactDetailCreationForm(request.POST)
+#         if form.is_valid():
+#             email = form.cleaned_data['email']
+
+#             #check if the user with the same email already exists
+#             if User.objects.filter(email=email).exists():
+#                 messages.error(request, 'A user with this email already exists.')
+#                 return render(request, 'contact/add_contact_detail.html', {'form': form})
+            
+#             #if no existing user, save the form
+#             contact = form.save()
+#             contact.created_by = request.user
+#             contact.updated_by = request.user
+#             contact.save()
+#             form.save_m2m()
+#             messages.success(request, 'New contact detail created successfully.')
+#             return redirect('contact_list')
+#     else:
+#         form = ContactDetailCreationForm()
+
+#     return render(request, 'contact/add_contact_detail.html', {'form': form})
+
+
 @login_required
-def add_contact_detail(request):
+@transaction.atomic
+def create_contact(request):
     if request.method == 'POST':
         form = ContactDetailCreationForm(request.POST)
         if form.is_valid():
+            # Create the associated user
             email = form.cleaned_data['email']
+            user, created = User.objects.get_or_create(
+                username=email,  # Use email as the username
+                defaults={'email': email, 'first_name': form.cleaned_data['first_name'], 'last_name': form.cleaned_data['last_name']}
+            )
 
-            #check if the user with the same email already exists
-            if User.objects.filter(email=email).exists():
-                messages.error(request, 'A user with this email already exists.')
-                return render(request, 'contact/add_contact_detail.html', {'form': form})
-            
-            #if no existing user, save the form
-            contact = form.save()
-            contact.created_by = request.user
-            contact.updated_by = request.user
+            if created:
+                user.set_password(User.objects.make_random_password())  # Set a temporary password if needed
+                user.save()
+
+            # Create the ContactDetail instance
+            contact = form.save(commit=False)
+            contact.user = user
+            contact.created_by = request.user  # Set created_by to the current user
+            contact.updated_by = request.user  # Set updated_by to the current user
             contact.save()
-            form.save_m2m()
-            messages.success(request, 'New contact detail created successfully.')
-            return redirect('contact_list')
+            return redirect('contact_list')  # Redirect to a list or detail view of contacts
     else:
         form = ContactDetailCreationForm()
+    return render(request, 'contact/create_contact.html', {'form': form})
 
-    return render(request, 'contact/add_contact_detail.html', {'form': form})
 
 @login_required
 def contact_list(request):

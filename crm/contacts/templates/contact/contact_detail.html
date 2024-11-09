@@ -3,36 +3,65 @@
 {% block title %}Contact Profile{% endblock %}
 
 {% block content %}
-<div class="max-w-lg mx-auto bg-white rounded-lg shadow-lg overflow-hidden mt-8">
-    <!-- Header with Profile Picture and Name -->
-    <div class="bg-teal-600 text-white text-center py-6">
-        <div class="flex justify-center mb-4">
+<div class="max-w-4xl mx-auto bg-white rounded-lg shadow-lg overflow-hidden mt-8">
+    <!-- Header with Profile Picture, Full Name, and Status -->
+    <div class="bg-teal-600 text-white p-6 flex justify-between items-center">
+        <div class="flex items-center space-x-4">
+            <!-- Profile Image -->
             <img src="https://via.placeholder.com/100" alt="Contact Photo" class="rounded-full border-4 border-white">
+            <div>
+                <!-- Contact Full Name -->
+                <h2 class="text-3xl font-semibold">{{ contact.user.first_name }} {{ contact.user.last_name }}</h2>
+                <p class="text-teal-200">{{ contact.status }}</p>
+            </div>
         </div>
-        <h2 class="text-2xl font-semibold">{{ contact.user.first_name }} {{ contact.user.last_name }}</h2>
-        <p class="text-teal-200">{{ contact.status }}</p>
+        <!-- Latest Activities -->
+        <div class="text-sm bg-white text-teal-600 rounded-lg shadow-lg p-4 max-w-xs">
+            <h3 class="font-bold mb-2">Recent Activity</h3>
+            <ul class="space-y-1">
+                {% for activity in recent_activities %}
+                <li>
+                    <span class="font-semibold">{{ activity.created_by.get_full_name }}</span>
+                    {{ activity.description }}
+                    <span class="text-gray-500 text-xs">{{ activity.created_at|date:"Y-m-d H:i" }}</span>
+                </li>
+                {% empty %}
+                <li>No recent activities found.</li>
+                {% endfor %}
+            </ul>
+        </div>
     </div>
 
     <!-- Contact Details -->
-    <div class="p-6">
-        <div class="space-y-4">
-            <h3 class="text-lg font-bold text-gray-700 border-b pb-2 mb-4">Contact Information</h3>
+    <div class="p-6 space-y-8">
+        <!-- Basic Information -->
+        <div>
+            <h3 class="text-lg font-bold text-gray-700 border-b pb-2">Contact Information</h3>
             <p><strong>Email:</strong> {{ contact.user.email }}</p>
             <p><strong>Phone Number:</strong> {{ contact.phone_number }}</p>
+        </div>
 
-            <h3 class="text-lg font-bold text-gray-700 border-b pb-2 mt-6 mb-4">Address</h3>
+        <!-- Address Information -->
+        <div>
+            <h3 class="text-lg font-bold text-gray-700 border-b pb-2">Address</h3>
             <p>{{ contact.address.first_line }}, {{ contact.address.second_line }}</p>
             <p>{{ contact.address.city }}, {{ contact.address.country }} - {{ contact.address.postal_code }}</p>
+        </div>
 
-            <h3 class="text-lg font-bold text-gray-700 border-b pb-2 mt-6 mb-4">Other Details</h3>
+        <!-- Other Details -->
+        <div>
+            <h3 class="text-lg font-bold text-gray-700 border-b pb-2">Other Details</h3>
             <p><strong>Tags:</strong> {{ contact.tags }}</p>
             <p><strong>Assigned Staff:</strong> {{ contact.assigned_staff.get_full_name }}</p>
             <p><strong>Traffic Source:</strong> {{ contact.trafick_source }}</p>
             <p><strong>Service:</strong> {{ contact.services }}</p>
             <p><strong>Open Date:</strong> {{ contact.open_date|date:"Y-m-d H:i" }}</p>
             <p><strong>Close Date:</strong> {{ contact.close_date|date:"Y-m-d H:i" }}</p>
+        </div>
 
-            <h3 class="text-lg font-bold text-gray-700 border-b pb-2 mt-6 mb-4">Activity</h3>
+        <!-- Activity Information -->
+        <div>
+            <h3 class="text-lg font-bold text-gray-700 border-b pb-2">Activity</h3>
             <p><strong>Created By:</strong> {{ contact.created_by.get_full_name }} on {{ contact.created_at|date:"Y-m-d
                 H:i" }}</p>
             <p><strong>Last Updated By:</strong> {{ contact.updated_by.get_full_name }} on {{
@@ -41,11 +70,8 @@
 
         <!-- Action Buttons -->
         <div class="flex justify-between mt-8">
-            <!-- Edit Button as a link -->
             <a href="{% url 'update_contact' contact.id %}"
                 class="bg-teal-500 text-white py-2 px-6 rounded hover:bg-teal-600">Edit</a>
-
-            <!-- Delete Button in a separate form -->
             <form action="{% url 'delete_contact' contact.id %}" method="POST" class="inline">
                 {% csrf_token %}
                 <button onclick="return confirmDelete();" type="submit"
@@ -57,6 +83,17 @@
         <div class="mt-6 text-center">
             <a href="{% url 'contact_list' %}" class="text-teal-500 hover:underline">Back to Contact List</a>
         </div>
+    </div>
+
+    <!-- Activity Log Section -->
+    <div class="p-6 bg-gray-100 rounded-b-lg mt-8">
+        <h3 class="text-lg font-bold text-gray-700 mb-4">Add New Log</h3>
+        <form action="/" method="POST" class="space-y-4">
+            {% csrf_token %}
+            <textarea name="log_content" rows="4" placeholder="Enter log details here..."
+                class="form-input block w-full rounded border-gray-300"></textarea>
+            <button type="submit" class="bg-teal-500 text-white py-2 px-6 rounded hover:bg-teal-600">Add Log</button>
+        </form>
     </div>
 </div>
 
