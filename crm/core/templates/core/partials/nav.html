@@ -13,10 +13,26 @@
 
     <div class="hidden md:flex space-x-4 items-center">
         {% if request.user.is_authenticated %}
+        <!-- Contact Dropdown -->
+
+        <div class="relative">
+            <button id="contact-dropdown-toggle" class="flex items-center py-1 px-4 text-white focus:outline-none">
+                Contacts
+                <svg class="ml-1 w-4 h-4 transition-transform duration-200 transform" id="contact-arrow-icon" fill="none"
+                    stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 10l5 5 5-5"></path>
+                </svg>
+            </button>
+            <div id="contact-dropdown" class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10 hidden">
+                <a href="{% url 'contact_list' %}" class="block px-4 py-2 text-gray-700 hover:bg-teal-100">View All</a>
+                <a href="{% url 'add_contact' %}" class="block px-4 py-2 text-gray-700 hover:bg-teal-100">Add Contact</a>
+            </div>
+        </div>
+
         <!-- Admin Dropdown -->
         <div class="relative">
             <button id="settings-dropdown-toggle" class="flex items-center py-1 px-4 text-white focus:outline-none">
-                Settings
+                Admin
                 <svg class="ml-1 w-4 h-4 transition-transform duration-200 transform" id="arrow-icon" fill="none"
                     stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 10l5 5 5-5"></path>
@@ -25,13 +41,11 @@
             <div id="settings-dropdown" class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10 hidden">
                 <a href="{% url 'user_list' %}" class="block px-4 py-2 text-gray-700 hover:bg-teal-100">Users</a>
                 <a href="{% url 'create_group' %}" class="block px-4 py-2 text-gray-700 hover:bg-teal-100">Add Role</a>
-                <a href="{% url 'add_contact' %}" class="block px-4 py-2 text-gray-700 hover:bg-teal-100">Add
-                    Contact</a>
-                <a href="{% url 'contact_list' %}" class="block px-4 py-2 text-gray-700 hover:bg-teal-100">Contacts</a>
                 <a href="{% url 'update_statuses' %}" class="block px-4 py-2 text-gray-700 hover:bg-teal-100">Update
                     Statuses</a>
             </div>
         </div>
+        
 
         <!-- Other Links -->
         <a href="{% url 'about' %}" class="py-2 px-4 text-white">About</a>
@@ -47,15 +61,16 @@
     <div id="mobile-menu" class="absolute top-16 left-0 w-full bg-teal-500 z-20 hidden md:hidden">
         <div class="flex flex-col">
             {% if request.user.is_authenticated %}
+            <!-- mobilecontact -->
             <div class="relative">
-                <button id="mobile-settings-dropdown-toggle" class="flex items-center py-2 px-4 text-white">
-                    Settings
-                    <svg class="ml-1 w-4 h-4 transition-transform duration-200 transform" id="mobile-arrow-icon"
+                <button id="mobile-contact-dropdown-toggle" class="flex items-center py-2 px-4 text-white">
+                Contacts
+                    <svg class="ml-1 w-4 h-4 transition-transform duration-200 transform" id="mobile-contact-arrow-icon"
                         fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 10l5 5 5-5"></path>
                     </svg>
                 </button>
-                <div id="mobile-settings-dropdown" class="bg-white rounded-md shadow-lg hidden">
+                <div id="mobile-contact-dropdown" class="bg-white rounded-md shadow-lg hidden">
                     <a href="{% url 'user_list' %}" class="block px-4 py-2 text-gray-700 hover:bg-teal-100">Users</a>
                     <a href="{% url 'create_group' %}" class="block px-4 py-2 text-gray-700 hover:bg-teal-100">Add
                         Role</a>
@@ -67,6 +82,29 @@
                         Statuses</a>
                 </div>
             </div>
+
+            <!-- mobileadmin -->
+            <div class="relative">
+                <button id="mobile-settings-dropdown-toggle" class="flex items-center py-2 px-4 text-white">
+                    Admin
+                    <svg class="ml-1 w-4 h-4 transition-transform duration-200 transform" id="mobile-arrow-icon" fill="none"
+                        stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 10l5 5 5-5"></path>
+                    </svg>
+                </button>
+                <div id="mobile-settings-dropdown" class="bg-white rounded-md shadow-lg hidden">
+                    <a href="{% url 'user_list' %}" class="block px-4 py-2 text-gray-700 hover:bg-teal-100">Users</a>
+                    <a href="{% url 'create_group' %}" class="block px-4 py-2 text-gray-700 hover:bg-teal-100">Add
+                        Role</a>
+                    <a href="{% url 'add_contact' %}" class="block px-4 py-2 text-gray-700 hover:bg-teal-100">Add
+                        Contact</a>
+                    <a href="{% url 'contact_list' %}" class="block px-4 py-2 text-gray-700 hover:bg-teal-100">Contacts</a>
+                    <a href="{% url 'update_statuses' %}" class="block px-4 py-2 text-gray-700 hover:bg-teal-100">Update
+                        Statuses</a>
+                </div>
+            </div>
+
+            <!-- others -->
             <a href="{% url 'about' %}" class="py-2 px-4 text-white">About</a>
             <a href="{% url 'logout' %}" class="py-2 px-4 bg-teal-600 rounded-xl text-white">Logout</a>
 
@@ -78,12 +116,13 @@
     </div>
 </nav>
 
+
 <script>
     // Toggle for mobile menu
     document.getElementById('mobile-menu-toggle').onclick = function () {
         var menu = document.getElementById('mobile-menu');
         menu.classList.toggle('hidden');
-    }
+    };
 
     // Toggle for settings dropdown in desktop view
     document.getElementById('settings-dropdown-toggle').onclick = function () {
@@ -91,9 +130,19 @@
         dropdown.classList.toggle('hidden');
 
         // Toggle the arrow direction
-        var arrow = document.getElementById('arrow-icon');
-        arrow.classList.toggle('rotate-180'); // Rotate arrow up when dropdown is open
-    }
+        var arrow = document.getElementById('settings-arrow-icon');
+        arrow.classList.toggle('rotate-180');
+    };
+
+    // Toggle for contacts dropdown in desktop view
+    document.getElementById('contact-dropdown-toggle').onclick = function () {
+        var cdropdown = document.getElementById('contact-dropdown');
+        cdropdown.classList.toggle('hidden');
+
+        // Toggle the arrow direction for contacts
+        var arrow = document.getElementById('contact-arrow-icon');
+        arrow.classList.toggle('rotate-180');
+    };
 
     // Toggle for settings dropdown in mobile view
     document.getElementById('mobile-settings-dropdown-toggle').onclick = function () {
@@ -101,22 +150,48 @@
         dropdown.classList.toggle('hidden');
 
         // Toggle the arrow direction
-        var mobileArrow = document.getElementById('mobile-arrow-icon');
-        mobileArrow.classList.toggle('rotate-180'); // Rotate arrow up when dropdown is open
-    }
+        var mobileArrow = document.getElementById('mobile-settings-arrow-icon');
+        mobileArrow.classList.toggle('rotate-180');
+    };
 
-    // Optional: Close dropdowns when clicking outside
+    // Toggle for contact dropdown in mobile
+    document.getElementById('mobile-contact-dropdown-toggle').onclick = function () {
+        var cdropdown = document.getElementById('mobile-contact-dropdown');
+        cdropdown.classList.toggle('hidden');
+
+        // Toggle the arrow direction
+        var mobileArrow = document.getElementById('mobile-contact-arrow-icon');
+        mobileArrow.classList.toggle('rotate-180');
+    };
+
+    // Optional: Close dropdowns and mobile menu when clicking outside
     document.addEventListener('click', function (event) {
+        // Close settings dropdown in desktop view
         var dropdown = document.getElementById('settings-dropdown');
         if (!event.target.closest('#settings-dropdown-toggle') && !dropdown.contains(event.target)) {
             dropdown.classList.add('hidden');
-            document.getElementById('arrow-icon').classList.remove('rotate-180'); // Reset arrow rotation
+            document.getElementById('settings-arrow-icon').classList.remove('rotate-180'); // Reset arrow rotation
         }
 
+        // Close contacts dropdown in desktop view
+        var cdropdown = document.getElementById('contact-dropdown');
+        if (!event.target.closest('#contact-dropdown-toggle') && !cdropdown.contains(event.target)) {
+            cdropdown.classList.add('hidden');
+            document.getElementById('contact-arrow-icon').classList.remove('rotate-180'); // Reset arrow rotation
+        }
+
+        // Close mobile settings dropdown
         var mobileDropdown = document.getElementById('mobile-settings-dropdown');
         if (!event.target.closest('#mobile-settings-dropdown-toggle') && !mobileDropdown.contains(event.target)) {
             mobileDropdown.classList.add('hidden');
-            document.getElementById('mobile-arrow-icon').classList.remove('rotate-180'); // Reset mobile arrow rotation
+            document.getElementById('mobile-settings-arrow-icon').classList.remove('rotate-180'); // Reset mobile arrow rotation
+        }
+
+        // Close mobile contact dropdown
+        var cmobileDropdown = document.getElementById('mobile-contact-dropdown');
+        if (!event.target.closest('#mobile-contact-dropdown-toggle') && !cmobileDropdown.contains(event.target)) {
+            cmobileDropdown.classList.add('hidden');
+            document.getElementById('mobile-contact-arrow-icon').classList.remove('rotate-180'); // Reset mobile arrow rotation
         }
 
         // Hide mobile menu when clicking outside
@@ -126,6 +201,9 @@
         }
     });
 </script>
+
+
+
 
 <style>
     .rotate-180 {
