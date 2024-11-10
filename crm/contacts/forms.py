@@ -40,6 +40,11 @@ class ContactDetailCreationForm(forms.ModelForm):
             Q(is_staff=True) | Q(groups=specific_group)
         ).distinct()
 
+        # Disable the email field if it's included in the form for some reason
+        if 'email' in self.fields:
+            self.fields['email'].widget.attrs['readonly'] = True
+            self.fields['email'].disabled = True
+
 
 
 
