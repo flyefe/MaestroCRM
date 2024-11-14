@@ -2,8 +2,8 @@ import re
 from django.shortcuts import render, redirect,get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.models import User, Group
-from .forms import ContactDetailCreationForm
-from .models import ContactDetail
+from .forms import ContactDetailCreationForm, LogForm
+from .models import ContactDetail, Log
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
 
@@ -13,8 +13,9 @@ import string
 from django.urls import reverse
 
 
-# from .forms import StatusForm, Status
 
+
+# from .forms import StatusForm, Status
 
 
 
@@ -68,8 +69,30 @@ def update_contact(request, contact_id):
 
 def contact_detail(request, contact_id):
     contact = get_object_or_404(ContactDetail, id=contact_id)
+    
+    # Fetch recent activities (assuming Log model has a ForeignKey to ContactDetail)
+    recent_activities = contact.log.all().order_by('-created_at') [:3] # Last 5 logs as an example
+    logs = Log.objects.filter(contact=contact).order_by('-created_at') 
+
+    # Handle form submission
+    if request.method == 'POST':
+        form = LogForm(request.POST)
+        if form.is_valid():
+            # Save the log, associating it with the contact
+            log = form.save(commit=False)
+            log.contact = contact
+            log.created_by = request.user
+            log.save()
+            # Redirect to avoid resubmission on refresh
+            return redirect('contact_detail', contact_id=contact_id)
+    else:
+        form = LogForm()
+
     context = {
         'contact': contact,
+        'recent_activities': recent_activities,
+        'logs': logs,
+        'form': form,
     }
     return render(request, 'contact/contact_detail.html', context)
 

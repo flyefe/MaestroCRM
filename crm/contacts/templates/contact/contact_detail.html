@@ -22,8 +22,8 @@
                 {% for activity in recent_activities %}
                 <li>
                     <span class="font-semibold">{{ activity.created_by.get_full_name }}</span>
-                    {{ activity.description }}
-                    <span class="text-gray-500 text-xs">{{ activity.created_at|date:"Y-m-d H:i" }}</span>
+                    {{ activity.log_description }}
+                    <span class="text-gray-500 text-xs">{{ activity.created_at|date:"Y-m-d h:i a" }}</span>
                 </li>
                 {% empty %}
                 <li>No recent activities found.</li>
@@ -83,14 +83,41 @@
         </div>
     </div>
 
+
+    <div class="text-sm bg-white text-teal-600 rounded-lg shadow-lg p-4 max-w-l">
+    </div>
+
+    
+
+
     <!-- Activity Log Section -->
-    <div class="p-6 bg-gray-100 rounded-b-lg mt-8">
-        <h3 class="text-lg font-bold text-gray-700 mb-4">Add New Log</h3>
-        <form action="/" method="POST" class="space-y-4">
+    <div class="mt-2 bg-white shadow-md rounded-lg p-10">
+
+        <div class="mb-10 text-sm bg-white text-teal-600 rounded-lg shadow-lg p-4 max-w-l mx-10">
+            <h3 class="font-bold mb-2">Log</h3>
+            <ul class="space-y-1">
+                {% for log in logs %}
+                <li>
+                    <span class="font-semibold">{{ log.created_by.get_full_name }}</span>
+                    {{ log.log_description }}
+                    <span class="text-gray-500 text-xs">{{ log.created_at|date:"Y-m-d h:i a" }}</span>
+                </li>
+                {% empty %}
+                <li>No recent activities found.</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+
+        <!--Log Form-->
+        <h2 class="text-2xl font-bold mb-6">Add Log</h2>
+        <form action="", method="post">
             {% csrf_token %}
-            <textarea name="log_content" rows="4" placeholder="Enter log details here..."
-                class="form-input block w-full rounded border-gray-300"></textarea>
-            <button type="submit" class="bg-teal-500 text-white py-2 px-6 rounded hover:bg-teal-600">Add Log</button>
+            {{ form.as_p }}
+
+            <button type="submit"
+                style="background-color: #45a29e; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">Add
+                Log</button>
         </form>
     </div>
 </div>

@@ -75,7 +75,7 @@ class Log(models.Model):
     log_type = models.CharField(max_length=20, choices=LOG_TYPE_CHOICES)  # Options filled in
     log_title = models.CharField(max_length=255)  # Added this field
     log_description = models.TextField(blank=True, null=True)
-    created_by = models.ForeignKey(User, related_name='client_comment', on_delete=models.CASCADE)
+    created_by = models.ForeignKey(User, related_name='created_log', on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)  # Set at creation
     modified_at = models.DateTimeField(auto_now=True)      # Updated on save
 
