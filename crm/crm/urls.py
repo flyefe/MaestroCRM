@@ -28,6 +28,6 @@ urlpatterns = [
     path('contacts/', include('contacts.urls')),
     path('user/', include('users.urls')),
     path('settings/', include('settings.urls')),
-
+    # path('accounts/', include('django.contrib.auth.urls')),
 
     ]

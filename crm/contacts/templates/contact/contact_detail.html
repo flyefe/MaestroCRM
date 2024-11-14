@@ -62,8 +62,8 @@
         <!-- Activity Information -->
         <div>
             <h3 class="text-lg font-bold text-gray-700 border-b pb-2">Activity</h3>
-            <p><strong>Created By:</strong> {{ contact.created_by.get_full_name }} on {{ contact.created_at|date:"Y-m-d H:i" }}</p>
-            <p><strong>Last Updated By:</strong> {{ contact.updated_by.get_full_name }} on {{contact.modified_at|date:"Y-m-d H:i"}}</p>
+            <p><strong>Created By:</strong> {{ contact.created_by.get_full_name }} on {{ contact.created_at|date:"d-m-Y h:i a" }}</p>
+            <p><strong>Last Updated By:</strong> {{ contact.updated_by.get_full_name }} on {{contact.modified_at|date:"d-m-Y h:i a"}}</p>
         </div>
 
         <!-- Action Buttons -->

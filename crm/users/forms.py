@@ -79,6 +79,7 @@
 
 from django import forms
 from django.contrib.auth.models import User, Group, Permission
+from django.core.exceptions import ValidationError
 
 class UserEditForm(forms.ModelForm):
     groups = forms.ModelMultipleChoiceField(
@@ -164,20 +165,40 @@ class RoleCreationForm(forms.ModelForm):
 
 
 class RegisterForm(forms.ModelForm):
+    password = forms.CharField(widget=forms.PasswordInput(attrs={
+        'class': 'w-full py-2 px-4 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-teal-300',
+        'placeholder': 'Enter your password'
+    }))
+    
+    confirm_password = forms.CharField(widget=forms.PasswordInput(attrs={
+        'class': 'w-full py-2 px-4 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-teal-300',
+        'placeholder': 'Confirm your password'
+    }))
+
     class Meta:
         model = User
-        fields = ['username', 'email', 'password']
+        fields = ['email']
         widgets = {
-            'username': forms.TextInput(attrs={
-                'class': 'w-full py-2 px-4 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-teal-300',
-                'placeholder': 'Enter your username'
-            }),
             'email': forms.EmailInput(attrs={
                 'class': 'w-full py-2 px-4 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-teal-300',
                 'placeholder': 'Enter your email'
             }),
-            'password': forms.PasswordInput(attrs={
-                'class': 'w-full py-2 px-4 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-teal-300',
-                'placeholder': 'Enter your password'
-            }),
         }
+
+    def clean(self):
+        cleaned_data = super().clean()
+        password = cleaned_data.get('password')
+        confirm_password = cleaned_data.get('confirm_password')
+
+        if password and confirm_password:
+            if password != confirm_password:
+                raise ValidationError("Passwords do not match.")
+        return cleaned_data
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.username = self.cleaned_data['email']  # Set username to email
+        user.set_password(self.cleaned_data["password"])
+        if commit:
+            user.save()
+        return user

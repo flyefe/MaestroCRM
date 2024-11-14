@@ -33,22 +33,7 @@ def edit_group(request, group_id):
     return render(request, 'edit_role.html', {'form': form, 'group': group})
 
 
-# #Delete Group
-# @login_required
-# def delete_group(request, group_id):
-#     # Check if the user has the appropriate permissions
-#     if not request.user.is_superuser:  # or another permission check
-#         messages.error(request, "You do not have permission to delete groups.")
-#         return redirect('create_group')  # Redirect to a page that lists groups or any preferred page
 
-#     # Get the group to be deleted
-#     group = get_object_or_404(Group, id=group_id)
-
-#     # Delete the group and display a success message
-#     group.delete()
-#     messages.success(request, f"Group '{group.name}' has been deleted successfully.")
-#     return redirect('create_group')  # Redirect to the list of groups or another page
-#Delete Group
 @login_required
 def delete_group(request, group_id):
     # Check if the user has permission to delete a group
@@ -202,19 +187,25 @@ def login_view(request):
 
 
 
-#Register User
-def register_user(request):
 
+def register_user(request):
     if request.method == 'POST':
         form = RegisterForm(request.POST)
         if form.is_valid():
+            email = form.cleaned_data['email']
+            
+            # Check if a user with this email already exists
+            if User.objects.filter(username=email).exists():
+                messages.error(request, 'A user with this email already exists. Please use a different email or log in.')
+                return render(request, 'register.html', {'form': form})
+            
             user = form.save()
-            staff_group = Group.objects.get(name='Contact')
+            staff_group = Group.objects.get(name='Staff')
             user.groups.add(staff_group)
             messages.success(request, 'User registered successfully.')
-            return redirect('user_list')  # Redirect to user list or any desired page
+            return redirect('login')  # Redirect to user list or any desired page
         else:
-            messages.error(request, 'please correct the errors below.')
+            messages.error(request, 'Please correct the errors below.')
     else:
         form = RegisterForm()
            
