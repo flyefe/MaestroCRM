@@ -101,8 +101,9 @@ CRM/                      # Project Root
 -DONE Make it possible to edit/update contact detail
 -DONE Make it possible to delete contact
 - Make it possible to for staff and admin users to add comments/logactivities on contact
-    - Make log form with various activities
+    -DONE Make log form with various activities
         -Call, Email, Note, etc
+    - Make it possible to Edit and Delete Comment
 - Make Segmentation/categorization possible
 - Make Tagging Possible
 - Make it possible to import data with mapping

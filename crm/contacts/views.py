@@ -18,6 +18,19 @@ from django.urls import reverse
 # from .forms import StatusForm, Status
 
 
+@login_required
+def delete_log(request, log_id):
+
+    log = get_object_or_404(Log, id=log_id)
+
+    log.delete()
+
+    contact_id = log.contact_id
+    
+    messages.success(request, f" Log has been successfully deleted.")
+    return redirect ('contact_detail', contact_id)
+
+
 
 
 @login_required
@@ -74,7 +87,7 @@ def contact_detail(request, contact_id):
     recent_activities = contact.log.all().order_by('-created_at') [:3] # Last 5 logs as an example
     logs = Log.objects.filter(contact=contact).order_by('-created_at') 
 
-    # Handle form submission
+    # Handle form submission --- Log Details
     if request.method == 'POST':
         form = LogForm(request.POST)
         if form.is_valid():

@@ -18,7 +18,7 @@
         <!-- Latest Activities -->
         <div class="text-sm bg-white text-teal-600 rounded-lg shadow-lg p-4 max-w-xs">
             <h3 class="font-bold mb-2">Recent Activity</h3>
-            <ul class="space-y-1">
+            <ul class="space-y-2">
                 {% for activity in recent_activities %}
                 <li>
                     <span class="font-semibold">{{ activity.created_by.get_full_name }}</span>
@@ -95,12 +95,18 @@
 
         <div class="mb-10 text-sm bg-white text-teal-600 rounded-lg shadow-lg p-4 max-w-l mx-10">
             <h3 class="font-bold mb-2">Log</h3>
-            <ul class="space-y-1">
+            <ul class="space-y-4">
                 {% for log in logs %}
-                <li>
+                <li >
                     <span class="font-semibold">{{ log.created_by.get_full_name }}</span>
                     {{ log.log_description }}
                     <span class="text-gray-500 text-xs">{{ log.created_at|date:"Y-m-d h:i a" }}</span>
+
+                    <form action="{% url 'delete_log' log.id %}" method="POST" class="inline">
+                        {% csrf_token %}
+                        <button onclick="return confirmDelete();" type="submit"
+                            class="bg-red-500 text-white py-1 px-2 rounded hover:bg-red-600">Delete</button>
+                    </form>
                 </li>
                 {% empty %}
                 <li>No recent activities found.</li>
