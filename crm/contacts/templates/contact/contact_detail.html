@@ -105,6 +105,8 @@
                     <!-- Edit and Delete Buttons -->
                     <a href="{% url 'update_log' log.id %}"
                         class="bg-teal-500 text-white py-2 px-6 rounded hover:bg-teal-600">Edit</a>
+
+                    
         
                     <!-- Delete Log -->
                     <form action="{% url 'delete_log' log.id %}" method="POST" class="inline">
@@ -112,6 +114,7 @@
                         <button onclick="return confirmDelete();" type="submit"
                             class="bg-red-500 text-white py-1 px-2 rounded hover:bg-red-600">Delete</button>
                     </form>
+
         
                     <!-- Edit Form (shown only for the selected log) -->
                     {% if log_id == log.id %}

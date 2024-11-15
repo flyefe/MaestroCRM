@@ -54,7 +54,7 @@ def update_log(request, log_id):
         'log_id': log_id
     }
 
-    return render(request, 'contact/contact_detail.html', context)
+    return render(request, 'contact/update_log.html', context)
 
 @login_required
 def update_contact(request, contact_id):
