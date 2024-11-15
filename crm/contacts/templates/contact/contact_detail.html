@@ -97,16 +97,31 @@
             <h3 class="font-bold mb-2">Log</h3>
             <ul class="space-y-4">
                 {% for log in logs %}
-                <li >
+                <li>
                     <span class="font-semibold">{{ log.created_by.get_full_name }}</span>
                     {{ log.log_description }}
                     <span class="text-gray-500 text-xs">{{ log.created_at|date:"Y-m-d h:i a" }}</span>
-
+        
+                    <!-- Edit and Delete Buttons -->
+                    <a href="{% url 'update_log' log.id %}"
+                        class="bg-teal-500 text-white py-2 px-6 rounded hover:bg-teal-600">Edit</a>
+        
+                    <!-- Delete Log -->
                     <form action="{% url 'delete_log' log.id %}" method="POST" class="inline">
                         {% csrf_token %}
                         <button onclick="return confirmDelete();" type="submit"
                             class="bg-red-500 text-white py-1 px-2 rounded hover:bg-red-600">Delete</button>
                     </form>
+        
+                    <!-- Edit Form (shown only for the selected log) -->
+                    {% if log_id == log.id %}
+                    <form method="post" action="{% url 'update_log' log_id %}">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        <button type="submit" class="bg-teal-500 text-white py-2 px-6 rounded hover:bg-teal-600">Update
+                            Log</button>
+                    </form>
+                    {% endif %}
                 </li>
                 {% empty %}
                 <li>No recent activities found.</li>

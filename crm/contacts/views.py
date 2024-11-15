@@ -34,6 +34,29 @@ def delete_log(request, log_id):
 
 
 @login_required
+def update_log(request, log_id):
+    log = get_object_or_404(Log, id=log_id)
+    contact_id = log.contact_id
+
+    if request.method == 'POST':
+        form = LogForm(request.POST, instance=log)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Log updated successfully.")
+            return redirect('contact_detail', contact_id=contact_id)
+    else:
+        # Populate form with current log details
+        form = LogForm(instance=log)
+
+    context = {
+        'contact_id': contact_id,
+        'form': form,
+        'log_id': log_id
+    }
+
+    return render(request, 'contact/contact_detail.html', context)
+
+@login_required
 def update_contact(request, contact_id):
     contact = get_object_or_404(ContactDetail, id=contact_id)
     user = contact.user
@@ -80,34 +103,78 @@ def update_contact(request, contact_id):
 
 
 
-def contact_detail(request, contact_id):
-    contact = get_object_or_404(ContactDetail, id=contact_id)
+# def contact_detail(request, contact_id):
+#     contact = get_object_or_404(ContactDetail, id=contact_id)
     
-    # Fetch recent activities (assuming Log model has a ForeignKey to ContactDetail)
-    recent_activities = contact.log.all().order_by('-created_at') [:3] # Last 5 logs as an example
-    logs = Log.objects.filter(contact=contact).order_by('-created_at') 
+#     # Fetch recent activities (assuming Log model has a ForeignKey to ContactDetail)
+#     recent_activities = contact.log.all().order_by('-created_at') [:3] # Last 5 logs as an example
+#     logs = Log.objects.filter(contact=contact).order_by('-created_at') 
 
-    # Handle form submission --- Log Details
-    if request.method == 'POST':
+#     # Handle form submission --- Log Details
+#     if request.method == 'POST':
+#         form = LogForm(request.POST)
+#         if form.is_valid():
+#             # Save the log, associating it with the contact
+#             log = form.save(commit=False)
+#             log.contact = contact
+#             log.created_by = request.user
+#             log.save()
+#             # Redirect to avoid resubmission on refresh
+#             return redirect('contact_detail', contact_id=contact_id)
+#     else:
+#         form = LogForm()
+
+#     context = {
+#         'contact': contact,
+#         'recent_activities': recent_activities,
+#         'logs': logs,
+#         'form': form,
+#     }
+#     return render(request, 'contact/contact_detail.html', context)
+
+
+
+@login_required
+def contact_detail(request, contact_id, log_id=None):
+    contact = get_object_or_404(ContactDetail, id=contact_id)
+
+    # Fetch recent activities (assuming Log model has a ForeignKey to ContactDetail)
+    recent_activities = contact.log.all().order_by('-created_at')[:3]
+    logs = Log.objects.filter(contact=contact).order_by('-created_at')
+
+    # If log_id is provided, get the specific log and populate the form for editing
+    form = LogForm()
+    if log_id:
+        log = get_object_or_404(Log, id=log_id)
+        form = LogForm(instance=log)  # Populate the form with the current log details
+
+    # Handle form submission for new logs
+    if request.method == 'POST' and not log_id:
         form = LogForm(request.POST)
         if form.is_valid():
-            # Save the log, associating it with the contact
             log = form.save(commit=False)
             log.contact = contact
             log.created_by = request.user
             log.save()
-            # Redirect to avoid resubmission on refresh
+            messages.success(request, "Log added successfully.")
             return redirect('contact_detail', contact_id=contact_id)
-    else:
-        form = LogForm()
+    elif request.method == 'POST' and log_id:
+        # Update the existing log
+        form = LogForm(request.POST, instance=log)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Log updated successfully.")
+            return redirect('contact_detail', contact_id=contact_id)
 
     context = {
         'contact': contact,
         'recent_activities': recent_activities,
         'logs': logs,
         'form': form,
+        'log_id': log_id,  # Pass the log_id to identify the form in the template
     }
     return render(request, 'contact/contact_detail.html', context)
+
 
 
 @login_required
