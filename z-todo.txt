@@ -103,7 +103,7 @@ CRM/                      # Project Root
 - Make it possible to for staff and admin users to add comments/logactivities on contact
     -DONE Make log form with various activities
         -Call, Email, Note, etc
-    - Make it possible to Edit and Delete Comment
+    - Done Make it possible to Edit and Delete Comment
 - Make Segmentation/categorization possible
 - Make Tagging Possible
 - Make it possible to import data with mapping

@@ -1,10 +1,12 @@
+
 {% extends 'core/base.html' %}
 
-{% block title %}Contact List{% endblock %}
+{% block title %}Contact tagged "{{tag.name}}" {% endblock %}
+
 
 {% block content %}
 <div class="max-w-6xl mx-auto px-4 mt-10">
-    <h2 class="text-3xl font-bold mb-6 text-center">Contact List</h2>
+    <h2 class="text-3xl font-bold mb-6 text-center">Contact Tagged "{{tag.name}}" </h2>
 
     <div class="overflow-x-auto rounded-lg shadow-lg">
         <table class="min-w-full bg-white border border-gray-300">
@@ -28,14 +30,15 @@
                     <td class="py-2 px-4 border-b border-gray-200">{{ contact.user.email }}</td>
                     <td class="py-2 px-4 border-b border-gray-200">
                         {% if contact.status %}
-                        <a href="{% url 'contacts_by_status' contact.status.id %}" class="text-teal-600 hover:underline">
+                        <a href="{% url 'contacts_by_status' contact.status.id %}"
+                            class="text-teal-600 hover:underline">
                             {{ contact.status }}
                         </a>
                         {% else %}
                         <span>No Status</span>
                         {% endif %}
 
-                        </td>
+                    </td>
                     <td class="py-2 px-4 border-b border-gray-200 text-blue-500">
                         {% for tag in contact.tags.all %}
                         <p>
@@ -44,12 +47,13 @@
                             </a>
                         </p>
                         {% empty %}
-                            <span>No Tags</span>
+                        <span>No Tags</span>
                         {% endfor %}
                     </td>
                     <td class="py-2 px-4 border-b border-gray-200">
                         {% if contact.assigned_staff %}
-                        <a href="{% url 'contacts_by_assigned_staff' contact.assigned_staff.id %}" class="text-teal-600 hover:underline">
+                        <a href="{% url 'contacts_by_status' contact.status.id %}"
+                            class="text-teal-600 hover:underline">
                             {{ contact.assigned_staff }}
                         </a>
                         {% else %}

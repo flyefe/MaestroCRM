@@ -3,14 +3,14 @@ from django.contrib.auth.models import User, Group
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils import timezone  # Import this at the top
-from settings.models import Status, Service, TrafickSource
+from settings.models import Status, Service, TrafickSource, Tag
 
 
 
 class ContactDetail(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     status = models.ForeignKey(Status, on_delete=models.SET_NULL, null=True, blank=True)
-    tags = models.CharField(max_length=100, blank=True)  # Comma-separated tags
+    tags = models.ManyToManyField(Tag, null=True, blank=True, related_name='contact')
     assigned_staff = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='assigned_contacts')
     phone_number = models.CharField(max_length=15, blank=True)
 
@@ -24,42 +24,9 @@ class ContactDetail(models.Model):
     modified_at = models.DateTimeField(auto_now=True)
     updated_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='updated_contacts')
 
-    def save(self, *args, **kwargs):
-        # Automatically set `created_by` and `updated_by` if provided in kwargs
-        if not self.pk and 'created_by' in kwargs:
-            self.created_by = kwargs.pop('created_by')
-        if 'updated_by' in kwargs:
-            self.updated_by = kwargs.pop('updated_by')
-        super().save(*args, **kwargs)
-
     def __str__(self):
         return f"{self.user.username} - {self.status.name if self.status else 'No Status'}"
 
-
-
-# class ContactDetail(models.Model):
-#     user = models.OneToOneField(User, on_delete=models.CASCADE)
-#     status = models.ForeignKey(Status, on_delete=models.SET_NULL, null=True, blank=True)
-#     tags = models.CharField(max_length=100, blank=True)  # Comma-separated tags
-#     assigned_staff = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='assigned_contacts')
-#     phone_number = models.CharField(max_length=15, blank=True)  # Adjust max_length as needed
-
-#     trafick_source = models.ForeignKey(TrafickSource, on_delete=models.SET_NULL, null=True, blank=True)
-#     services = models.ForeignKey(Service, on_delete=models.SET_NULL, null=True, blank=True)
-#     open_date = models.DateTimeField(blank=True, null=True)
-#     close_date = models.DateTimeField(blank=True, null=True)
-
-#     created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='created_contacts')
-#     created_at = models.DateTimeField(auto_now_add=True)  # Set at creation
-#     modified_at = models.DateTimeField(auto_now=True)      # Updated on save
-#     updated_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='updated_contacts')
-    
-#     def __str__(self):
-#         if not self.pk:
-#             self.created_by = kwargs.pop('created_by', None)
-#         self.updated_by = kwargs.pop('updated_by', None)
-#         super().save(*args, **kwargs)
-#         return f"{self.user.username} - {self.status.name if self.status else 'No Status'}"
 
 
 

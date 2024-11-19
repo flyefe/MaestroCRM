@@ -1,10 +1,12 @@
 {% extends 'core/base.html' %}
 
-{% block title %}Contact List{% endblock %}
+{% block title %}Contacts Filtered by {{ filter_type|title }}{% endblock %}
 
 {% block content %}
 <div class="max-w-6xl mx-auto px-4 mt-10">
-    <h2 class="text-3xl font-bold mb-6 text-center">Contact List</h2>
+    <h2 class="text-3xl font-bold mb-6 text-center">
+        Contacts Filtered by {{ filter_type|title }}: "{{ filter_object.name }}"
+    </h2>
 
     <div class="overflow-x-auto rounded-lg shadow-lg">
         <table class="min-w-full bg-white border border-gray-300">
@@ -28,28 +30,27 @@
                     <td class="py-2 px-4 border-b border-gray-200">{{ contact.user.email }}</td>
                     <td class="py-2 px-4 border-b border-gray-200">
                         {% if contact.status %}
-                        <a href="{% url 'contacts_by_status' contact.status.id %}" class="text-teal-600 hover:underline">
-                            {{ contact.status }}
+                        <a href="{% url 'filter_contacts' 'status' contact.status.id %}"
+                            class="text-teal-600 hover:underline">
+                            {{ contact.status.name }}
                         </a>
                         {% else %}
                         <span>No Status</span>
                         {% endif %}
-
-                        </td>
+                    </td>
                     <td class="py-2 px-4 border-b border-gray-200 text-blue-500">
                         {% for tag in contact.tags.all %}
-                        <p>
-                            <a href="{% url 'contacts_by_tag' tag.id %}" class="text-teal-600 hover:underline">
-                                {{ tag.name }}
-                            </a>
-                        </p>
+                        <a href="{% url 'filter_contacts' 'tag' tag.id %}" class="text-teal-600 hover:underline">
+                            {{ tag.name }}
+                        </a>
                         {% empty %}
-                            <span>No Tags</span>
+                        <span>No Tags</span>
                         {% endfor %}
                     </td>
                     <td class="py-2 px-4 border-b border-gray-200">
                         {% if contact.assigned_staff %}
-                        <a href="{% url 'contacts_by_assigned_staff' contact.assigned_staff.id %}" class="text-teal-600 hover:underline">
+                        <a href="{% url 'filter_contacts' 'assigned_staff' contact.assigned_staff.id %}"
+                            class="text-teal-600 hover:underline">
                             {{ contact.assigned_staff }}
                         </a>
                         {% else %}
@@ -64,6 +65,8 @@
                 {% endfor %}
             </tbody>
         </table>
+
+        <!-- Pagination -->
         <div class="bg-teal-600 py-2 px-4 border-b border-gray-200">
             <span>Page {{ contacts.number }} of {{ contacts.paginator.num_pages }}</span>
             {% if contacts.has_previous %}

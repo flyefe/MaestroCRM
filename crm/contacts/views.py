@@ -4,6 +4,7 @@ from django.contrib import messages
 from django.contrib.auth.models import User, Group
 from .forms import ContactDetailCreationForm, LogForm
 from .models import ContactDetail, Log
+from settings.models import Tag, Status
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
 
@@ -12,10 +13,90 @@ import random
 import string
 from django.urls import reverse
 
+from django.core.paginator import Paginator
 
 
 
-# from .forms import StatusForm, Status
+# def filter_contacts(request, filter_type, filter_id):
+#     if filter_type == "status":
+#         filter_object = get_object_or_404(Status, id=filter_id)
+#         contacts = ContactDetail.objects.filter(status=filter_object)
+#     elif filter_type == "tag":
+#         filter_object = get_object_or_404(Tag, id=filter_id)
+#         contacts = ContactDetail.objects.filter(tags=filter_object)
+#     elif filter_type == "assigned_staff":
+#         filter_object = get_object_or_404(Staff, id=filter_id)
+#         contacts = ContactDetail.objects.filter(assigned_staff=filter_object)
+#     else:
+#         # Default fallback
+#         filter_object = None
+#         contacts = ContactDetail.objects.none()
+
+#     # Pagination (optional, if you have many contacts)
+#     from django.core.paginator import Paginator
+#     paginator = Paginator(contacts, 10)  # Show 10 contacts per page
+#     page_number = request.GET.get('page')
+#     contacts = paginator.get_page(page_number)
+
+#     return render(request, 'contacts/filter_contacts.html', {
+#         'contacts': contacts,
+#         'filter_type': filter_type,
+#         'filter_object': filter_object,  # This is dynamically the tag, status, or assigned staff
+#     })
+
+def contacts_by_assigned_staff(request, assigned_staff_id):
+    # Get the staff by ID
+    assigned_staff = get_object_or_404(User, id=assigned_staff_id)
+    
+    # Filter contacts by staff
+    contacts = ContactDetail.objects.filter(assigned_staff=assigned_staff)
+    
+    # Add pagination (Optional)
+    paginator = Paginator(contacts, 2)  # Show 10 contacts per page
+    page_number = request.GET.get('page')
+    page_contacts = paginator.get_page(page_number)
+    
+    # Render the filtered contacts
+    return render(request, 'contact/contacts_by_filter.html', {
+        'assigned_staff': assigned_staff,
+        'contacts': page_contacts,  # Pass paginated contacts if using pagination
+    })
+
+
+
+def contacts_by_status(request, status_id):
+    # Get the status by ID
+    status = get_object_or_404(Status, id=status_id)
+    
+    # Filter contacts by status
+    contacts = ContactDetail.objects.filter(status=status)
+    
+    # Add pagination (Optional)
+    paginator = Paginator(contacts, 2)  # Show 10 contacts per page
+    page_number = request.GET.get('page')
+    page_contacts = paginator.get_page(page_number)
+    
+    # Render the filtered contacts
+    return render(request, 'contact/contacts_by_filter.html', {
+        'status': status,
+        'contacts': page_contacts,  # Pass paginated contacts if using pagination
+    })
+
+
+def contacts_by_tag(request, tag_id):
+    tag = get_object_or_404(Tag, id=tag_id)  # Get the tag by ID
+    contacts = ContactDetail.objects.filter(tags=tag)  # Filter contacts by tag
+
+     # Add pagination (Optional)
+    paginator = Paginator(contacts, 2)  # Show 10 contacts per page
+    page_number = request.GET.get('page')
+    page_contacts = paginator.get_page(page_number)
+
+    return render(request, 'contact/contacts_by_filter.html', {
+        'tag': tag,
+        'contacts': page_contacts
+    })
+
 
 
 @login_required
@@ -56,17 +137,75 @@ def update_log(request, log_id):
 
     return render(request, 'contact/update_log.html', context)
 
+# @login_required
+# def update_contact(request, contact_id):
+#     contact = get_object_or_404(ContactDetail, id=contact_id)
+#     user = contact.user
+    
+#     if request.method == 'POST':
+#         form = ContactDetailCreationForm(request.POST, instance=contact)
+#         if form.is_valid():
+#             email = form.cleaned_data['email']
+#             first_name = form.cleaned_data['first_name']
+#             last_name = form.cleaned_data['last_name']
+#             tags = [tag.strip() for tag in form.cleaned_data['tags'].split(',') if tag.strip()]
+
+
+#             # Check if the email has been changed
+#             if email != user.email:
+#                 # Check if the new email already exists for another user
+#                 if User.objects.filter(email=email).exclude(id=user.id).exists():
+#                     messages.error(request, 'This email is already in use by another contact.')
+#                     return render(request, 'contact/update_contact_detail.html', {'form': form})
+            
+#             # Update user details first
+#             user.email = email
+#             user.first_name = first_name
+#             user.last_name = last_name
+#             user.save()  # Save user changes
+
+#             # Update contact details
+#             contact = form.save(commit=False)
+
+           
+#             contact.updated_by = request.user
+#             contact.save()
+#              # Process tags
+#             contact.tags.clear()  # Clear existing tags
+#             for tag_name in tags:
+#                 tag, _ = Tag.objects.get_or_create(name=tag_name)  # Create tag if not exists
+#                 contact.tags.add(tag)  # Add tag to contact
+                
+#             form.save_m2m()
+
+#             messages.success(request, 'Contact and user details updated successfully.')
+            
+#             # Redirect to contact detail page
+#             return redirect(reverse('contact_detail', args=[contact.id]))
+#     else:
+#         # Populate the form with current contact details
+#         form = ContactDetailCreationForm(instance=contact, initial={
+#             'email': user.email,
+#             'first_name': user.first_name,
+#             'last_name': user.last_name,
+#             'tags': ', '.join(contact.tags.values_list('name', flat=True))  # Populate tags as a comma-separated string
+#         })
+        
+#     # If GET, display the form for editing
+#     return render(request, 'contact/update_contact_detail.html', {'form': form})
+
 @login_required
 def update_contact(request, contact_id):
     contact = get_object_or_404(ContactDetail, id=contact_id)
     user = contact.user
-    
+
     if request.method == 'POST':
         form = ContactDetailCreationForm(request.POST, instance=contact)
         if form.is_valid():
             email = form.cleaned_data['email']
             first_name = form.cleaned_data['first_name']
             last_name = form.cleaned_data['last_name']
+            tags = [tag.strip() for tag in form.cleaned_data['tags'].split(',') if tag.strip()]
 
             # Check if the email has been changed
             if email != user.email:
@@ -75,62 +214,37 @@ def update_contact(request, contact_id):
                     messages.error(request, 'This email is already in use by another contact.')
                     return render(request, 'contact/update_contact_detail.html', {'form': form})
             
-            # Update user details first
+            # Update user details
             user.email = email
             user.first_name = first_name
             user.last_name = last_name
-            user.save()  # Save user changes
+            user.save()
 
             # Update contact details
             contact = form.save(commit=False)
             contact.updated_by = request.user
             contact.save()
-            form.save_m2m()
+
+            # Update tags
+            contact.tags.clear()  # Clear existing tags
+            for tag_name in tags:
+                tag, _ = Tag.objects.get_or_create(name=tag_name)  # Create tag if not exists
+                contact.tags.add(tag)  # Add tag to contact
+
             messages.success(request, 'Contact and user details updated successfully.')
-            
-            # Redirect to contact detail page
             return redirect(reverse('contact_detail', args=[contact.id]))
     else:
         # Populate the form with current contact details
         form = ContactDetailCreationForm(instance=contact, initial={
             'email': user.email,
             'first_name': user.first_name,
-            'last_name': user.last_name
+            'last_name': user.last_name,
+            'tags': ', '.join(contact.tags.values_list('name', flat=True))  # Populate tags as a comma-separated string
         })
-
-    # If GET, display the form for editing
+        
     return render(request, 'contact/update_contact_detail.html', {'form': form})
 
 
-
-# def contact_detail(request, contact_id):
-#     contact = get_object_or_404(ContactDetail, id=contact_id)
-    
-#     # Fetch recent activities (assuming Log model has a ForeignKey to ContactDetail)
-#     recent_activities = contact.log.all().order_by('-created_at') [:3] # Last 5 logs as an example
-#     logs = Log.objects.filter(contact=contact).order_by('-created_at') 
-
-#     # Handle form submission --- Log Details
-#     if request.method == 'POST':
-#         form = LogForm(request.POST)
-#         if form.is_valid():
-#             # Save the log, associating it with the contact
-#             log = form.save(commit=False)
-#             log.contact = contact
-#             log.created_by = request.user
-#             log.save()
-#             # Redirect to avoid resubmission on refresh
-#             return redirect('contact_detail', contact_id=contact_id)
-#     else:
-#         form = LogForm()
-
-#     context = {
-#         'contact': contact,
-#         'recent_activities': recent_activities,
-#         'logs': logs,
-#         'form': form,
-#     }
-#     return render(request, 'contact/contact_detail.html', context)
 
 
 
@@ -210,6 +324,8 @@ def create_contact(request):
         form = ContactDetailCreationForm(request.POST)
         if form.is_valid():
             email = form.cleaned_data['email']
+            tags = [tag.strip().title() for tag in form.cleaned_data['tags'].split(',') if tag.strip()]
+
             password = ''.join(random.choices(string.ascii_letters + string.digits, k=12))
 
             try:
@@ -243,6 +359,13 @@ def create_contact(request):
                 contact.created_by = request.user
                 contact.updated_by = request.user
                 contact.save()
+
+                   # Process tags
+                for tag_name in tags:
+                    tag, _ = Tag.objects.get_or_create(name=tag_name)  # Create tag if not exists
+                    contact.tags.add(tag)  # Add tag to contact
+                
+
                 messages.success(request, "Contact created successfully.")
                 return redirect('contact_list')
 
@@ -258,7 +381,12 @@ def create_contact(request):
 @login_required
 def contact_list(request):
     contacts = ContactDetail.objects.select_related('user').all()  # Retrieves Profile and related User data in a single query
-    context = {'contacts': contacts}
+    # Add pagination (Optional)
+    paginator = Paginator(contacts, 5)  # Show 10 contacts per page
+    page_number = request.GET.get('page')
+    page_contacts = paginator.get_page(page_number)
+
+    context = {'contacts': page_contacts}
     return render(request, 'contact/contact_list.html', context)
 
 

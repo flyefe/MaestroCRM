@@ -51,7 +51,15 @@
         <!-- Other Details -->
         <div>
             <h3 class="text-lg font-bold text-gray-700 border-b pb-2">Other Details</h3>
-            <p><strong>Tags:</strong> {{ contact.tags }}</p>
+            <!-- <p><strong>Tags:</strong> {{ contact.tags }}</p> -->
+            <p><strong>Tags:</strong>
+                {% if contact.tags.all %}
+                {{ contact.tags.all|join:", " }}
+                {% else %}
+                None
+                {% endif %}
+            </p>
+
             <p><strong>Assigned Staff:</strong> {{ contact.assigned_staff.get_full_name }}</p>
             <p><strong>Traffic Source:</strong> {{ contact.trafick_source }}</p>
             <p><strong>Service:</strong> {{ contact.services }}</p>
