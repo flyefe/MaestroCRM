@@ -380,7 +380,7 @@ def create_contact(request):
     
 @login_required
 def contact_list(request):
-    contacts = ContactDetail.objects.select_related('user').all()  # Retrieves Profile and related User data in a single query
+    contacts = ContactDetail.objects.select_related('user').all().order_by('-modified_at')  # Retrieves Profile and related User data in a single query
     # Add pagination (Optional)
     paginator = Paginator(contacts, 5)  # Show 10 contacts per page
     page_number = request.GET.get('page')

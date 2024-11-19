@@ -10,22 +10,27 @@
         <table class="min-w-full bg-white border border-gray-300">
             <thead class="bg-teal-600 text-white">
                 <tr>
+                    <th class="py-3 px-4 text-left text-sm font-semibold">Added On</th>
                     <th class="py-3 px-4 text-left text-sm font-semibold">Name</th>
                     <th class="py-3 px-4 text-left text-sm font-semibold">Email</th>
+                    <th class="py-3 px-4 text-left text-sm font-semibold">Phone Number</th>
                     <th class="py-3 px-4 text-left text-sm font-semibold">Status</th>
                     <th class="py-3 px-4 text-left text-sm font-semibold">Tags</th>
                     <th class="py-3 px-4 text-left text-sm font-semibold">Assigned Staff</th>
+                    <th class="py-3 px-4 text-left text-sm font-semibold">Last Update</th>
                 </tr>
             </thead>
             <tbody>
                 {% for contact in contacts %}
                 <tr class="hover:bg-teal-100 transition duration-200">
+                    <td class="py-2 px-4 border-b border-gray-200">{{ contact.created_at }}</td>
                     <td class="py-2 px-4 border-b border-gray-200">
                         <a href="{% url 'contact_detail' contact.id %}" class="text-teal-600 hover:underline">
                             {{ contact.user.first_name }} {{ contact.user.last_name }}
                         </a>
                     </td>
                     <td class="py-2 px-4 border-b border-gray-200">{{ contact.user.email }}</td>
+                    <td class="py-2 px-4 border-b border-gray-200">{{ contact.phone_number }}</td>
                     <td class="py-2 px-4 border-b border-gray-200">
                         {% if contact.status %}
                         <a href="{% url 'contacts_by_status' contact.status.id %}" class="text-teal-600 hover:underline">
@@ -56,6 +61,8 @@
                         <span>Not Assigned</span>
                         {% endif %}
                     </td>
+                    <td class="py-2 px-4 border-b border-gray-200">{{ contact.modified_at }} by {{ contact.updated_by.get_full_name }}</td>
+
                 </tr>
                 {% empty %}
                 <tr>
