@@ -1,15 +1,31 @@
 from django import forms
-from django.contrib.auth.models import User
-from .models import Status
+from .models import Status, Service, TrafickSource
 
-# forms.py
-
-
-class StatusForm(forms.Form):
+class UpdateSettingsForm(forms.Form):
     statuses = forms.CharField(
+        label="Statuses (comma-separated):",
         widget=forms.TextInput(attrs={
-            'placeholder': '"new", "old", "paid"',  # Placeholder text to guide users
-            'required': 'required',  # Make the field required
+            'placeholder': 'e.g., "new", "old", "paid"',
+            'class': 'form-input block w-full rounded border border-black p-2 mb-2',
+            'style': 'background-color: #f5f5f5;'
         }),
-        label="Statuses (enclose each value in quotes, separate with commas):"  # Custom label
+        required=False,
+    )
+    services = forms.CharField(
+        label="Services (comma-separated):",
+        widget=forms.TextInput(attrs={
+            'placeholder': 'e.g., "Consulting", "Development"',
+            'class': 'form-input block w-full rounded border border-black p-2 mb-2',
+            'style': 'background-color: #f5f5f5;'
+        }),
+        required=False,
+    )
+    traffic_sources = forms.CharField(
+        label="Traffic Sources (comma-separated):",
+        widget=forms.TextInput(attrs={
+            'placeholder': 'e.g., "Google", "Referral"',
+            'class': 'form-input block w-full rounded border border-black p-2 mb-2',
+            'style': 'background-color: #f5f5f5;'
+        }),
+        required=False,
     )

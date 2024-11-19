@@ -1,31 +1,49 @@
-import re
 from django.shortcuts import render, redirect
-from django.contrib import messages
-from .forms import StatusForm
-from .models import Status
-from django.contrib.auth.decorators import login_required
-# Create your views here.
+from .forms import UpdateSettingsForm
+from .models import Status, Service, TrafickSource
 
-
-
-def update_statuses(request):
+def update_settings(request):
     if request.method == 'POST':
-        form = StatusForm(request.POST)
+        form = UpdateSettingsForm(request.POST)
         if form.is_valid():
-            # Clear all existing statuses
+            # Clear all previous data
             Status.objects.all().delete()
+            Service.objects.all().delete()
+            TrafickSource.objects.all().delete()
 
-            # Split input by commas, strip whitespace, and remove duplicates
-            status_list = form.cleaned_data['statuses'].split(',')
-            unique_statuses = set(status.strip() for status in status_list if status.strip())
+            # Process and add new Statuses
+            statuses = form.cleaned_data['statuses']
+            if statuses:
+                status_names = {name.strip().title() for name in statuses.split(',') if name.strip()}
+                for name in status_names:
+                    Status.objects.create(name=name)
 
-            # Add each status to the database
-            for status_name in unique_statuses:
-                Status.objects.create(name=status_name)
+            # Process and add new Services
+            services = form.cleaned_data['services']
+            if services:
+                service_names = {name.strip().title() for name in services.split(',') if name.strip()}
+                for name in service_names:
+                    Service.objects.create(name=name)
 
-            messages.success(request, "Statuses updated successfully.")
-            return redirect('add_contact')  # Replace with your redirect target
+            # Process and add new Traffic Sources
+            traffic_sources = form.cleaned_data['traffic_sources']
+            if traffic_sources:
+                traffic_source_names = {name.strip().title() for name in traffic_sources.split(',') if name.strip()}
+                for name in traffic_source_names:
+                    TrafickSource.objects.create(name=name)
+
+            return redirect('contact_list')  # Redirect to the desired page
     else:
-        form = StatusForm()
+        # Query existing values for editing
+        existing_statuses = ', '.join(Status.objects.values_list('name', flat=True))
+        existing_services = ', '.join(Service.objects.values_list('name', flat=True))
+        existing_traffic_sources = ', '.join(TrafickSource.objects.values_list('name', flat=True))
 
-    return render(request, 'setting/update_statuses.html', {'form': form})
+        # Prepopulate the form with existing data
+        form = UpdateSettingsForm(initial={
+            'statuses': existing_statuses,
+            'services': existing_services,
+            'traffic_sources': existing_traffic_sources,
+        })
+
+    return render(request, 'setting/update_settings.html', {'form': form})
