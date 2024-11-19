@@ -30,6 +30,7 @@
                     <th class="py-3 px-4 text-left text-sm font-semibold">Name</th>
                     <th class="py-3 px-4 text-left text-sm font-semibold">Email</th>
                     <th class="py-3 px-4 text-left text-sm font-semibold">Phone Number</th>
+                    <th class="py-3 px-4 text-left text-sm font-semibold">Services</th>
                     <th class="py-3 px-4 text-left text-sm font-semibold">Status</th>
                     <th class="py-3 px-4 text-left text-sm font-semibold">Tags</th>
                     <th class="py-3 px-4 text-left text-sm font-semibold">Assigned Staff</th>
@@ -47,6 +48,7 @@
                     </td>
                     <td class="py-2 px-4 border-b border-gray-200">{{ contact.user.email }}</td>
                     <td class="py-2 px-4 border-b border-gray-200">{{ contact.phone_number }}</td>
+                    <td class="py-2 px-4 border-b border-gray-200">{{ contact.services }}</td>
                     <td class="py-2 px-4 border-b border-gray-200">
                         {% if contact.status %}
                         <a href="{% url 'contacts_by_status' contact.status.id %}" class="text-teal-600 hover:underline">

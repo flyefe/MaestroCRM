@@ -3,35 +3,37 @@
 {% block title %}Contact List{% endblock %}
 
 {% block content %}
-<div class="max-w-6xl mx-auto px-4 mt-10">
+<div class="max-w-6xl mx-auto mt-10">
     <h2 class="text-3xl font-bold mb-6 text-center">Contact List</h2>
 
     <div class="overflow-x-auto rounded-lg shadow-lg">
-        <table class="min-w-full bg-white border border-gray-300">
+        <table class="w-full bg-white border border-gray-300">
             <thead class="bg-teal-600 text-white">
                 <tr>
-                    <th class="py-3 px-4 text-left text-sm font-semibold">Added On</th>
-                    <th class="py-3 px-4 text-left text-sm font-semibold">Name</th>
-                    <th class="py-3 px-4 text-left text-sm font-semibold">Email</th>
-                    <th class="py-3 px-4 text-left text-sm font-semibold">Phone Number</th>
-                    <th class="py-3 px-4 text-left text-sm font-semibold">Status</th>
-                    <th class="py-3 px-4 text-left text-sm font-semibold">Tags</th>
-                    <th class="py-3 px-4 text-left text-sm font-semibold">Assigned Staff</th>
-                    <th class="py-3 px-4 text-left text-sm font-semibold">Last Update</th>
+                    <th class="py-3 px-4 text-left text-sm font-semibold w-40">Added On</th>
+                    <th class="py-3 px-4 text-left text-sm font-semibold w-40">Name</th>
+                    <th class="py-3 px-4 text-left text-sm font-semibold w-40">Email</th>
+                    <th class="py-3 px-4 text-left text-sm font-semibold w-40">Phone Number</th>
+                    <th class="py-3 px-4 text-left text-sm font-semibold w-40">Service</th>
+                    <th class="py-3 px-4 text-left text-sm font-semibold w-40">Status</th>
+                    <th class="py-3 px-4 text-left text-sm font-semibold w-40">Tags</th>
+                    <th class="py-3 px-4 text-left text-sm font-semibold w-40">Assigned Staff</th>
+                    <th class="py-3 px-4 text-left text-sm font-semibold w-40">Last Update</th>
                 </tr>
             </thead>
             <tbody>
                 {% for contact in contacts %}
                 <tr class="hover:bg-teal-100 transition duration-200">
-                    <td class="py-2 px-4 border-b border-gray-200">{{ contact.created_at }}</td>
-                    <td class="py-2 px-4 border-b border-gray-200">
+                    <td class="py-2 px-4 border-b border-gray-200 text-sm">{{ contact.created_at|date:"d/m/Y" }} <br> <span class="text-blue-400 text-xs"> by {{contact.created_by.get_full_name}}</span></td>
+                    <td class="py-2 px-4 border-b border-gray-200 text-sm">
                         <a href="{% url 'contact_detail' contact.id %}" class="text-teal-600 hover:underline">
                             {{ contact.user.first_name }} {{ contact.user.last_name }}
                         </a>
                     </td>
-                    <td class="py-2 px-4 border-b border-gray-200">{{ contact.user.email }}</td>
-                    <td class="py-2 px-4 border-b border-gray-200">{{ contact.phone_number }}</td>
-                    <td class="py-2 px-4 border-b border-gray-200">
+                    <td class="py-2 px-4 border-b border-gray-200 text-sm">{{ contact.user.email }}</td>
+                    <td class="py-2 px-4 border-b border-gray-200 text-sm">{{ contact.phone_number }}</td>
+                    <td class="py-2 px-4 border-b border-gray-200 text-sm">{{ contact.services }}</td>
+                    <td class="py-2 px-4 border-b border-gray-200 text-sm">
                         {% if contact.status %}
                         <a href="{% url 'contacts_by_status' contact.status.id %}" class="text-teal-600 hover:underline">
                             {{ contact.status }}
@@ -41,7 +43,7 @@
                         {% endif %}
 
                         </td>
-                    <td class="py-2 px-4 border-b border-gray-200 text-blue-500">
+                    <td class="py-2 px-4 border-b border-gray-200 text-blue-500 text-sm">
                         {% for tag in contact.tags.all %}
                         <p>
                             <a href="{% url 'contacts_by_tag' tag.id %}" class="text-teal-600 hover:underline">
@@ -52,7 +54,7 @@
                             <span>No Tags</span>
                         {% endfor %}
                     </td>
-                    <td class="py-2 px-4 border-b border-gray-200">
+                    <td class="py-2 px-4 border-b border-gray-200 text-sm">
                         {% if contact.assigned_staff %}
                         <a href="{% url 'contacts_by_assigned_staff' contact.assigned_staff.id %}" class="text-teal-600 hover:underline">
                             {{ contact.assigned_staff.get_full_name }}
@@ -61,7 +63,7 @@
                         <span>Not Assigned</span>
                         {% endif %}
                     </td>
-                    <td class="py-2 px-4 border-b border-gray-200">{{ contact.modified_at }} by {{ contact.updated_by.get_full_name }}</td>
+                    <td class="py-2 px-4 border-b border-gray-200 text-sm">{{ contact.modified_at|date:"d/m/Y"}} <span class="text-blue-400 text-xs"> <br> by {{ contact.updated_by.get_full_name }} </span> </td>
 
                 </tr>
                 {% empty %}
