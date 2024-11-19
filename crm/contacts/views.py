@@ -226,7 +226,7 @@ def update_contact(request, contact_id):
             contact.save()
 
             # Update tags
-            contact.tags.clear()  # Clear existing tags
+            # contact.tags.clear()  # Clear existing tags
             for tag_name in tags:
                 tag, _ = Tag.objects.get_or_create(name=tag_name)  # Create tag if not exists
                 contact.tags.add(tag)  # Add tag to contact

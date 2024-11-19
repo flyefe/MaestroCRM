@@ -104,8 +104,15 @@ CRM/                      # Project Root
     -DONE Make log form with various activities
         -Call, Email, Note, etc
     - Done Make it possible to Edit and Delete Comment
+- DONE Make Tagging Possible
 - Make Segmentation/categorization possible
-- Make Tagging Possible
+    - Create a new app == segement
+    - Make it possible to create tags in 
+    - make it possible to create status
+    - Make it possible to create services, traffic sourse, all in settings
+    - Make create/update form have multiple select for tags
+    - Make create/update form have options to add contact to tag by typing
+    - Make it possible to remove contact from tag in update section
 - Make it possible to import data with mapping
 - Make it possible to add additional field
 - Deploy app to cloud for usage

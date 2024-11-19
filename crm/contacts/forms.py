@@ -27,6 +27,17 @@ class ContactDetailCreationForm(forms.ModelForm):
         'style': 'background-color: #f5f5f5;',
     }))
 
+    assigned_staff = forms.ModelChoiceField(
+        queryset=User.objects.filter(Q(is_staff=True) | Q(groups__name="Staff")).distinct(),
+        label="Assigned Staff",
+        empty_label="Select Staff",
+        to_field_name="id",  # This is important to keep the correct ID
+        widget=forms.Select(attrs={
+            'class': 'form-select block w-full rounded border border-black p-2 mb-2',
+            'style': 'background-color: #f5f5f5;'
+        })
+    )
+
     class Meta:
         model = ContactDetail
         fields = ['first_name', 'last_name', 'email', 'status', 'tags', 'assigned_staff', 
@@ -36,10 +47,11 @@ class ContactDetailCreationForm(forms.ModelForm):
                 'class': 'form-select block w-full rounded border border-black p-2 mb-2',
                 'style': 'background-color: #f5f5f5;'
             }),
-            'assigned_staff': forms.Select(attrs={
-                'class': 'form-select block w-full rounded border border-black p-2 mb-2',
-                'style': 'background-color: #f5f5f5;'
-            }),
+            # 'assigned_staff': forms.Select(attrs={
+            #     'class': 'form-select block w-full rounded border border-black p-2 mb-2',
+            #     'style': 'background-color: #f5f5f5;'
+            # }),
+            
             'phone_number': forms.TextInput(attrs={
                 'class': 'form-input block w-full rounded border border-black p-2 mb-2',
                 'style': 'background-color: #f5f5f5;'
@@ -73,6 +85,7 @@ class ContactDetailCreationForm(forms.ModelForm):
         self.fields['assigned_staff'].queryset = User.objects.filter(
             Q(is_staff=True) | Q(groups=specific_group)
         ).distinct()
+        self.fields['assigned_staff'].label_from_instance = lambda obj: f"{obj.first_name} {obj.last_name}"
 
 
 # class LogForm (forms.ModelForm):
