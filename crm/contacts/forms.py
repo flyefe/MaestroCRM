@@ -21,11 +21,20 @@ class ContactDetailCreationForm(forms.ModelForm):
         'placeholder': 'Email'
     }))
 
-    tags = forms.CharField(label="Tags", widget=forms.TextInput(attrs={
+    tag = forms.CharField(label="Tags", widget=forms.TextInput(attrs={
         'placeholder': 'Enter tags separated by commas',
         'class': 'form-input block w-full rounded border border-black p-2 mb-2',
         'style': 'background-color: #f5f5f5;',
     }))
+
+    tags = forms.ModelMultipleChoiceField(
+        queryset=Tag.objects.all(),
+        widget=forms.CheckboxSelectMultiple(attrs={
+            'class': 'p-2 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-teal-300'
+        }),
+        required=False,
+        label="Assign Tags"
+    )
 
     assigned_staff = forms.ModelChoiceField(
         queryset=User.objects.filter(Q(is_staff=True) | Q(groups__name="Staff")).distinct(),

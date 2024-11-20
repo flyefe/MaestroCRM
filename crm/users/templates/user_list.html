@@ -7,6 +7,7 @@
 <table>
     <tr>
         <th>User ID</th>
+        <th>Added</th>
         <th>Username</th>
         <th>Email</th>
         <th>First Name</th>
@@ -17,6 +18,7 @@
     {% for user in user_list %}
     <tr>
         <td>{{ user.user_id }}</td>
+        <td>{{ user.date_joined|date:"d/m/Y h:i a" }}</td>
         <td>{{ user.username }}</td>
         <td>{{ user.email }}</td>
         <td>{{ user.first_name }}</td>

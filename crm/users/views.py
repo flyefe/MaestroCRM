@@ -140,7 +140,8 @@ def users_table(request):
             'first_name': user.first_name,
             'last_name': user.last_name,
             'email': user.email,
-            'roles': [group.name for group in groups]  # Add roles (group names)
+            'roles': [group.name for group in groups],  # Add roles (group names)
+            'date_joined': user.date_joined
         })
 
     context = {
