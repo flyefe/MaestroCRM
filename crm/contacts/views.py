@@ -205,7 +205,7 @@ def update_contact(request, contact_id):
             email = form.cleaned_data['email']
             first_name = form.cleaned_data['first_name']
             last_name = form.cleaned_data['last_name']
-            tags = [tag.strip() for tag in form.cleaned_data['tags'].split(',') if tag.strip()]
+            tags = [tag.strip().title() for tag in form.cleaned_data['tags'].split(',') if tag.strip()]
 
             # Check if the email has been changed
             if email != user.email:

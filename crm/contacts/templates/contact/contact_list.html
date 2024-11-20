@@ -3,36 +3,73 @@
 {% block title %}Contact List{% endblock %}
 
 {% block content %}
-<div class="max-w-6xl mx-auto mt-10">
+<div class="max-w-full mx-auto mt-10">
     <h2 class="text-3xl font-bold mb-6 text-center">Contact List</h2>
 
+    <div class="mb-1 px-4 flex-col flex md:flex-row">
+        <!-- Bulk Actions -->
+        <div class="flex-auto w-50 mb-4 px-4 flex items-center justify-start">
+            <div>
+                <select name="action" class="border border-gray-300 rounded py-2 px-3">
+                    <option value="">Select Action</option>
+                    <option value="update_status">Update Status</option>
+                    <option value="add_tags">Add Tags</option>
+                    <option value="remove_tag">Remove Tags</option>
+                </select>
+                <button type="submit" class="ml-2 bg-teal-600 text-white py-2 px-4 rounded hover:bg-teal-700">
+                    Apply
+                </button>
+            </div>
+            <div class="px-4 text-sm text-gray-500">Total Contacts: {{ contacts.paginator.count }}</div>
+        </div>
+        <div class="flex-auto w-50 md-1/2 mb-4 flex items-center justify-end px-6">
+            <a  href="{% url 'add_contact' %}" class="ml-2 text-sm bg-teal-600 text-white py-2 px-4 rounded hover:bg-teal-700">
+                Add New Contact
+            </a>
+        </div>
+    </div>
+
+    <!-- View All Contacts Table -->
     <div class="overflow-x-auto rounded-lg shadow-lg">
         <table class="w-full bg-white border border-gray-300">
             <thead class="bg-teal-600 text-white">
                 <tr>
+                    <th class="py-3 px-4 border-r border-gray-200 text-left text-sm font-semibold w-12">
+                        <input id="select-all" type="checkbox" class="rounded border-gray-300">
+                    </th>
                     <th class="py-3 px-4 text-left text-sm font-semibold w-40">Added On</th>
-                    <th class="py-3 px-4 text-left text-sm font-semibold w-40">Name</th>
+                    <th class="py-3 px-4 text-left text-sm font-semibold w-60">Full Name</th>
                     <th class="py-3 px-4 text-left text-sm font-semibold w-40">Email</th>
                     <th class="py-3 px-4 text-left text-sm font-semibold w-40">Phone Number</th>
                     <th class="py-3 px-4 text-left text-sm font-semibold w-40">Service</th>
                     <th class="py-3 px-4 text-left text-sm font-semibold w-40">Status</th>
                     <th class="py-3 px-4 text-left text-sm font-semibold w-40">Tags</th>
-                    <th class="py-3 px-4 text-left text-sm font-semibold w-40">Assigned Staff</th>
+                    <th class="py-3 px-4 text-left text-sm font-semibold w-60">Assigned Staff</th>
                     <th class="py-3 px-4 text-left text-sm font-semibold w-40">Last Update</th>
                 </tr>
             </thead>
             <tbody>
                 {% for contact in contacts %}
                 <tr class="hover:bg-teal-100 transition duration-200">
+                    <!-- Select -->
+                    <td class="py-2 px-4 border-r border-b border-gray-200 text-sm">
+                        <input type="checkbox" name="selected_contacts" value="{{ contact.id }}" class="rounded border-gray-300">
+                    </td>
+                    <!-- Added On -->
                     <td class="py-2 px-4 border-b border-gray-200 text-sm">{{ contact.created_at|date:"d/m/Y" }} <br> <span class="text-blue-400 text-xs"> by {{contact.created_by.get_full_name}}</span></td>
+                    <!-- Full Name -->
                     <td class="py-2 px-4 border-b border-gray-200 text-sm">
                         <a href="{% url 'contact_detail' contact.id %}" class="text-teal-600 hover:underline">
                             {{ contact.user.first_name }} {{ contact.user.last_name }}
                         </a>
                     </td>
+                    <!-- Email -->
                     <td class="py-2 px-4 border-b border-gray-200 text-sm">{{ contact.user.email }}</td>
+                    <!-- Phone Number -->
                     <td class="py-2 px-4 border-b border-gray-200 text-sm">{{ contact.phone_number }}</td>
+                    <!-- Services -->
                     <td class="py-2 px-4 border-b border-gray-200 text-sm">{{ contact.services }}</td>
+                    <!-- Status -->
                     <td class="py-2 px-4 border-b border-gray-200 text-sm">
                         {% if contact.status %}
                         <a href="{% url 'contacts_by_status' contact.status.id %}" class="text-teal-600 hover:underline">
@@ -41,8 +78,8 @@
                         {% else %}
                         <span>No Status</span>
                         {% endif %}
-
-                        </td>
+                    </td>
+                    <!-- Tags -->
                     <td class="py-2 px-4 border-b border-gray-200 text-blue-500 text-sm">
                         {% for tag in contact.tags.all %}
                         <p>
@@ -54,6 +91,7 @@
                             <span>No Tags</span>
                         {% endfor %}
                     </td>
+                    <!-- Assigned Staff -->
                     <td class="py-2 px-4 border-b border-gray-200 text-sm">
                         {% if contact.assigned_staff %}
                         <a href="{% url 'contacts_by_assigned_staff' contact.assigned_staff.id %}" class="text-teal-600 hover:underline">
@@ -63,8 +101,8 @@
                         <span>Not Assigned</span>
                         {% endif %}
                     </td>
+                    <!-- Last Updated -->
                     <td class="py-2 px-4 border-b border-gray-200 text-sm">{{ contact.modified_at|date:"d/m/Y"}} <span class="text-blue-400 text-xs"> <br> by {{ contact.updated_by.get_full_name }} </span> </td>
-
                 </tr>
                 {% empty %}
                 <tr>
@@ -84,4 +122,16 @@
         </div>
     </div>
 </div>
+
+<!-- Javascript -->
+<script>
+    document.getElementById("select-all").addEventListener("change", function () {
+            const checkboxes = document.querySelectorAll('input[name="selected_contacts"]');
+            checkboxes.forEach((checkbox) => {
+                checkbox.checked = this.checked;
+            });
+        });
+
+</script>
+
 {% endblock %}

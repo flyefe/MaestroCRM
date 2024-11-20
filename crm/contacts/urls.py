@@ -17,7 +17,7 @@ urlpatterns = [
 
     path('update-contact/<int:contact_id>/update', update_contact, name='update_contact'),
     path('contact_deatil/<int:contact_id>/', contact_detail, name='contact_detail'),
-    path('', create_contact, name='add_contact'),
+    path('add-contact', create_contact, name='add_contact'),
     path("contact-list/", contact_list, name='contact_list'),
 ]
 
