@@ -102,9 +102,15 @@ CRM/                      # Project Root
 -DONE Make it possible to delete contact
 - Make it possible to for staff and admin users to add comments/logactivities on contact
     -DONE Make log form with various activities
-        -Call, Email, Note, etc
+        -DONE Call, Email, Note, etc
     - Done Make it possible to Edit and Delete Comment
 - DONE Make Tagging Possible
+- Distingush backend staff users from clients portal
+    -Decide on all pages that will be only accessed by staff users
+    - Create cllient portal, only accessible by clients (front end)
+    - Make Login possible but only staffs cans see backend and clients can only see client portal
+
+    
 - Make Segmentation/categorization possible
     - Create a new app == segement
     - Make it possible to create tags in 
