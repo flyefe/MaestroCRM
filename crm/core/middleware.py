@@ -6,9 +6,9 @@ class RoleBasedAccessMiddleware:
         self.get_response = get_response
 
     def __call__(self, request):
-        if request.path.startswith('/admin/') and not request.user.groups.filter(name='Admin').exists():
+        if request.path.startswith('/admin/') and not request.user.groups.filter(name='Admins').exists():
             return redirect('permission_denied')
-        if request.path.startswith('/contacts/') and not request.user.groups.filter(name__in=['Admin', 'Staff']).exists():
+        if request.path.startswith('/contacts/') and not request.user.groups.filter(name__in=['Admins', 'Staff']).exists():
             return redirect('permission_denied')
         if request.path.startswith('/client-portal/') and not request.user.groups.filter(name='Contacts').exists():
             return redirect('permission_denied')

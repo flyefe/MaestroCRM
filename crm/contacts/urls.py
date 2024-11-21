@@ -4,7 +4,7 @@ from .views import create_contact, contact_list, contact_detail, delete_contact,
 
 #Urls patterns
 urlpatterns = [
-    path('update-contact/<int:contact_id>/delete', delete_contact, name='delete_contact'),
+    path('delete-contact/<int:contact_id>/delete', delete_contact, name='delete_contact'),
     path('update-log/<int:log_id>/delete', delete_log, name='delete_log'),
     path('update-log/<int:log_id>/', update_log, name='update_log'),
 

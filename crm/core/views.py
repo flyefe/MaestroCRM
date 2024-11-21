@@ -8,6 +8,8 @@ from django.contrib.auth.forms import AuthenticationForm
 
 from users.forms import RegisterForm
 
+from .decorators import role_required
+
 
 @login_required
 def index(request):
@@ -83,4 +85,10 @@ def sign_up(request):
 
 def permission_denied(request):
     return render(request, 'core/permission_denied.html', status=403)
+
+
+@role_required(allowed_roles=['Admin', 'Manager'])
+def another_view(request):
+    ...
+
 

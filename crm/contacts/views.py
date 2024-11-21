@@ -17,33 +17,6 @@ from django.core.paginator import Paginator
 
 
 
-# def filter_contacts(request, filter_type, filter_id):
-#     if filter_type == "status":
-#         filter_object = get_object_or_404(Status, id=filter_id)
-#         contacts = ContactDetail.objects.filter(status=filter_object)
-#     elif filter_type == "tag":
-#         filter_object = get_object_or_404(Tag, id=filter_id)
-#         contacts = ContactDetail.objects.filter(tags=filter_object)
-#     elif filter_type == "assigned_staff":
-#         filter_object = get_object_or_404(Staff, id=filter_id)
-#         contacts = ContactDetail.objects.filter(assigned_staff=filter_object)
-#     else:
-#         # Default fallback
-#         filter_object = None
-#         contacts = ContactDetail.objects.none()
-
-#     # Pagination (optional, if you have many contacts)
-#     from django.core.paginator import Paginator
-#     paginator = Paginator(contacts, 10)  # Show 10 contacts per page
-#     page_number = request.GET.get('page')
-#     contacts = paginator.get_page(page_number)
-
-#     return render(request, 'contacts/filter_contacts.html', {
-#         'contacts': contacts,
-#         'filter_type': filter_type,
-#         'filter_object': filter_object,  # This is dynamically the tag, status, or assigned staff
-#     })
-
 def contacts_by_assigned_staff(request, assigned_staff_id):
     # Get the staff by ID
     assigned_staff = get_object_or_404(User, id=assigned_staff_id)

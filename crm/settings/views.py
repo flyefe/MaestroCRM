@@ -47,3 +47,5 @@ def update_settings(request):
         })
 
     return render(request, 'setting/update_settings.html', {'form': form})
+
+
