@@ -13,7 +13,7 @@ urlpatterns = [
     path("create_role/", create_group, name='create_group'),
     path('user/<int:user_id>/delete/', delete_user, name='delete_user'),
     path('group/<int:group_id>/users/', users_in_group, name='users_in_group'),
-    path("accounts/login/", login_view, name='login'),
-    path("accounts/login/registration", login_view, name='login'),
-    path("accounts/logout/", logout_view, name='logout'),
+    # path("accounts/login/", login_view, name='admin-login'),
+    # path("accounts/login/registration", login_view, name='admin-login'),
+    # path("accounts/logout/", logout_view, name='logout'),
 ]

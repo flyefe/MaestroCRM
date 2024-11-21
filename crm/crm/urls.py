@@ -16,18 +16,28 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from core.views import index, about
+from core.views import index, about, sign_up, login_view, logout_view, permission_denied
 from django.urls import include
 
 urlpatterns = [
+    
+    #Django Admin
+    path("admin-site/", admin.site.urls),
+
+    #Public-facing URl
     path("", index, name='index'),
     path("about/", about, name='about'),
-    path("admin/", admin.site.urls),
+    path("permission-denied/", permission_denied, name='permission_denied'),
+    path("accounts/login/", login_view, name='login'),
+    path('sign-up/', sign_up, name='sign_up'),
+    path("accounts/logout/", logout_view, name='logout'),
 
-    #includes
-    path('contacts/', include('contacts.urls')),
-    path('user/', include('users.urls')),
-    path('settings/', include('settings.urls')),
+
+    #INCLUDE
+    #Backend URLs (admin view)
+    path('admin/contacts/', include('contacts.urls')),
+    path('admin/user/', include('users.urls')),
+    path('admin/settings/', include('settings.urls')),
     # path('accounts/', include('django.contrib.auth.urls')),
 
     ]
