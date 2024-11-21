@@ -17,47 +17,55 @@
         
         <div class="hidden md:flex space-x-4 items-center">        
             {% if request.user.is_authenticated %}
-            <a href="{% url 'about' %}" class="py-2 px-4 text-white">About</a>
-           
-            <!-- Contact Dropdown -->
-            <div class="relative">
-                <button id="contact-dropdown-toggle" class="flex items-center py-1 px-4 text-white focus:outline-none">
-                    Contacts
-                    <svg class="ml-1 w-4 h-4 transition-transform duration-200 transform" id="contact-arrow-icon" fill="none"
-                        stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 10l5 5 5-5"></path>
-                    </svg>
-                </button>
-                <div id="contact-dropdown" class="absolute left-0 mt-1 w-48 bg-white rounded-md shadow-lg z-10 hidden">
-                    <a href="{% url 'contact_list' %}" class="block px-4 py-2 text-gray-700 hover:bg-teal-100">View All</a>
-                    <a href="{% url 'add_contact' %}" class="block px-4 py-2 text-gray-700 hover:bg-teal-100">Add Contact</a>
-                </div>
-            </div>
-        
-            <!-- Admin Dropdown -->
-            <div class="relative">
-                <button id="settings-dropdown-toggle" class="flex items-center py-1 px-4 text-white focus:outline-none">
-                    Admin
-                    <svg class="ml-1 w-4 h-4 transition-transform duration-200 transform" id="arrow-icon" fill="none"
-                        stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 10l5 5 5-5"></path>
-                    </svg>
-                </button>
-                <div id="settings-dropdown" class="absolute left-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10 hidden">
-                    <a href="{% url 'user_list' %}" class="block px-4 py-2 text-gray-700 hover:bg-teal-100">Users</a>
-                    <a href="{% url 'create_group' %}" class="block px-4 py-2 text-gray-700 hover:bg-teal-100">Add Role</a>
-                    <a href="{% url 'update_settings' %}" class="block px-4 py-2 text-gray-700 hover:bg-teal-100">Update
-                        Settings</a>
-                </div>
-            </div>
-        
-        
-            <!-- Other Links -->
-            <a href="{% url 'logout' %}" class="py-2 px-4 bg-teal-600 rounded-xl text-white">Logout</a>
-        
+                {% if 'Contact' in user_roles %}
+                    <!-- Contact Menu -->
+                    <a href="{% url 'about' %}" class="py-2 px-4 text-white">About</a>
+                {%endif %}
+
+                {% if 'Staff' in user_roles %}
+                    <!-- Staff Menu -->
+                    <!-- Contact Dropdown -->
+                    <div class="relative">
+                        <button id="contact-dropdown-toggle" class="flex items-center py-1 px-4 text-white focus:outline-none">
+                            Contacts
+                            <svg class="ml-1 w-4 h-4 transition-transform duration-200 transform" id="contact-arrow-icon" fill="none"
+                                stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 10l5 5 5-5"></path>
+                            </svg>
+                        </button>
+                        <div id="contact-dropdown" class="absolute left-0 mt-1 w-48 bg-white rounded-md shadow-lg z-10 hidden">
+                            <a href="{% url 'contact_list' %}" class="block px-4 py-2 text-gray-700 hover:bg-teal-100">View All</a>
+                            <a href="{% url 'add_contact' %}" class="block px-4 py-2 text-gray-700 hover:bg-teal-100">Add Contact</a>
+                        </div>
+                    </div>
+                {% endif %}
+
+                {% if 'Admin' in user_roles %}
+                    <!-- Admin Menu -->
+                    <!-- Admin Dropdown -->
+                    <div class="relative">
+                        <button id="settings-dropdown-toggle" class="flex items-center py-1 px-4 text-white focus:outline-none">
+                            Admin
+                            <svg class="ml-1 w-4 h-4 transition-transform duration-200 transform" id="arrow-icon" fill="none"
+                                stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 10l5 5 5-5"></path>
+                            </svg>
+                        </button>
+                        <div id="settings-dropdown" class="absolute left-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10 hidden">
+                            <a href="{% url 'user_list' %}" class="block px-4 py-2 text-gray-700 hover:bg-teal-100">Users</a>
+                            <a href="{% url 'create_group' %}" class="block px-4 py-2 text-gray-700 hover:bg-teal-100">Add Role</a>
+                            <a href="{% url 'update_settings' %}" class="block px-4 py-2 text-gray-700 hover:bg-teal-100">Update
+                                Settings</a>
+                        </div>
+                    </div>
+                {% endif %}
+
+                <!-- Other Links -->
+                <a href="{% url 'logout' %}" class="py-2 px-4 bg-teal-600 rounded-xl text-white">Logout</a>
+                    
             {% else %}
-            <a href="{% url 'login' %}" class="py-2 px-4 bg-teal-600 rounded-xl text-white">Log In</a>
-            <a href="{% url 'sign_up' %}" class="py-2 px-4 bg-teal-400 rounded-xl text-white">Register</a>
+                        <a href="{% url 'login' %}" class="py-2 px-4 bg-teal-600 rounded-xl text-white">Log In</a>
+                        <a href="{% url 'sign_up' %}" class="py-2 px-4 bg-teal-400 rounded-xl text-white">Register</a>
             {% endif %}
         </div>
         
@@ -66,49 +74,58 @@
         <div id="mobile-menu" class="absolute top-16 left-0 w-full bg-teal-500 z-20 hidden md:hidden">
             <div class="flex flex-col">
                 {% if request.user.is_authenticated %}
-                <a href="{% url 'about' %}" class="py-2 px-4 text-white">About</a>
+                    {% if 'Contact' in user_roles %}
+                        <!-- Contact Menu -->
+                        <a href="{% url 'about' %}" class="py-2 px-4 text-white">About</a>
+                    {% endif %}
 
-                <!-- mobilecontact -->
-                <div class="relative">
-                    <button id="mobile-contact-dropdown-toggle" class="flex items-center py-2 px-4 text-white">
-                        Contacts
-                        <svg class="ml-1 w-4 h-4 transition-transform duration-200 transform" id="mobile-contact-arrow-icon"
-                            fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 10l5 5 5-5"></path>
-                        </svg>
-                    </button>
-                    <div id="mobile-contact-dropdown" class="bg-white rounded-md shadow-lg hidden">
-                        <a href="{% url 'user_list' %}" class="block px-4 py-2 text-gray-700 hover:bg-teal-100">Users</a>
-                        <a href="{% url 'create_group' %}" class="block px-4 py-2 text-gray-700 hover:bg-teal-100">Add
-                            Role</a>
-                        <a href="{% url 'add_contact' %}" class="block px-4 py-2 text-gray-700 hover:bg-teal-100">Add
-                            Contact</a>
-                        <a href="{% url 'contact_list' %}" class="block px-4 py-2 text-gray-700 hover:bg-teal-100">Contacts</a>
-                        <a href="{% url 'update_settings' %}" class="block px-4 py-2 text-gray-700 hover:bg-teal-100">Update
-                            Settings</a>
-                    </div>
-                </div>
-        
-                <!-- mobileadmin -->
-                <div class="relative">
-                    <button id="mobile-settings-dropdown-toggle" class="flex items-center py-2 px-4 text-white">
-                        Admin
-                        <svg class="ml-1 w-4 h-4 transition-transform duration-200 transform" id="mobile-arrow-icon" fill="none"
-                            stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 10l5 5 5-5"></path>
-                        </svg>
-                    </button>
-                    <div id="mobile-settings-dropdown" class="bg-white rounded-md shadow-lg hidden">
-                        <a href="{% url 'user_list' %}" class="block px-4 py-2 text-gray-700 hover:bg-teal-100">Users</a>
-                        <a href="{% url 'create_group' %}" class="block px-4 py-2 text-gray-700 hover:bg-teal-100">Add
-                            Role</a>
-                        <a href="{% url 'add_contact' %}" class="block px-4 py-2 text-gray-700 hover:bg-teal-100">Add
-                            Contact</a>
-                        <a href="{% url 'contact_list' %}" class="block px-4 py-2 text-gray-700 hover:bg-teal-100">Contacts</a>
-                        <a href="{% url 'update_settings' %}" class="block px-4 py-2 text-gray-700 hover:bg-teal-100">Update
-                            Settings</a>
-                    </div>
-                </div>
+                    {% if 'Staff' in user_roles %}
+                        <!-- Staff Menu -->
+                        <!-- mobilecontact -->
+                        <div class="relative">
+                            <button id="mobile-contact-dropdown-toggle" class="flex items-center py-2 px-4 text-white">
+                                Contacts
+                                <svg class="ml-1 w-4 h-4 transition-transform duration-200 transform" id="mobile-contact-arrow-icon"
+                                    fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 10l5 5 5-5"></path>
+                                </svg>
+                            </button>
+                            <div id="mobile-contact-dropdown" class="bg-white rounded-md shadow-lg hidden">
+                                <a href="{% url 'user_list' %}" class="block px-4 py-2 text-gray-700 hover:bg-teal-100">Users</a>
+                                <a href="{% url 'create_group' %}" class="block px-4 py-2 text-gray-700 hover:bg-teal-100">Add
+                                    Role</a>
+                                <a href="{% url 'add_contact' %}" class="block px-4 py-2 text-gray-700 hover:bg-teal-100">Add
+                                    Contact</a>
+                                <a href="{% url 'contact_list' %}" class="block px-4 py-2 text-gray-700 hover:bg-teal-100">Contacts</a>
+                                <a href="{% url 'update_settings' %}" class="block px-4 py-2 text-gray-700 hover:bg-teal-100">Update
+                                    Settings</a>
+                            </div>
+                        </div>
+                    {% endif %}
+
+                    {% if 'Admin' in user_roles %}
+                        <!-- Admin Menu -->
+                        <!-- mobileadmin -->
+                        <div class="relative">
+                            <button id="mobile-settings-dropdown-toggle" class="flex items-center py-2 px-4 text-white">
+                                Admin
+                                <svg class="ml-1 w-4 h-4 transition-transform duration-200 transform" id="mobile-arrow-icon" fill="none"
+                                    stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 10l5 5 5-5"></path>
+                                </svg>
+                            </button>
+                            <div id="mobile-settings-dropdown" class="bg-white rounded-md shadow-lg hidden">
+                                <a href="{% url 'user_list' %}" class="block px-4 py-2 text-gray-700 hover:bg-teal-100">Users</a>
+                                <a href="{% url 'create_group' %}" class="block px-4 py-2 text-gray-700 hover:bg-teal-100">Add
+                                    Role</a>
+                                <a href="{% url 'add_contact' %}" class="block px-4 py-2 text-gray-700 hover:bg-teal-100">Add
+                                    Contact</a>
+                                <a href="{% url 'contact_list' %}" class="block px-4 py-2 text-gray-700 hover:bg-teal-100">Contacts</a>
+                                <a href="{% url 'update_settings' %}" class="block px-4 py-2 text-gray-700 hover:bg-teal-100">Update
+                                    Settings</a>
+                            </div>
+                        </div>
+                    {% endif %}
         
                 <!-- others -->
                 <a href="{% url 'logout' %}" class="py-2 px-4 bg-teal-600 rounded-xl text-white">Logout</a>
