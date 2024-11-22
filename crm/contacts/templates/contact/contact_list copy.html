@@ -15,7 +15,7 @@
                     <option value="update_status">Update Status</option>
                     <option value="add_tags">Add Tags</option>
                     <option value="remove_tag">Remove Tags</option>
-                    <option value="delete">Delete</option>
+                    <option value="remove_tag">Delete</option>
                 </select>
                 <button type="submit" class="ml-2 bg-gray-600 text-white py-2 px-4 rounded hover:bg-gray-700">
                     Apply
@@ -24,7 +24,7 @@
             <div class="px-4 text-sm text-gray-500">Total Contacts: {{ contacts.paginator.count }}</div>
         </div>
         <div class="flex-auto w-50 md-1/2 mb-4 flex items-center justify-end px-6">
-            <a  href="{% url 'bulk_update' %}" class="ml-2 text-sm bg-gray-600 text-white py-2 px-4 rounded hover:bg-gray-700">
+            <a  href="{% url 'add_contact' %}" class="ml-2 text-sm bg-gray-600 text-white py-2 px-4 rounded hover:bg-gray-700">
                 Add New Contact
             </a>
         </div>
@@ -33,7 +33,7 @@
     <!-- View All Contacts Table -->
     <div class="overflow-x-auto rounded-lg shadow-lg">
         <table class="w-full bg-white border border-gray-300">
-            <thead class="">
+            <thead class="bg-gray-600 text-white">
                 <tr>
                     <th class="py-3 px-4 border-r border-gray-200 text-left text-sm font-semibold w-12">
                         <input id="select-all" type="checkbox" class="rounded border-gray-300">
@@ -127,16 +127,19 @@
 
 <!-- Modals -->
 <div id="modal-container" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
-   <!-- Update Status Modal -->
+    <!-- Update Status Modal -->
     <div id="update-status-modal" class="bg-white rounded-lg shadow-lg w-3/4 max-w-lg p-6 hidden">
         <h3 class="text-xl font-semibold mb-4">Update Status</h3>
-        <form method="POST" action="{% url 'bulk_update' %}">
+        <!-- <form method="POST" action="{% url 'update_contact_status' %}"> -->
+        <form method="POST" action="">
             {% csrf_token %}
-            <!-- Hidden input for selected contacts -->
-            <input type="hidden" name="action_type" value="update_status">
             <input type="hidden" name="selected_contacts" id="status-selected-contacts">
-            <label for="status" class="block text-sm font-medium mb-2">Select Status:</label>
-            {{ form.status|safe }} <!-- Using form_as_p to render the form -->
+            <label for="status" class="block text-sm font-medium mb-2">Select New Status:</label>
+            <select name="status" id="status" class="w-full border border-gray-300 rounded py-2 px-3 mb-4">
+                {% for status in statuses %}
+                <option value="{{ status.id }}">{{ status.name }}</option>
+                {% endfor %}
+            </select>
             <div class="flex justify-end">
                 <button type="button" onclick="closeModal()"
                     class="bg-gray-500 text-white py-2 px-4 rounded hover:bg-gray-600 mr-2">
@@ -149,80 +152,55 @@
         </form>
     </div>
 
-    <!-- Update Tag Modal -->
+    <!-- Add Tags Modal -->
     <div id="add-tags-modal" class="bg-white rounded-lg shadow-lg w-3/4 max-w-lg p-6 hidden">
         <h3 class="text-xl font-semibold mb-4">Add Tags</h3>
-        <form method="POST" action="{% url 'bulk_update' %}">
+        <!-- <form method="POST" action="{% url 'add_tags' %}"> -->
+        <form method="POST" action="">
             {% csrf_token %}
-            <!-- Hidden input for selected contacts -->
-            <input type="hidden" name="action_type" value="add_tags">
             <input type="hidden" name="selected_contacts" id="tags-selected-contacts">
-
-            <label for="status" class="block text-sm font-medium mb-2">Select tags:</label>
-            {{ form.tags|safe }} <!-- Using form_as_p to render the form -->
+            <label for="tags" class="block text-sm font-medium mb-2">Enter Tags (comma-separated):</label>
+            <input type="text" name="tags" id="tags" class="w-full border border-gray-300 rounded py-2 px-3 mb-4">
             <div class="flex justify-end">
                 <button type="button" onclick="closeModal()"
                     class="bg-gray-500 text-white py-2 px-4 rounded hover:bg-gray-600 mr-2">
                     Cancel
                 </button>
                 <button type="submit" class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600">
-                    Update
+                    Add
                 </button>
             </div>
         </form>
     </div>
 
- <!-- Remove Tag Modal -->
+    <!-- Remove Tags Modal -->
     <div id="remove-tags-modal" class="bg-white rounded-lg shadow-lg w-3/4 max-w-lg p-6 hidden">
         <h3 class="text-xl font-semibold mb-4">Remove Tags</h3>
-        <form method="POST" action="{% url 'bulk_update' %}">
+        <!-- <form method="POST" action="{% url 'remove_contat_tags' %}"> -->
+        <form method="POST" action="">
             {% csrf_token %}
-            <!-- Hidden input for selected contacts -->
-            <input type="hidden" name="action_type" value="remove_tags">
             <input type="hidden" name="selected_contacts" id="remove-tags-selected-contacts">
-
-            <label for="status" class="block text-sm font-medium mb-2">Select tags :</label>
-            {{ form.tags|safe }} <!-- Using form_as_p to render the form -->
+            <label for="remove-tags" class="block text-sm font-medium mb-2">Enter Tags to Remove
+                (comma-separated):</label>
+            <input type="text" name="remove_tags" id="remove-tags"
+                class="w-full border border-gray-300 rounded py-2 px-3 mb-4">
             <div class="flex justify-end">
                 <button type="button" onclick="closeModal()"
                     class="bg-gray-500 text-white py-2 px-4 rounded hover:bg-gray-600 mr-2">
                     Cancel
                 </button>
                 <button type="submit" class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600">
-                    Update
+                    Remove
                 </button>
             </div>
         </form>
     </div>
-
-    <!-- Delete Contact Modal -->
-    <div id="delete-contacts-modal" class="bg-white rounded-lg shadow-lg w-3/4 max-w-lg p-6 hidden">
-        <h3 class="text-xl font-semibold mb-4 text-red-600">Delete Contacts</h3>
-        <p class="mb-4">Are you sure you want to delete the selected contacts? This action cannot be undone.</p>
-        <form method="POST" action="{% url 'bulk_update' %}">
-            {% csrf_token %}
-            <!-- Hidden input for selected contacts -->
-            <input type="hidden" name="action_type" value="delete">
-            <input type="hidden" name="selected_contacts" id="delete-selected-contacts">
-            
-            <div class="flex justify-end">
-                <button type="button" onclick="closeModal()"
-                    class="bg-gray-500 text-white py-2 px-4 rounded hover:bg-gray-600 mr-2">
-                    Cancel
-                </button>
-                <button type="submit" class="bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600">
-                    Delete
-                </button>
-            </div>
-        </form>
-    </div>
-</div>
-
 
     <!-- Delete Contacts Modal -->
     <div id="delete-contacts-modal" class="bg-white rounded-lg shadow-lg w-3/4 max-w-lg p-6 hidden">
         <h3 class="text-xl font-semibold mb-4 text-red-600">Delete Contacts</h3>
         <p class="mb-4">Are you sure you want to delete the selected contacts? This action cannot be undone.</p>
+        <!-- <form method="POST" action="{% url 'delete_contacts' %}"> -->
         <form method="POST" action="">
             {% csrf_token %}
             <input type="hidden" name="selected_contacts" id="delete-selected-contacts">

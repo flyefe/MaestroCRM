@@ -178,6 +178,7 @@ def delete_contact(request, contact_id):
     messages.success(request, f"Contact '{contact.user.first_name}' and associated user account have been successfully deleted.")
     return redirect('contact_list')  # Redirect to contact list or another appropriate page
 
+
     
 @login_required
 def contact_list(request):
@@ -187,8 +188,92 @@ def contact_list(request):
     page_number = request.GET.get('page')
     page_contacts = paginator.get_page(page_number)
 
-    context = {'contacts': page_contacts}
+    form = ContactDetailCreationForm
+
+    context = {'contacts': page_contacts, 'form': form}
     return render(request, 'contact/contact_list.html', context)
+
+
+#List Bulk Actions
+from django.shortcuts import redirect
+from django.contrib import messages
+from django.db.models import F, Value
+from django.db.models.functions import Concat
+from contacts.models import ContactDetail, Tag
+
+def bulk_update(request):
+    if request.method == "POST":
+        action_type = request.POST.get("action_type")
+        selected_contacts = request.POST.get("selected_contacts", "").split(',')
+        
+        # Ensure contacts are selected
+        if not selected_contacts:
+            messages.error(request, "No contacts selected.")
+            return redirect("contact_list")
+        
+        # Handle each action
+        if action_type == "update_status":
+            status_id = request.POST.get("status")
+            if status_id:
+                ContactDetail.objects.filter(id__in=selected_contacts).update(status_id=status_id)
+                messages.success(request, "Status updated successfully!")
+            else:
+                messages.error(request, "No status selected.")
+        
+        elif action_type == "add_tags":
+            # tags_input = request.POST.get("tags", "").split(",")
+            tag_ids = request.POST.getlist("tags")
+            if tag_ids:
+                for contact in ContactDetail.objects.filter(id__in=selected_contacts):                    
+                    # Add selected tags
+                    contact.tags.add(*tag_ids)
+                messages.success(request, "Tags added successfully!")
+            else:
+                messages.error(request, "No tags provided or selected.")
+        
+        elif action_type == "remove_tags":
+            tag_ids = request.POST.getlist("tags")
+            if tag_ids:
+                tags = Tag.objects.filter(id__in=tag_ids)
+                contacts = ContactDetail.objects.filter(id__in=selected_contacts)
+
+                for contact in contacts:
+                    # Remove selected tags
+                    contact.tags.remove(*tags)
+                messages.success(request, "Tags removed successfully!")
+            else:
+                messages.error(request, "No tags provided or selected.")
+        
+        elif action_type == "delete":
+            contacts=ContactDetail.objects.filter(id__in=selected_contacts)
+
+            for contact in contacts:
+                # Delete associated user account if it exists
+                if contact.user: #Assuming ContactDetails has relationship with User
+                    contact.user.delete()
+                contact.delete() #Delete the ContactDetail Object
+            messages.success(request, "Selected contacts deleted successfully!")
+        
+        else:
+            messages.error(request, "Invalid action selected.")
+        
+        return redirect("contact_list")
+
+# @login_required
+# def update_status(request):
+#     if request.method == "POST":
+#         selected_contacts = request.POST.get('selected_contacts', '').split(',')
+#         status_id = request.POST.get('status')
+
+#         # Perform the update logic
+#         if selected_contacts and status_id:
+#             ContactDetail.objects.filter(id__in=selected_contacts).update(status_id=status_id)
+#             messages.success(request, "Status updated successfully!")
+#         else:
+#             messages.error(request, "No contacts selected or status missing.")
+        
+#         return redirect('contact_list')  # Adjust the redirect to your desired URL
+
 
 
 

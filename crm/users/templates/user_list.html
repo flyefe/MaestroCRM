@@ -3,41 +3,76 @@
 {% block title %}User List{% endblock %}
 
 {% block content %}
-<h2>User List</h2>
-<table>
-    <tr>
-        <th>User ID</th>
-        <th>Added</th>
-        <th>Username</th>
-        <th>Email</th>
-        <th>First Name</th>
-        <th>Last Name</th>
-        <th>Role</th>
-        <th>Edit</th>
-    </tr>
-    {% for user in user_list %}
-    <tr>
-        <td>{{ user.user_id }}</td>
-        <td>{{ user.date_joined|date:"d/m/Y h:i a" }}</td>
-        <td>{{ user.username }}</td>
-        <td>{{ user.email }}</td>
-        <td>{{ user.first_name }}</td>
-        <td>{{ user.last_name }}</td>
-        <td>{{ user.roles|join:", " }}</td>
-        <td>
-            {% if user.user_id %}
-            <a href="{% url 'edit_user' user.user_id %}">Edit</a>
-            <a href="{% url 'delete_user' user.user_id %}" onclick="return confirmDelete();" class="btn btn-danger">
-                Delete
-            </a>
-            {% else %}
-            No ID
-            {% endif %}
-        </td>
 
-    </tr>
-    {% endfor %}
-</table>
+<div class="p-4">
+    <h2 class="text-3xl font-bold mb-6 text-center">User List</h2>
+
+    <div class="mb-1 px-4 flex-col flex md:flex-row">
+        <!-- Bulk Actions -->
+        <div class="flex-auto w-50 mb-4 px-4 flex items-center justify-start">
+            <div>
+                <select name="action" class="border border-gray-300 rounded py-2 px-3">
+                    <option value="">Select Action</option>
+                    <option value="update_status">Update Status</option>
+                    <option value="add_tags">Add Tags</option>
+                    <option value="remove_tag">Remove Tags</option>
+                    <option value="remove_tag">Delete</option>
+                </select>
+                <button type="submit" class="ml-2 bg-gray-600 text-white py-2 px-4 rounded hover:bg-gray-700">
+                    Apply
+                </button>
+            </div>
+            <div class="px-4 text-sm text-gray-500">Total Contacts: {{ contacts.paginator.count }}</div>
+        </div>
+        <div class="flex-auto w-50 md-1/2 mb-4 flex items-center justify-end px-6">
+            <a href="{% url 'add_contact' %}"
+                class="ml-2 text-sm bg-gray-600 text-white py-2 px-4 rounded hover:bg-gray-700">
+                Add New Contact
+            </a>
+        </div>
+    </div>
+
+
+    <table class="w-full bg-white border border-gray-300">
+        <tr class="border-2 border-gray-200 items-center bg-gray-50">
+            <th class="py-3 px-4 border-r border-gray-200  text-sm font-semibold w-12">
+                <input id="select-all" type="checkbox" class="rounded border-gray-300">
+            </th>
+            <th class="py-3 px-4 border-r border-b border-gray-200  text-sm font-semibold w-40">User ID</th>
+            <th class="py-3 px-4 border-r border-b border-gray-200  text-sm font-semibold w-40">Added</th>
+            <th class="py-3 px-4 border-r border-b border-gray-200  text-sm font-semibold w-40">Username</th>
+            <th class="py-3 px-4 border-r border-b border-gray-200  text-sm font-semibold w-40">Email</th>
+            <th class="py-3 px-4 border-r border-b border-gray-200  text-sm font-semibold w-40">First Name</th>
+            <th class="py-3 px-4 border-r border-b border-gray-200  text-sm font-semibold w-40">Last Name</th>
+            <th class="py-3 px-4 border-r border-b border-gray-200  text-sm font-semibold w-40">Role</th>
+            <th class="py-3 px-4 border-r border-b border-gray-200  text-sm font-semibold w-40">Edit</th>
+        </tr>
+        {% for user in user_list %}
+        <tr class="hover:bg-gray-100 transition duration-200">
+            <td class="py-2 px-4 border-r border-b border-gray-200 text-sm">
+                <input type="checkbox" name="selected_contacts" value="{{ contact.id }}" class="rounded border-gray-300">
+            </td>
+            <td class="py-2 px-2 border-r border-b border-gray-200 text-sm">{{ user.user_id }}</td>
+            <td class="py-2 px-4 border-r border-b border-gray-200 text-sm">{{ user.date_joined|date:"d/m/Y h:i a" }}</td>
+            <td class="py-2 px-4 border-r border-b border-gray-200 text-sm">{{ user.username }}</td>
+            <td class="py-2 px-4 border-r border-b border-gray-200 text-sm">{{ user.email }}</td>
+            <td class="py-2 px-4 border-r border-b border-gray-200 text-sm">{{ user.first_name }}</td>
+            <td class="py-2 px-4 border-r border-b border-gray-200 text-sm">{{ user.last_name }}</td>
+            <td class="py-2 px-4 border-r border-b border-gray-200 text-sm">{{ user.roles|join:", " }}</td>
+            <td class="py-2 px-4 border-r border-b border-gray-200 text-sm">
+                {% if user.user_id %}
+                <a href="{% url 'edit_user' user.user_id %}" class="text-teal-600 hover:text-teal-800">Edit</a>
+                <a href="{% url 'delete_user' user.user_id %}" onclick="return confirmDelete();" class="btn btn-danger text-red-600 hover:text-red-800 ml-2">
+                    Delete
+                </a>
+                {% else %}
+                No ID
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
 
 <script>
     function confirmDelete() {

@@ -1,6 +1,6 @@
 from django.urls import path
 # from . import views
-from .views import create_contact, contact_list, contact_detail, delete_contact, update_contact, delete_log,update_log, contacts_by_tag,contacts_by_status, contacts_by_assigned_staff
+from .views import bulk_update, create_contact, contact_list, contact_detail, delete_contact, update_contact, delete_log,update_log, contacts_by_tag,contacts_by_status, contacts_by_assigned_staff
 
 #Urls patterns
 urlpatterns = [
@@ -19,6 +19,8 @@ urlpatterns = [
     path('contact_deatil/<int:contact_id>/', contact_detail, name='contact_detail'),
     path('add-contact', create_contact, name='add_contact'),
     path("contact-list/", contact_list, name='contact_list'),
+    path("contact-list-update-status/", bulk_update, name='bulk_update'),
+
 ]
 
 
