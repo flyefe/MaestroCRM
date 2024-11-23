@@ -25,7 +25,9 @@ class ContactDetailCreationForm(forms.ModelForm):
         'placeholder': 'Enter tags separated by commas',
         'class': 'form-input block w-full rounded border border-black p-2 mb-2',
         'style': 'background-color: #f5f5f5;',
-    }))
+    }),
+        required=False,
+    )
 
     tags = forms.ModelMultipleChoiceField(
         queryset=Tag.objects.all(),
@@ -44,7 +46,8 @@ class ContactDetailCreationForm(forms.ModelForm):
         widget=forms.Select(attrs={
             'class': 'form-select block w-full rounded border border-black p-2 mb-2',
             'style': 'background-color: #f5f5f5;'
-        })
+        }),
+        required=False
     )
 
     class Meta:

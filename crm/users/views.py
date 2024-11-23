@@ -8,6 +8,9 @@ from django.contrib.auth.models import User, Group
 
 from .forms import UserEditForm, RegisterForm, RoleCreationForm,RoleEditForm
 
+from django.core.paginator import Paginator
+
+
 
 
 #Edit group
@@ -110,7 +113,6 @@ def delete_user(request, user_id):
     return redirect('user_list')  # Redirect to the list of users or another page
 
 
-
 #Edit Users
 @login_required
 def edit_user(request, user_id):
@@ -144,10 +146,132 @@ def users_table(request):
             'date_joined': user.date_joined
         })
 
+    paginator = Paginator(user_list, 10)  # Show 10 users per page
+    page_number = request.GET.get('page')
+    page_users = paginator.get_page(page_number)
+
+    form = UserEditForm
+
     context = {
-        'user_list': user_list
+        'user_list': page_users,
+        'form' : form
     }
     return render(request, 'user_list.html', context)
+
+
+# @login_required
+# def users_bulk_action(request):
+#     if request.method == "POST":
+#         action_type = request.POST.get("action_type")
+#         selected_users = request.POST.get("selected_users", "").split(',')
+        
+#         # Ensure users are selected
+#         if not selected_users:
+#             messages.error(request, "No users selected.")
+#             return redirect("user_list")
+        
+#         # Handle each action
+#         # if action_type == "update_status":
+#         #     status_id = request.POST.get("status")
+#         #     if status_id:
+#         #         User.objects.filter(id__in=selected_users).update(status_id=status_id)
+#         #         messages.success(request, "Status updated successfully!")
+#         #     else:
+#         #         messages.error(request, "No status selected.")
+        
+#         if action_type == "add_groups":
+#             # group_input = request.POST.get("group", "").split(",")
+#             group_ids = request.POST.getlist("groups")
+#             if group_ids:
+#                 for user in User.objects.filter(id__in=selected_users):                    
+#                     # Add selected group
+#                     user.groups(*group_ids)
+#                 messages.success(request, "Gropups added successfully!")
+#             else:
+#                 messages.error(request, "No groups provided or selected.")
+        
+#         elif action_type == "remove_group":
+#             group_ids = request.POST.getlist("group")
+#             if group_ids:
+#                 group = Group.objects.filter(id__in=group_ids)
+#                 users = User.objects.filter(id__in=selected_users)
+
+#                 for user in users:
+#                     # Remove selected group
+#                     user.group.remove(*group)
+#                 messages.success(request, "Groups removed successfully!")
+#             else:
+#                 messages.error(request, "No group provided or selected.")
+        
+#         elif action_type == "delete_users":
+#             users = User.objects.filter(id__in=selected_users)
+
+#             for user in users:
+#                 # Delete associated Contact account if it exists
+#                 if user.contact: #Assuming User has relationship with ContactDetail
+#                     user.contact.delete()
+#                 user.delete() #Delete the User Object
+#             messages.success(request, "Selected users deleted successfully!")
+        
+#         else:
+#             messages.error(request, "Invalid action selected.")
+        
+#         return redirect("user_list")
+
+
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from django.shortcuts import redirect
+from django.contrib.auth.models import User, Group
+
+@login_required
+def users_bulk_action(request):
+    if request.method == "POST":
+        action_type = request.POST.get("action_type")
+        # selected_users = [user_id for user_id in request.POST.get("selected_users", "").split(',') if user_id]
+        # selected_users = request.POST.get("selected_users", "").split(',')
+        selected_users = [user_id for user_id in request.POST.get("selected_users", "").split(',') if user_id.strip().isdigit()]
+
+
+        # Ensure users are selected
+        if not selected_users:
+            messages.error(request, "No users selected.")
+            return redirect("user_list")
+        
+        if action_type == "add_groups":
+            group_ids = request.POST.getlist("groups")
+            if group_ids:
+                for user in User.objects.filter(id__in=selected_users):
+                    user.groups.add(*group_ids)  # Corrected method
+                messages.success(request, "Groups added successfully!")
+            else:
+                messages.error(request, "No groups provided or selected.")
+        
+        elif action_type == "remove_groups":  # Fixed to match the front-end action
+            group_ids = request.POST.getlist("groups")
+            if group_ids:
+                for user in User.objects.filter(id__in=selected_users):
+                    user.groups.remove(*group_ids)  # Corrected method
+                messages.success(request, "Groups removed successfully!")
+            else:
+                messages.error(request, "No groups provided or selected.")
+        
+        elif action_type == "delete_users":
+            if request.user.id in selected_users:
+                messages.error(request, "You cannot delete your own account.")
+                return redirect('user_list')  # Redirect to prevent the process from continuing
+            
+            users = User.objects.filter(id__in=selected_users)
+            for user in users:
+                if hasattr(user, 'contactdetail'):  # Check for associated ContactDetail
+                    user.contactdetail.delete()
+                user.delete()
+            messages.success(request, "Selected users deleted successfully!")
+        
+        else:
+            messages.error(request, "Invalid action selected.")
+        
+        return redirect("user_list")
 
 
 #Logout

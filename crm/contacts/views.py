@@ -201,7 +201,8 @@ from django.db.models import F, Value
 from django.db.models.functions import Concat
 from contacts.models import ContactDetail, Tag
 
-def bulk_update(request):
+@login_required
+def contacts_bulk_action(request):
     if request.method == "POST":
         action_type = request.POST.get("action_type")
         selected_contacts = request.POST.get("selected_contacts", "").split(',')
