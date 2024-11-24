@@ -5,6 +5,10 @@ from .models import ContactDetail, Log
 from settings.models import TrafickSource, Service, Status,Tag
 
 
+from django import forms
+from django.contrib.auth.models import User, Group
+from .models import Status, Tag, Service, TrafickSource
+
 class ContactFilterForm(forms.Form):
     status = forms.ModelChoiceField(
         queryset=Status.objects.all(),
@@ -30,6 +34,26 @@ class ContactFilterForm(forms.Form):
         empty_label="All Traffic Sources",
         widget=forms.Select(attrs={"class": "text-sm border-gray-300 rounded py-2 px-3"})
     )
+    
+    assigned_staff = forms.ModelChoiceField(
+        queryset=User.objects.filter(assigned_contacts__isnull=False).distinct(),
+        # queryset=User.objects.filter(Q(is_staff=True) | Q(groups__name="Staff")).distinct(),
+        required=False,
+        label="Assigned Staff",
+        to_field_name="id",  # This is important to keep the correct ID
+        empty_label="Assigned Staff",
+        widget=forms.Select(attrs={'class': "text-sm border-gray-300 rounded py-2 px-3 form-control" }),
+
+    )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Customize the label for assigned_staff
+        self.fields['assigned_staff'].queryset = User.objects.filter(assigned_contacts__isnull=False).distinct()
+        self.fields['assigned_staff'].label_from_instance = lambda obj: f"{obj.get_full_name()}" if obj.get_full_name() else obj.username
+
+
+
 
 class ContactDetailCreationForm(forms.ModelForm):
     first_name = forms.CharField(max_length=30, label="First Name", required=True, widget=forms.TextInput(attrs={

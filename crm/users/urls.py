@@ -1,13 +1,14 @@
 from django.urls import path
 # from . import views
 
-from .views import users_bulk_action, users_table, edit_user, register_user, create_group, users_in_group, delete_user, edit_group, delete_group
+from .views import change_password, users_bulk_action, users_table, edit_user, register_user, create_group, users_in_group, delete_user, edit_group, delete_group
 
 #Users
 urlpatterns = [
     path('register/', register_user, name='register'),
     path("users/", users_table, name='user_list'),
     path("edit-user/<int:user_id>/", edit_user, name='edit_user'),
+    path("change-password/<int:user_id>/", change_password, name='change_password'),
     path("users-bulk-action/", users_bulk_action, name='users_bulk_action'),
 
     path("edit-role/<int:group_id>/", edit_group, name='edit_group'),

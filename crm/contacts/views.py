@@ -76,36 +76,6 @@ def contacts_by_tag(request, tag_id):
     })
 
 @login_required
-def contact_filter(request):
-    # Initialize form with GET data if available
-    filter_form = ContactFilterForm(request.GET)
-
-    # Start with all contacts, then apply filters
-    contacts = ContactDetail.objects.select_related('user').all()
-
-    if filter_form.is_valid():
-        # Apply filters based on the form data
-        if filter_form.cleaned_data['status']:
-            contacts = contacts.filter(status=filter_form.cleaned_data['status'])
-        if filter_form.cleaned_data['tags']:
-            contacts = contacts.filter(tags=filter_form.cleaned_data['tags'])
-        if filter_form.cleaned_data['services']:
-            contacts = contacts.filter(services=filter_form.cleaned_data['services'])
-        if filter_form.cleaned_data['trafick_source']:
-            contacts = contacts.filter(trafick_source=filter_form.cleaned_data['trafick_source'])
-
-    # Pagination
-    paginator = Paginator(contacts, 5)  # Show 5 contacts per page
-    page_number = request.GET.get('page')
-    page_contacts = paginator.get_page(page_number)
-
-    return render(request, 'contact/contact_list.html', {
-        'contacts': page_contacts,
-        'filter_form': filter_form
-    })
-
-
-@login_required
 def delete_log(request, log_id):
 
     log = get_object_or_404(Log, id=log_id)
@@ -234,7 +204,36 @@ def contact_list(request):
     return render(request, 'contact/contact_list.html', context)
 
 
+@login_required
+def contact_filter(request):
+    # Initialize form with GET data if available
+    filter_form = ContactFilterForm(request.GET)
 
+    # Start with all contacts, then apply filters
+    contacts = ContactDetail.objects.select_related('user').all()
+
+    if filter_form.is_valid():
+        # Apply filters based on the form data
+        if filter_form.cleaned_data['status']:
+            contacts = contacts.filter(status=filter_form.cleaned_data['status'])
+        if filter_form.cleaned_data['tags']:
+            contacts = contacts.filter(tags=filter_form.cleaned_data['tags'])
+        if filter_form.cleaned_data['services']:
+            contacts = contacts.filter(services=filter_form.cleaned_data['services'])
+        if filter_form.cleaned_data['trafick_source']:
+            contacts = contacts.filter(trafick_source=filter_form.cleaned_data['trafick_source'])
+        if filter_form.cleaned_data['assigned_staff']:
+            contacts = contacts.filter(assigned_staff=filter_form.cleaned_data['assigned_staff'])
+
+    # Pagination
+    paginator = Paginator(contacts, 5)  # Show 5 contacts per page
+    page_number = request.GET.get('page')
+    page_contacts = paginator.get_page(page_number)
+
+    return render(request, 'contact/contact_list.html', {
+        'contacts': page_contacts,
+        'filter_form': filter_form
+    })
 
 
 
