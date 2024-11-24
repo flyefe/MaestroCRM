@@ -4,6 +4,33 @@ from django.db.models import Q  # Import Q here
 from .models import ContactDetail, Log
 from settings.models import TrafickSource, Service, Status,Tag
 
+
+class ContactFilterForm(forms.Form):
+    status = forms.ModelChoiceField(
+        queryset=Status.objects.all(),
+        required=False,
+        empty_label="All Statuses",
+        widget=forms.Select(attrs={"class": "text-sm border-gray-300 rounded py-2 px-3"})
+    )
+    tags = forms.ModelChoiceField(
+        queryset=Tag.objects.all(),
+        required=False,
+        empty_label="All Tags",
+        widget=forms.Select(attrs={"class": "text-sm border-gray-300 rounded py-2 px-3"})
+    )
+    services = forms.ModelChoiceField(
+        queryset=Service.objects.all(),
+        required=False,
+        empty_label="All Services",
+        widget=forms.Select(attrs={"class": "text-sm border-gray-300 rounded py-2 px-3"})
+    )
+    trafick_source = forms.ModelChoiceField(
+        queryset=TrafickSource.objects.all(),
+        required=False,
+        empty_label="All Traffic Sources",
+        widget=forms.Select(attrs={"class": "text-sm border-gray-300 rounded py-2 px-3"})
+    )
+
 class ContactDetailCreationForm(forms.ModelForm):
     first_name = forms.CharField(max_length=30, label="First Name", required=True, widget=forms.TextInput(attrs={
         'class': 'form-input block w-full rounded border border-black p-2 mb-2',

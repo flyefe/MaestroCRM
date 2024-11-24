@@ -1,9 +1,12 @@
 import re
 from django.shortcuts import render, redirect,get_object_or_404
+from django.urls import reverse
+from urllib.parse import urlencode
 from django.contrib import messages
 from django.contrib.auth.models import User, Group
-from .forms import ContactDetailCreationForm, LogForm
+from .forms import ContactDetailCreationForm, LogForm, ContactFilterForm
 from .models import ContactDetail, Log
+from .utility import filter_contacts
 from settings.models import Tag, Status
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
@@ -14,6 +17,8 @@ import string
 from django.urls import reverse
 
 from django.core.paginator import Paginator
+
+
 
 
 
@@ -70,6 +75,34 @@ def contacts_by_tag(request, tag_id):
         'contacts': page_contacts
     })
 
+@login_required
+def contact_filter(request):
+    # Initialize form with GET data if available
+    filter_form = ContactFilterForm(request.GET)
+
+    # Start with all contacts, then apply filters
+    contacts = ContactDetail.objects.select_related('user').all()
+
+    if filter_form.is_valid():
+        # Apply filters based on the form data
+        if filter_form.cleaned_data['status']:
+            contacts = contacts.filter(status=filter_form.cleaned_data['status'])
+        if filter_form.cleaned_data['tags']:
+            contacts = contacts.filter(tags=filter_form.cleaned_data['tags'])
+        if filter_form.cleaned_data['services']:
+            contacts = contacts.filter(services=filter_form.cleaned_data['services'])
+        if filter_form.cleaned_data['trafick_source']:
+            contacts = contacts.filter(trafick_source=filter_form.cleaned_data['trafick_source'])
+
+    # Pagination
+    paginator = Paginator(contacts, 5)  # Show 5 contacts per page
+    page_number = request.GET.get('page')
+    page_contacts = paginator.get_page(page_number)
+
+    return render(request, 'contact/contact_list.html', {
+        'contacts': page_contacts,
+        'filter_form': filter_form
+    })
 
 
 @login_required
@@ -183,23 +216,27 @@ def delete_contact(request, contact_id):
 @login_required
 def contact_list(request):
     contacts = ContactDetail.objects.select_related('user').all().order_by('-modified_at')  # Retrieves Profile and related User data in a single query
+  
     # Add pagination (Optional)
     paginator = Paginator(contacts, 5)  # Show 10 contacts per page
     page_number = request.GET.get('page')
     page_contacts = paginator.get_page(page_number)
 
     form = ContactDetailCreationForm
+    filter_form = ContactFilterForm
 
-    context = {'contacts': page_contacts, 'form': form}
+
+    context = {
+        'contacts': page_contacts, 
+        'form': form,
+        'filter_form': filter_form
+    }
     return render(request, 'contact/contact_list.html', context)
 
 
-#List Bulk Actions
-from django.shortcuts import redirect
-from django.contrib import messages
-from django.db.models import F, Value
-from django.db.models.functions import Concat
-from contacts.models import ContactDetail, Tag
+
+
+
 
 @login_required
 def contacts_bulk_action(request):
@@ -259,21 +296,8 @@ def contacts_bulk_action(request):
             messages.error(request, "Invalid action selected.")
         
         return redirect("contact_list")
+    return redirect('contact_list')
 
-# @login_required
-# def update_status(request):
-#     if request.method == "POST":
-#         selected_contacts = request.POST.get('selected_contacts', '').split(',')
-#         status_id = request.POST.get('status')
-
-#         # Perform the update logic
-#         if selected_contacts and status_id:
-#             ContactDetail.objects.filter(id__in=selected_contacts).update(status_id=status_id)
-#             messages.success(request, "Status updated successfully!")
-#         else:
-#             messages.error(request, "No contacts selected or status missing.")
-        
-#         return redirect('contact_list')  # Adjust the redirect to your desired URL
 
 
 

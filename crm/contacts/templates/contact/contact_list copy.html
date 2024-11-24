@@ -124,6 +124,49 @@
     </div>
 </form>
 
+<div class="mb-4 px-4 flex-col flex md:flex-row">
+    <!-- Filter Section -->
+    <div class="flex-auto w-50 mb-4 px-4 flex items-center justify-start">
+        <form method="get" action="{% url 'contact_list' %}" class="flex">
+            <!-- Status Filter -->
+            <select name="status" class="border border-gray-300 rounded py-2 px-3 mr-2">
+                <option value="">Filter by Status</option>
+                {% for status in statuses %}
+                <option value="{{ status.id }}>
+                                {{ status.name }}
+                            </option>
+        
+                            {% endfor %}
+                        </select>
+            
+                        <!-- Tags Filter -->
+                        <select name=" tag" class="border border-gray-300 rounded py-2 px-3 mr-2">
+                <option value="">Filter by Tag</option>
+                {% for tag in tags %}
+                <option value="{{ tag.id }}">
+                    {{ tag.name }}
+                </option>
+                {% endfor %}
+            </select>
+
+            <!-- Assigned Staff Filter -->
+            <select name="assigned_staff" class="border border-gray-300 rounded py-2 px-3 mr-2">
+                <option value="">Filter by Assigned Staff</option>
+                {% for staff in staff_users %}
+                <option value="{{ staff.id }}">
+                    {{ staff.get_full_name }}
+                </option>
+                {% endfor %}
+            </select>
+
+            <button type="submit" class="ml-2 bg-gray-600 text-white py-2 px-4 rounded hover:bg-gray-700">
+                Filter
+            </button>
+        </form>
+    </div>
+</div>
+
+
 
 <!-- Modals -->
 <div id="modal-container" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
