@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 
-from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.forms import AuthenticationForm, AdminPasswordChangeForm
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -120,13 +120,28 @@ def edit_user(request, user_id):
     
     if request.method == 'POST':
         form = UserEditForm(request.POST, instance=user)
-        if form.is_valid():
+        password_form = AdminPasswordChangeForm(user=user, data=request.POST)
+        if form.is_valid() and password_form.is_valid():
             form.save()
+            password_form.save()
             messages.success(request, 'User has been editted successfully.')
             return redirect('user_list')  # Redirect to a page that lists all users or any preferred page
     else:
         form = UserEditForm(instance=user)
-    return render(request, 'edit_user.html', {'form': form, 'user': user})
+        password_form = AdminPasswordChangeForm(user=user)
+
+         # Customize widgets for password_form fields
+        for field_name, field in password_form.fields.items():
+            field.widget.attrs.update({
+                'class': 'w-full py-2 px-4 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-teal-300',
+                'placeholder': f'Enter {field.label}'
+            })
+
+    return render(request, 'edit_user.html', {
+        'form': form,
+        'password_form' : password_form, 
+        'user': user
+    })
 
 #Users Table
 @login_required
@@ -159,77 +174,12 @@ def users_table(request):
     return render(request, 'user_list.html', context)
 
 
-# @login_required
-# def users_bulk_action(request):
-#     if request.method == "POST":
-#         action_type = request.POST.get("action_type")
-#         selected_users = request.POST.get("selected_users", "").split(',')
-        
-#         # Ensure users are selected
-#         if not selected_users:
-#             messages.error(request, "No users selected.")
-#             return redirect("user_list")
-        
-#         # Handle each action
-#         # if action_type == "update_status":
-#         #     status_id = request.POST.get("status")
-#         #     if status_id:
-#         #         User.objects.filter(id__in=selected_users).update(status_id=status_id)
-#         #         messages.success(request, "Status updated successfully!")
-#         #     else:
-#         #         messages.error(request, "No status selected.")
-        
-#         if action_type == "add_groups":
-#             # group_input = request.POST.get("group", "").split(",")
-#             group_ids = request.POST.getlist("groups")
-#             if group_ids:
-#                 for user in User.objects.filter(id__in=selected_users):                    
-#                     # Add selected group
-#                     user.groups(*group_ids)
-#                 messages.success(request, "Gropups added successfully!")
-#             else:
-#                 messages.error(request, "No groups provided or selected.")
-        
-#         elif action_type == "remove_group":
-#             group_ids = request.POST.getlist("group")
-#             if group_ids:
-#                 group = Group.objects.filter(id__in=group_ids)
-#                 users = User.objects.filter(id__in=selected_users)
 
-#                 for user in users:
-#                     # Remove selected group
-#                     user.group.remove(*group)
-#                 messages.success(request, "Groups removed successfully!")
-#             else:
-#                 messages.error(request, "No group provided or selected.")
-        
-#         elif action_type == "delete_users":
-#             users = User.objects.filter(id__in=selected_users)
-
-#             for user in users:
-#                 # Delete associated Contact account if it exists
-#                 if user.contact: #Assuming User has relationship with ContactDetail
-#                     user.contact.delete()
-#                 user.delete() #Delete the User Object
-#             messages.success(request, "Selected users deleted successfully!")
-        
-#         else:
-#             messages.error(request, "Invalid action selected.")
-        
-#         return redirect("user_list")
-
-
-from django.contrib.auth.decorators import login_required
-from django.contrib import messages
-from django.shortcuts import redirect
-from django.contrib.auth.models import User, Group
 
 @login_required
 def users_bulk_action(request):
     if request.method == "POST":
         action_type = request.POST.get("action_type")
-        # selected_users = [user_id for user_id in request.POST.get("selected_users", "").split(',') if user_id]
-        # selected_users = request.POST.get("selected_users", "").split(',')
         selected_users = [user_id for user_id in request.POST.get("selected_users", "").split(',') if user_id.strip().isdigit()]
 
 
@@ -257,8 +207,10 @@ def users_bulk_action(request):
                 messages.error(request, "No groups provided or selected.")
         
         elif action_type == "delete_users":
-            if request.user.id in selected_users:
-                messages.error(request, "You cannot delete your own account.")
+            userid = request.user.id
+            userid = str(userid)
+            if userid in selected_users:
+                messages.error(request, "You cannot select your own account for deletion.")
                 return redirect('user_list')  # Redirect to prevent the process from continuing
             
             users = User.objects.filter(id__in=selected_users)
@@ -282,6 +234,7 @@ def logout_view(request):
     return redirect('login')  # Redirect to login page after logout
 
 # Login
+@login_required
 def login_view(request):
 
     form = AuthenticationForm()
@@ -312,7 +265,7 @@ def login_view(request):
 
 
 
-
+@login_required
 def register_user(request):
     if request.method == 'POST':
         form = RegisterForm(request.POST)

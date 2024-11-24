@@ -19,7 +19,7 @@
             {% if request.user.is_authenticated %}
                 {% if 'Contact' in user_roles %}
                     <!-- Contact Menu -->
-                    <a href="{% url 'about' %}" class="py-2 px-4 text-gray-500">About</a>
+                    <a href="{% url 'index' %}" class="py-2 px-4 text-gray-500">About</a>
                 {%endif %}
 
                 {% if 'Staff' in user_roles %}
