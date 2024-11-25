@@ -1,12 +1,13 @@
 import re
+from django.db.models import Q
 from django.shortcuts import render, redirect,get_object_or_404
 from django.urls import reverse
-from urllib.parse import urlencode
+# from urllib.parse import urlencode
 from django.contrib import messages
 from django.contrib.auth.models import User, Group
-from .forms import ContactDetailCreationForm, LogForm, ContactFilterForm
+from .forms import ContactDetailCreationForm, LogForm, ContactFilterForm, ContactSearchForm
 from .models import ContactDetail, Log
-from .utility import filter_contacts
+# from .utility import filter_contacts
 from settings.models import Tag, Status
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
@@ -17,6 +18,7 @@ import string
 from django.urls import reverse
 
 from django.core.paginator import Paginator
+
 
 
 
@@ -194,23 +196,67 @@ def contact_list(request):
 
     form = ContactDetailCreationForm
     filter_form = ContactFilterForm
+    search_form = ContactSearchForm
 
 
     context = {
         'contacts': page_contacts, 
         'form': form,
-        'filter_form': filter_form
+        'filter_form': filter_form,
+        'search_form': search_form
     }
+    return render(request, 'contact/contact_list.html', context)
+
+def search_contact(request):
+    search_form = ContactSearchForm(request.GET or None)
+    query = request.GET.get('query', '').strip()
+    # contacts = ContactDetail.objects.all()
+    contacts = ContactDetail.objects.select_related('user').all()
+    filter_form = ContactFilterForm(request.GET)
+
+
+
+    if query:
+        # Search across multiple fields
+        contacts = contacts.filter(
+            Q(user__username__icontains=query) |
+            Q(user__first_name__icontains=query) |
+            Q(user__last_name__icontains=query) |
+            Q(phone_number__icontains=query) |
+            Q(status__name__icontains=query) |
+            Q(tags__name__icontains=query) |
+            Q(services__name__icontains=query) |
+            Q(trafick_source__name__icontains=query)
+        ).distinct()
+
+    # Pagination
+    paginator = Paginator(contacts, 5)  # Show 5 contacts per page
+    page_number = request.GET.get('page')
+    page_contacts = paginator.get_page(page_number)
+
+    context = {
+        'search_form': search_form,
+        'contacts': page_contacts,  # Paginated results
+        'query': query,
+        'search_form' : search_form,
+        'filter_form' : filter_form
+    }
+
     return render(request, 'contact/contact_list.html', context)
 
 
 @login_required
-def contact_filter(request):
+def filter_contact(request):
     # Initialize form with GET data if available
     filter_form = ContactFilterForm(request.GET)
 
+    #Pass in search form as well
+    search_form = ContactSearchForm(request.GET or None)
+
+
     # Start with all contacts, then apply filters
     contacts = ContactDetail.objects.select_related('user').all()
+
 
     if filter_form.is_valid():
         # Apply filters based on the form data
@@ -232,7 +278,8 @@ def contact_filter(request):
 
     return render(request, 'contact/contact_list.html', {
         'contacts': page_contacts,
-        'filter_form': filter_form
+        'filter_form': filter_form,
+        'search_form' : search_form
     })
 
 
@@ -296,7 +343,6 @@ def contacts_bulk_action(request):
         
         return redirect("contact_list")
     return redirect('contact_list')
-
 
 
 

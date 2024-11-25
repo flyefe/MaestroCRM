@@ -9,6 +9,20 @@ from django import forms
 from django.contrib.auth.models import User, Group
 from .models import Status, Tag, Service, TrafickSource
 
+
+
+class ContactSearchForm(forms.Form):
+    query = forms.CharField(
+        label='Search',
+        max_length=255,
+        required=False,
+        widget=forms.TextInput(attrs={
+            'class': 'w-full py-2 px-4 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-teal-300',
+            'placeholder': 'Search for contacts...'
+        })
+    )
+
+
 class ContactFilterForm(forms.Form):
     status = forms.ModelChoiceField(
         queryset=Status.objects.all(),

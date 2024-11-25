@@ -1,6 +1,6 @@
 from django.urls import path
 # from . import views
-from .views import contact_filter, contacts_bulk_action, create_contact, contact_list, contact_detail, delete_contact, update_contact, delete_log,update_log, contacts_by_tag,contacts_by_status, contacts_by_assigned_staff
+from .views import search_contact, filter_contact, contacts_bulk_action, create_contact, contact_list, contact_detail, delete_contact, update_contact, delete_log,update_log, contacts_by_tag,contacts_by_status, contacts_by_assigned_staff
 
 #Urls patterns
 urlpatterns = [
@@ -11,7 +11,9 @@ urlpatterns = [
     path('contacts-by-tag/<int:tag_id>/', contacts_by_tag, name='contacts_by_tag'),
     path('contacts-by-status/<int:status_id>/', contacts_by_status, name='contacts_by_status'),
     path('contacts-by-staff/<int:assigned_staff_id>/', contacts_by_assigned_staff, name='contacts_by_assigned_staff'),
-    path('contact/', contact_filter, name='contact_filter'),
+    path('contact/', filter_contact, name='filter_contact'),
+    path('contact-query/', search_contact, name='search_contact'),
+
 
 
     # path('contacts/filter/<str:filter_type>/<int:filter_id>/', filter_contacts, name='filter_contacts'),
