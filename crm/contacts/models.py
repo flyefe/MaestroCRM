@@ -10,7 +10,7 @@ from settings.models import Status, Service, TrafickSource, Tag
 class ContactDetail(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     status = models.ForeignKey(Status, on_delete=models.SET_NULL, null=True, blank=True)
-    tags = models.ManyToManyField(Tag, null=True, blank=True, related_name='contact')
+    tags = models.ManyToManyField(Tag, blank=True, related_name='contact')
     assigned_staff = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='assigned_contacts')
     phone_number = models.CharField(max_length=15, blank=True)
 

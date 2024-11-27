@@ -10,5 +10,5 @@ urlpatterns = [
     path("permission-denied/", permission_denied, name='permission_denied'),
     path("login/", login_view, name='login'),
     path('sign-up/', sign_up, name='sign_up'),
-    path("/logout/", logout_view, name='logout'),
+    path("logout/", logout_view, name='logout'),
 ]

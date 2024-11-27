@@ -36,6 +36,8 @@
                         <div id="contact-dropdown" class="absolute left-0 mt-1 w-48 bg-gray-600 rounded-md shadow-lg z-10 hidden">
                             <a href="{% url 'contact_list' %}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">View All</a>
                             <a href="{% url 'add_contact' %}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Add Contact</a>
+                            <a href="{% url 'segments:segment_list' %}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Segment List</a>
+                            <a href="{% url 'segments:create_segment' %}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Create Segment</a>
                         </div>
                     </div>
                 {% endif %}

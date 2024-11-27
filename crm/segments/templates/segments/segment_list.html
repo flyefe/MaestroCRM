@@ -1,0 +1,14 @@
+{% extends 'core/base.html' %}
+{% block title %}Segments{% endblock %}
+{% block content %}
+<div class="container mt-5">
+    <h2>Segments</h2>
+    <ul>
+        {% for segment in segments %}
+        <li>
+            <a href="{% url 'segments:segment_detail' segment.id %}">{{ segment.name }}</a>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

@@ -1,0 +1,14 @@
+{% extends 'core/base.html' %}
+{% block title %}Segment Detail{% endblock %}
+{% block content %}
+<div class="container mt-5">
+    <h2>Segment: {{ segment.name }}</h2>
+    <p>{{ segment.description }}</p>
+    <h3>Contacts</h3>
+    <ul>
+        {% for contact in contacts %}
+        <li>{{ contact.user.email }} - {{ contact.status.name }}</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

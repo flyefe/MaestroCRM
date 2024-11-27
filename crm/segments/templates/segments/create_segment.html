@@ -1,0 +1,130 @@
+{% extends "core/base.html" %}
+{% block content %}
+<h1>Create Segment</h1>
+
+<form method="post" id="segment-form">
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+
+    <div class="form-group">
+        {{ form.name.label_tag }}
+        {{ form.name }}
+    </div>
+
+    <div class="form-group">
+        {{ form.description.label_tag }}
+        {{ form.description }}
+    </div>
+
+    <div id="conditions-container" class="mb-4">
+        <!-- Placeholder for dynamic conditions -->
+    </div>
+
+    <button type="button" id="add-condition-btn" class="btn btn-primary mb-4">
+        Add Condition
+    </button>
+
+    <input type="hidden" name="conditions" id="conditions-field" value="[]">
+    <input type="hidden" name="value" id="conditions-field" value="[]">
+
+
+    <div  class="form-group hidden">
+        {{ form.status_value }}
+
+        {{ form.tag_value }}
+    </div>
+
+    <button type="submit" class="btn btn-success">Save Segment</button>
+</form>
+
+<script>
+    const addConditionBtn = document.getElementById('add-condition-btn');
+    const conditionsContainer = document.getElementById('conditions-container');
+    const conditionsField = document.getElementById('conditions-field');
+
+    // Get the options from status_value and tag_value fields
+    const statusOptions = Array.from(document.querySelectorAll('[name="status_value"] option')).map(option => ({
+        value: option.value,
+        text: option.text,
+    }));
+    const tagOptions = Array.from(document.querySelectorAll('[name="tag_value"] option')).map(option => ({
+        value: option.value,
+        text: option.text,
+    }));
+
+    addConditionBtn.addEventListener('click', () => {
+        const conditionRow = document.createElement('div');
+        conditionRow.className = 'condition-row mb-3';
+
+        conditionRow.innerHTML = `
+            <select class="condition-type form-control mb-2">
+                <option value="status">Status</option>
+                <option value="tag">Tag</option>
+            </select>
+            <select class="condition-operation form-control mb-2">
+                <option value="=">=</option>
+                <option value="!=">!=</option>
+            </select>
+            <select class="condition-value form-control mb-2">
+                <!-- Options will be dynamically populated -->
+            </select>
+            <select class="condition-logic form-control mb-2">
+                <option value="and">AND</option>
+                <option value="or">OR</option>
+            </select>
+            <button type="button" class="remove-condition-btn btn btn-danger">Remove</button>
+        `;
+
+        // Set up event listeners for dynamic updates
+        const typeSelect = conditionRow.querySelector('.condition-type');
+        const valueSelect = conditionRow.querySelector('.condition-value');
+
+        // Populate the value dropdown based on the selected type
+        const populateValueOptions = () => {
+            const selectedType = typeSelect.value;
+            const options = selectedType === 'status' ? statusOptions : tagOptions;
+
+            // Clear existing options
+            valueSelect.innerHTML = '';
+
+            // Add new options
+            options.forEach(option => {
+                const opt = document.createElement('option');
+                opt.value = option.value;
+                opt.textContent = option.text;
+                valueSelect.appendChild(opt);
+            });
+        };
+
+        // Initialize with the default selected type
+        populateValueOptions();
+
+        // Update options when type changes
+        typeSelect.addEventListener('change', populateValueOptions);
+
+        // Remove condition row
+        conditionRow.querySelector('.remove-condition-btn').addEventListener('click', () => {
+            conditionRow.remove();
+            updateConditionsField();
+        });
+
+        conditionsContainer.appendChild(conditionRow);
+    });
+
+    function updateConditionsField() {
+        const conditions = Array.from(conditionsContainer.querySelectorAll('.condition-row')).map(row => ({
+            type: row.querySelector('.condition-type').value,
+            operation: row.querySelector('.condition-operation').value,
+            value: row.querySelector('.condition-value').value,
+            logic: row.querySelector('.condition-logic').value,
+        }));
+
+        conditionsField.value = JSON.stringify(conditions);
+    }
+
+    document.getElementById('segment-form').addEventListener('submit', (e) => {
+        updateConditionsField();
+    });
+</script>
+
+{% endblock %}
