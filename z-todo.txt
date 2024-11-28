@@ -112,13 +112,21 @@ CRM/                      # Project Root
 
     
 - Make Segmentation/categorization possible
-    - Create a new app == segement
-    - Make it possible to create tags in 
-    - make it possible to create status
-    - Make it possible to create services, traffic sourse, all in settings
-    - Make create/update form have multiple select for tags
-    - Make create/update form have options to add contact to tag by typing
-    - Make it possible to remove contact from tag in update section
+    -DONE Create a new app == segement
+    -Create segment
+        -Make it possible to create Segmentation
+        -Make it possible to list segments
+        -Make it possible to see all contacts in a segments
+        -Make it possible to update and delete segments
+    -DONE Make it possible to create tags in 
+        -Make it possible to List all tags
+        -Make it possible to see all contact in a tag
+        -Make it possible to Update and delete tags
+    -DONE make it possible to create status
+    -DONE Make it possible to create services, traffic sourse, all in settings
+    -DONE Make create/update form have multiple select for tags
+    -DONE Make create/update form have options to add contact to tag by typing
+    -DONE Make it possible to remove contact from tag in update section
 - Make it possible to import data with mapping
 - Make it possible to add additional field
 - Deploy app to cloud for usage

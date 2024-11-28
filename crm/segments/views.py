@@ -108,5 +108,6 @@ def segment_list(request):
 @login_required
 def segment_detail(request, pk):
     segment = get_object_or_404(Segment, pk=pk)
-    contacts = segment.get_contacts()
+    # contacts = segment.get_contacts()
+    contacts = segment.contacts.all()
     return render(request, 'segments/segment_detail.html', {'segment': segment, 'contacts': contacts})
