@@ -1,8 +1,10 @@
-import re
+# import re
 from django.db.models import Q
 from django.shortcuts import render, redirect,get_object_or_404
 from django.urls import reverse
-# from urllib.parse import urlencode
+from django.contrib.auth.hashers import make_password
+import random, string
+from django.urls import reverse
 from django.contrib import messages
 from django.contrib.auth.models import User, Group
 from .forms import ContactDetailCreationForm, LogForm, ContactFilterForm, ContactSearchForm
@@ -12,10 +14,7 @@ from settings.models import Tag, Status
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
 
-from django.contrib.auth.hashers import make_password
-import random
-import string
-from django.urls import reverse
+
 
 from django.core.paginator import Paginator
 
@@ -207,6 +206,7 @@ def contact_list(request):
     }
     return render(request, 'contact/contact_list.html', context)
 
+@login_required
 def search_contact(request):
     search_form = ContactSearchForm(request.GET or None)
     query = request.GET.get('query', '').strip()
@@ -238,7 +238,6 @@ def search_contact(request):
         'search_form': search_form,
         'contacts': page_contacts,  # Paginated results
         'query': query,
-        'search_form' : search_form,
         'filter_form' : filter_form
     }
 
@@ -276,11 +275,13 @@ def filter_contact(request):
     page_number = request.GET.get('page')
     page_contacts = paginator.get_page(page_number)
 
-    return render(request, 'contact/contact_list.html', {
+    context = {
         'contacts': page_contacts,
         'filter_form': filter_form,
         'search_form' : search_form
-    })
+    }
+
+    return render(request, 'contact/contact_list.html', context)
 
 
 

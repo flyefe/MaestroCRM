@@ -1,237 +1,85 @@
 <nav class="py-4 px-10 items-center bg">
-    
-    <div  class="py-4 px-10 text-blue-700 font-semibold text-lg">
+    <div class="py-4 px-10 text-blue-700 font-semibold text-lg flex justify-between">
         <a href="/">MaestroCRM</a>
+        {% if request.user.is_authenticated %}
+        <div class="flex items-center">
+            <div class="relative group">
+                <!-- Icon -->
+                <svg class="w-6 h-6 text-gray-600 hover:text-blue-600 cursor-pointer" fill="none" stroke="currentColor"
+                    viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                </svg>
+
+                <!-- Tooltip -->
+                <span
+                    class="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 whitespace-nowrap bg-gray-300 py-1 px-2 rounded text-xs z-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <a class="mr-4" href="#">{{ request.user.get_full_name }}</a><br>
+                    Role: {% for group in request.user.groups.all %}
+                    {{ group.name }}
+                    {% if not forloop.last %},{% endif %}
+                    {% endfor %}<br>
+                    Email: {{ request.user.email }}
+                </span>
+            </div>
+        </div>
+        {% endif %}
     </div>
 
     <div class="flex justify-between items-center bg--500">
-        
-        <!-- Mobile Menu Button -->
-        <div class="flex items-center md:hidden">
-            <button id="mobile-menu-toggle" class="text-gray-900 focus:outline-none">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
-                </svg>
-            </button>
-        </div>
-        
-        <div class="hidden md:flex space-x-4 items-center">        
+        <div class="hidden md:flex space-x-4 items-center">
             {% if request.user.is_authenticated %}
-                {% if 'Contact' in user_roles %}
-                    <!-- Contact Menu -->
-                    <a href="{% url 'index' %}" class="py-2 px-4 text-gray-500">About</a>
-                {%endif %}
+            {% if 'Staff' in user_roles %}
+            <!-- Staff Dropdown -->
+            <div class="relative group">
+                <button class="flex items-center py-1 px-4 text-gray-600 focus:outline-none">
+                    Contacts
+                    <svg class="ml-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 10l5 5 5-5"></path>
+                    </svg>
+                </button>
+                <div 
+                    class="absolute left-0 mt-1 w-48 bg-gray-600 rounded-md shadow-lg z-10 opacity-0 invisible group-hover:opacity-100
+                    group-hover:visible transition-all duration-2000 custom-linger">
 
-                {% if 'Staff' in user_roles %}
-                    <!-- Staff Menu -->
-                    <!-- Contact Dropdown -->
-                    <div class="relative">
-                        <button id="contact-dropdown-toggle" class="flex items-center py-1 px-4 text-gray-600 focus:outline-none">
-                            Contacts
-                            <svg class="ml-1 w-4 h-4 transition-transform duration-200 transform" id="contact-arrow-icon" fill="none"
-                                stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 10l5 5 5-5"></path>
-                            </svg>
-                        </button>
-                        <div id="contact-dropdown" class="absolute left-0 mt-1 w-48 bg-gray-600 rounded-md shadow-lg z-10 hidden">
-                            <a href="{% url 'contact_list' %}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">View All</a>
-                            <a href="{% url 'add_contact' %}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Add Contact</a>
-                            <a href="{% url 'segments:segment_list' %}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Segment List</a>
-                            <a href="{% url 'segments:create_segment' %}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Create Segment</a>
-                        </div>
-                    </div>
-                {% endif %}
-
-                {% if 'Admin' in user_roles %}
-                    <!-- Admin Menu -->
-                    <!-- Admin Dropdown -->
-                    <div class="relative">
-                        <button id="settings-dropdown-toggle" class="flex items-center py-1 px-4 text-gray-600 focus:outline-none">
-                            Admin
-                            <svg class="ml-1 w-4 h-4 transition-transform duration-200 transform" id="arrow-icon" fill="none"
-                                stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 10l5 5 5-5"></path>
-                            </svg>
-                        </button>
-                        <div id="settings-dropdown" class="absolute left-0 mt-2 w-48 bg-gray-600 rounded-md shadow-lg z-10 hidden">
-                            <a href="{% url 'user_list' %}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Users</a>
-                            <a href="{% url 'create_group' %}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Add Role</a>
-                            <a href="{% url 'update_settings' %}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Update
-                                Settings</a>
-                        </div>
-                    </div>
-                {% endif %}
-
-                <!-- Other Links -->
-                <a href="{% url 'logout' %}" class="py-2 px-4 bg-gray-600 rounded-xl text-white">Logout</a>
-                    
-            {% else %}
-                        <a href="{% url 'login' %}" class="py-2 px-4 bg-gray-600 rounded-xl text-gray-600">Log In</a>
-                        <a href="{% url 'sign_up' %}" class="py-2 px-4 bg-gray-400 rounded-xl text-gray-600">Register</a>
+                    <a href="{% url 'contact_list' %}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">View
+                        All</a>
+                    <a href="{% url 'add_contact' %}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Add
+                        Contact</a>
+                    <a href="{% url 'segments:segment_list' %}"
+                        class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Segment List</a>
+                    <a href="{% url 'segments:create_segment' %}"
+                        class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Create Segment</a>
+                </div>
+            </div>            
             {% endif %}
-        </div>
-        
-        
-        <!-- Mobile Menu -->
-        <div id="mobile-menu" class="absolute top-16 left-0 w-full bg-gray-500 z-20 hidden md:hidden">
-            <div class="flex flex-col">
-                {% if request.user.is_authenticated %}
-                    {% if 'Contact' in user_roles %}
-                        <!-- Contact Menu -->
-                        <a href="{% url 'about' %}" class="py-2 px-4 text-gray-600">About</a>
-                    {% endif %}
 
-                    {% if 'Staff' in user_roles %}
-                        <!-- Staff Menu -->
-                        <!-- mobilecontact -->
-                        <div class="relative">
-                            <button id="mobile-contact-dropdown-toggle" class="flex items-center py-2 px-4 text-gray-600">
-                                Contacts
-                                <svg class="ml-1 w-4 h-4 transition-transform duration-200 transform" id="mobile-contact-arrow-icon"
-                                    fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 10l5 5 5-5"></path>
-                                </svg>
-                            </button>
-                            <div id="mobile-contact-dropdown" class="bg-gray-600 rounded-md shadow-lg hidden">
-                                <a href="{% url 'user_list' %}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Users</a>
-                                <a href="{% url 'create_group' %}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Add
-                                    Role</a>
-                                <a href="{% url 'add_contact' %}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Add
-                                    Contact</a>
-                                <a href="{% url 'contact_list' %}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Contacts</a>
-                                <a href="{% url 'update_settings' %}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Update
-                                    Settings</a>
-                            </div>
-                        </div>
-                    {% endif %}
+            {% if 'Admin' in user_roles %}
+            <!-- Admin Dropdown -->
+            <div class="relative group">
+                <button class="flex items-center py-1 px-4 text-gray-600 focus:outline-none">
+                    Admin
+                    <svg class="ml-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 10l5 5 5-5"></path>
+                    </svg>
+                </button>
+                <div
+                    class="absolute left-0 mt-1 w-48 bg-gray-600 rounded-md shadow-lg z-10 opacity-0 invisible group-hover:opacity-100
+                    group-hover:visible transition-all duration-2000 custom-linger">
 
-                    {% if 'Admin' in user_roles %}
-                        <!-- Admin Menu -->
-                        <!-- mobileadmin -->
-                        <div class="relative">
-                            <button id="mobile-settings-dropdown-toggle" class="flex items-center py-2 px-4 text-gray-600">
-                                Admin
-                                <svg class="ml-1 w-4 h-4 transition-transform duration-200 transform" id="mobile-arrow-icon" fill="none"
-                                    stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 10l5 5 5-5"></path>
-                                </svg>
-                            </button>
-                            <div id="mobile-settings-dropdown" class="bg-gray-600 rounded-md shadow-lg hidden">
-                                <a href="{% url 'user_list' %}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Users</a>
-                                <a href="{% url 'create_group' %}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Add
-                                    Role</a>
-                                <a href="{% url 'add_contact' %}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Add
-                                    Contact</a>
-                                <a href="{% url 'contact_list' %}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Contacts</a>
-                                <a href="{% url 'update_settings' %}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Update
-                                    Settings</a>
-                            </div>
-                        </div>
-                    {% endif %}
-        
-                <!-- others -->
-                <a href="{% url 'logout' %}" class="py-2 px-4 bg-gray-600 rounded-xl text-gray-600">Logout</a>
-        
-                {% else %}
-                <a href="{% url 'login' %}" class="py-2 px-4 bg-gray-600 rounded-xl text-gray-600">Log In</a>
-                <a href="{% url 'register' %}" class="py-2 px-4 bg-gray-400 rounded-xl text-gray-600">Register</a>
-                {% endif %}
+                    <a href="{% url 'user_list' %}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Users</a>
+                    <a href="{% url 'create_group' %}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Add
+                        Role</a>
+                    <a href="{% url 'update_settings' %}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Update
+                        Settings</a>
+                </div>
             </div>
+            {% endif %}
+            <a href="{% url 'logout' %}" class="py-2 px-4 bg-gray-600 rounded-xl text-white">Logout</a>
+            {% else %}
+            <a href="{% url 'login' %}" class="py-2 px-4 bg-gray-600 rounded-xl text-gray-600">Log In</a>
+            <a href="{% url 'sign_up' %}" class="py-2 px-4 bg-gray-400 rounded-xl text-gray-600">Register</a>
+            {% endif %}
         </div>
     </div>
 </nav>
-
-
-<script>
-    // Toggle for mobile menu
-    document.getElementById('mobile-menu-toggle').onclick = function () {
-        var menu = document.getElementById('mobile-menu');
-        menu.classList.toggle('hidden');
-    };
-
-    // Toggle for settings dropdown in desktop view
-    document.getElementById('settings-dropdown-toggle').onclick = function () {
-        var dropdown = document.getElementById('settings-dropdown');
-        dropdown.classList.toggle('hidden');
-
-        // Toggle the arrow direction
-        var arrow = document.getElementById('settings-arrow-icon');
-        arrow.classList.toggle('rotate-180');
-    };
-
-    // Toggle for contacts dropdown in desktop view
-    document.getElementById('contact-dropdown-toggle').onclick = function () {
-        var cdropdown = document.getElementById('contact-dropdown');
-        cdropdown.classList.toggle('hidden');
-
-        // Toggle the arrow direction for contacts
-        var arrow = document.getElementById('contact-arrow-icon');
-        arrow.classList.toggle('rotate-180');
-    };
-
-    // Toggle for settings dropdown in mobile view
-    document.getElementById('mobile-settings-dropdown-toggle').onclick = function () {
-        var dropdown = document.getElementById('mobile-settings-dropdown');
-        dropdown.classList.toggle('hidden');
-
-        // Toggle the arrow direction
-        var mobileArrow = document.getElementById('mobile-settings-arrow-icon');
-        mobileArrow.classList.toggle('rotate-180');
-    };
-
-    // Toggle for contact dropdown in mobile
-    document.getElementById('mobile-contact-dropdown-toggle').onclick = function () {
-        var cdropdown = document.getElementById('mobile-contact-dropdown');
-        cdropdown.classList.toggle('hidden');
-
-        // Toggle the arrow direction
-        var mobileArrow = document.getElementById('mobile-contact-arrow-icon');
-        mobileArrow.classList.toggle('rotate-180');
-    };
-
-    // Optional: Close dropdowns and mobile menu when clicking outside
-    document.addEventListener('click', function (event) {
-        // Close settings dropdown in desktop view
-        var dropdown = document.getElementById('settings-dropdown');
-        if (!event.target.closest('#settings-dropdown-toggle') && !dropdown.contains(event.target)) {
-            dropdown.classList.add('hidden');
-            document.getElementById('settings-arrow-icon').classList.remove('rotate-180'); // Reset arrow rotation
-        }
-
-        // Close contacts dropdown in desktop view
-        var cdropdown = document.getElementById('contact-dropdown');
-        if (!event.target.closest('#contact-dropdown-toggle') && !cdropdown.contains(event.target)) {
-            cdropdown.classList.add('hidden');
-            document.getElementById('contact-arrow-icon').classList.remove('rotate-180'); // Reset arrow rotation
-        }
-
-        // Close mobile settings dropdown
-        var mobileDropdown = document.getElementById('mobile-settings-dropdown');
-        if (!event.target.closest('#mobile-settings-dropdown-toggle') && !mobileDropdown.contains(event.target)) {
-            mobileDropdown.classList.add('hidden');
-            document.getElementById('mobile-settings-arrow-icon').classList.remove('rotate-180'); // Reset mobile arrow rotation
-        }
-
-        // Close mobile contact dropdown
-        var cmobileDropdown = document.getElementById('mobile-contact-dropdown');
-        if (!event.target.closest('#mobile-contact-dropdown-toggle') && !cmobileDropdown.contains(event.target)) {
-            cmobileDropdown.classList.add('hidden');
-            document.getElementById('mobile-contact-arrow-icon').classList.remove('rotate-180'); // Reset mobile arrow rotation
-        }
-
-        // Hide mobile menu when clicking outside
-        var mobileMenu = document.getElementById('mobile-menu');
-        if (!event.target.closest('#mobile-menu-toggle') && !mobileMenu.contains(event.target)) {
-            mobileMenu.classList.add('hidden');
-        }
-    });
-</script>
-
-
-
-
-<style>
-    .rotate-180 {
-        transform: rotate(180deg);
-    }
-</style>

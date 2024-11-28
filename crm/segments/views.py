@@ -1,17 +1,24 @@
+import json, random, string
+from django.db.models import Q
+from django.utils.timezone import now
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+
+from django.core.paginator import Paginator
+
+
 from .models import Segment
 from .forms import SegmentForm
 
-import json
-from django.db.models import Q
-from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
-from django.utils.timezone import now
-from segments.models import Segment
 from contacts.models import ContactDetail
+from contacts.forms import ContactDetailCreationForm, ContactFilterForm, ContactSearchForm
 
+from core.decorators import role_required
+
+
+
+@role_required(['Admin'])
 @login_required
 def create_segment(request):
     if request.method == 'POST':
@@ -110,4 +117,21 @@ def segment_detail(request, pk):
     segment = get_object_or_404(Segment, pk=pk)
     # contacts = segment.get_contacts()
     contacts = segment.contacts.all()
-    return render(request, 'segments/segment_detail.html', {'segment': segment, 'contacts': contacts})
+
+    # Add pagination (Optional)
+    paginator = Paginator(contacts, 5)  # Show 10 contacts per page
+    page_number = request.GET.get('page')
+    page_contacts = paginator.get_page(page_number)
+
+    form = ContactDetailCreationForm
+    filter_form = ContactFilterForm
+    search_form = ContactSearchForm
+
+    context = {
+        'segment': segment,
+        'contacts': page_contacts,
+        'form': form,
+        'filter_form': filter_form,
+        'search_form' : search_form
+    }
+    return render(request,'segments/segment_detail.html', context)
