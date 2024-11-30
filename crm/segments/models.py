@@ -23,7 +23,7 @@ class Segment(models.Model):
     description = models.TextField(blank=True, null=True)
     conditions = models.JSONField()  # Store filtering rules in JSON
     contacts = models.ManyToManyField(ContactDetail, blank=True, related_name='segments')
-    created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='segments_created')
+    created_by = models.ForeignKey(User, on_delete=models.SET_DEFAULT, default=1, related_name='segments_created')
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
 

@@ -28,7 +28,10 @@
 
     <div class="flex justify-between items-center bg--500">
         <div class="hidden md:flex space-x-4 items-center">
+            
             {% if request.user.is_authenticated %}
+            <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Client Portal</a>
+
             {% if 'Staff' in user_roles %}
             <!-- Staff Dropdown -->
             <div class="relative group">
@@ -67,6 +70,7 @@
                     class="absolute left-0 mt-1 w-48 bg-gray-600 rounded-md shadow-lg z-10 opacity-0 invisible group-hover:opacity-100
                     group-hover:visible transition-all duration-2000 custom-linger">
 
+                    <a href="{% url 'staff_list' %}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Staffs</a>
                     <a href="{% url 'user_list' %}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Users</a>
                     <a href="{% url 'create_group' %}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Add
                         Role</a>

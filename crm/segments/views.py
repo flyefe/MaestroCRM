@@ -17,6 +17,16 @@ from contacts.forms import ContactDetailCreationForm, ContactFilterForm, Contact
 from core.decorators import role_required
 
 
+@role_required(['Admin'])
+def edit_segment(request, pk):
+    # segment = Segment.getobject (id=segment_id)
+    segment = get_object_or_404(Segment, pk=pk)
+    form = SegmentForm(instance=segment)
+    context = {
+        'form' : form
+    }
+    return render(request, 'segments/edit_segment.html', context)
+
 
 @role_required(['Admin'])
 @login_required
@@ -25,6 +35,7 @@ def create_segment(request):
         name = request.POST.get('name')
         description = request.POST.get('description')
         conditions = json.loads(request.POST.get('conditions', '[]'))
+        # print(conditions)
 
         # Initialize the main Q object
         q = Q()
@@ -76,6 +87,9 @@ def create_segment(request):
             # additional_rules=conditions,
         )
 
+
+        print(conditions)
+
         # Optional: Save filtered contacts to the segment if needed
         for contact in filtered_contacts:
             segment.contacts.add(contact)  # Assuming you have a ManyToMany relationship with contacts
@@ -90,27 +104,17 @@ def create_segment(request):
 
     return render(request, 'segments/create_segment.html', context)
 
-# @login_required
-# def create_segment(request):
-#     if request.method == 'POST':
-#         form = SegmentForm(request.POST)
-#         conditions = request.POST.get('conditions')  # JSON data from the frontend
-
-#         if form.is_valid():
-#             segment = form.save(commit=False)
-#             segment.conditions = conditions  # Save JSON conditions
-#             segment.created_by = request.user
-#             segment.save()
-#             messages.success(request, "Segment created successfully.")
-#             return redirect('segments:segment_list')
-#     else:
-#         form = SegmentForm()
-#     return render(request, 'segments/create_segment.html', {'form': form})
 
 @login_required
 def segment_list(request):
-    segments = Segment.objects.filter(created_by=request.user)
-    return render(request, 'segments/segment_list.html', {'segments': segments})
+    segments = Segment.objects.all()
+
+    # Add pagination (Optional)
+    paginator = Paginator(segments, 5)  # Show 10 contacts per page
+    page_number = request.GET.get('page')
+    page_segments = paginator.get_page(page_number)
+    
+    return render(request, 'segments/segment_list.html', {'segments': page_segments})
 
 @login_required
 def segment_detail(request, pk):

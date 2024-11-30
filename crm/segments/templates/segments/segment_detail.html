@@ -4,11 +4,15 @@
 
 {% block content %}
 <div class="max-w-full mx-auto mt-10">
-    <h2 class="text-3xl font-bold mb-6 text-center">Segment: {{ segment.name }} List</h2>
+    <h2 class="text-3xl font-bold mb-6 text-center"> Segment: {{ segment.name }} </h2>
+
+    <div class="text-blue-200 flex justify-center bg-white px-10 py-10">
+        <p>{{ segment.description }}</p>
+
+    </div>
 
 
     <div class="mb-4 px-4 py-4 ">
-        <p>{{ segment.description }}</p>
 
         <div class=" mb-4 px-4 py-4 flex-col flex md:flex-row">
             <!-- Contact List Section -->

@@ -3,12 +3,17 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.forms import AuthenticationForm, AdminPasswordChangeForm
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
+
+from django.contrib.auth.hashers import make_password
+import random, string
+
 from django.contrib import messages
 from django.contrib.auth.models import User, Group
 
 from .forms import UserEditForm, RegisterForm, RoleCreationForm,RoleEditForm
 
 from django.core.paginator import Paginator
+from django.db.models import Q  # Import the Q object
 
 
 
@@ -133,14 +138,69 @@ def edit_user(request, user_id):
         'user': user
     })
 
-#Users Table
+
+
 @login_required
-def users_table(request):
-    users = User.objects.all()  # Fetch all users
+def add_staff_user(request):
+    if request.method == 'POST':
+        form = UserEditForm(request.POST)  # Instantiate form with POST data
+
+        if form.is_valid():
+            email = form.cleaned_data['email']
+            first_name = form.cleaned_data['first_name']
+            last_name = form.cleaned_data['last_name']
+
+            try:
+                # Check if a user with this email already exists
+                if User.objects.filter(email=email).exists():
+                    messages.error(request, "A user with this email already exists.")
+                    return render(request, 'add_staff_user.html', {'form': form})
+
+                # Create a new user
+                password = ''.join(random.choices(string.ascii_letters + string.digits, k=12))
+                user = User.objects.create_user(
+                    username=email,  # Assuming email as username
+                    email=email,
+                    password=password,
+                    first_name=first_name,
+                    last_name=last_name
+                )
+
+                # Add the user to the 'Staff' group
+                staff_group = Group.objects.get(name='Staff')
+                user.groups.add(staff_group)
+
+                # Set is_staff to True for staff users
+                user.is_staff = True
+                user.save()
+
+                messages.success(request, "Staff user added successfully.")
+                print(f"Password for {email} is: {password}")  # Log password or send via email
+                return redirect('staff_list')  # Assuming you have a URL named 'staff_list'
+
+            except Group.DoesNotExist:
+                messages.error(request, "Staff group does not exist.")
+                return render(request, 'add_staff_user.html', {'form': form})
+
+    else:
+        form = UserEditForm()
+
+    return render(request, 'add_staff_user.html', {'form': form})
+
+@login_required
+def staff_table(request):
+    # Correct the group filters
+    staff_group = Group.objects.filter(name='Staff')
+    admin_group = Group.objects.filter(name='Admin')  # Correct the name to 'Admin'
+
+    # Fetch users who belong to either 'Staff' or 'Admin' group
+    users = (User.objects.filter(groups__in=staff_group) | User.objects.filter(groups__in=admin_group)).distinct()
+    
     user_list = []  # This will hold user data with roles
 
     for user in users:
         groups = user.groups.all()  # Fetch all roles (groups) for each user
+        contact_detail = getattr(user, 'contactdetail', None)  # Access the ContactDetail instance if it exists        
         user_list.append({
             'user_id': user.id,
             'username': user.username,
@@ -148,7 +208,43 @@ def users_table(request):
             'last_name': user.last_name,
             'email': user.email,
             'roles': [group.name for group in groups],  # Add roles (group names)
-            'date_joined': user.date_joined
+            'date_joined': user.date_joined,
+            'user_contact_id': contact_detail.id if contact_detail else None  # Safely get the ContactDetail ID
+        })
+
+    paginator = Paginator(user_list, 10)  # Show 10 users per page
+    page_number = request.GET.get('page')
+    page_users = paginator.get_page(page_number)
+
+    form = UserEditForm
+
+    context = {
+        'user_list': page_users,
+        'form' : form
+    }
+    return render(request, 'staff_list.html', context)
+
+
+#Users Table
+@login_required
+def users_table(request):
+    contact_group = Group.objects.filter(name='Contact')
+
+    users = User.objects.filter(groups__in=contact_group)  # Fetch all users
+    user_list = []  # This will hold user data with roles
+
+    for user in users:
+        groups = user.groups.all()  # Fetch all roles (groups) for each user
+        contact_detail = getattr(user, 'contactdetail', None)  # Access the ContactDetail instance if it exists
+        user_list.append({
+            'user_id': user.id,
+            'username': user.username,
+            'first_name': user.first_name,
+            'last_name': user.last_name,
+            'email': user.email,
+            'roles': [group.name for group in groups],  # Add roles (group names)
+            'date_joined': user.date_joined,
+            'user_contact_id': contact_detail.id if contact_detail else None  # Safely get the ContactDetail ID
         })
 
     paginator = Paginator(user_list, 10)  # Show 10 users per page
@@ -213,7 +309,7 @@ def users_bulk_action(request):
         else:
             messages.error(request, "Invalid action selected.")
         
-        return redirect("user_list")
+        return redirect('staff_list')
 
 
 #Logout

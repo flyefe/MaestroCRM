@@ -61,6 +61,7 @@
                 <table class="w-full bg-white border border-gray-300">
                     <thead class="">
                         <tr>
+                            <th class="py-3 px-4 text-left text-sm font-semibold w-40">ID</th>
                             <th class="py-3 px-4 border-r border-gray-200 text-left text-sm font-semibold w-12">
                                 <input id="select-all" type="checkbox" class="rounded border-gray-300">
                             </th>
@@ -78,6 +79,8 @@
                     <tbody>
                         {% for contact in contacts %}
                         <tr class="hover:bg-gray-100 transition duration-200">
+                            <!-- ID -->
+                            <td class="py-2 px-4 border-r border-b border-gray-200 text-sm"> {{contact.id}} </td>
                             <!-- Select -->
                             <td class="py-2 px-4 border-r border-b border-gray-200 text-sm">
                                 <input type="checkbox" name="selected_contacts" value="{{ contact.id }}"
