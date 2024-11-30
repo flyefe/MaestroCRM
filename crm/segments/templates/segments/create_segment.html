@@ -28,6 +28,9 @@
 
 
     <div  class="form-group hidden">
+        <!-- Hidden form fields for page logics in javascript -->
+        {{form.conditions}}
+
         {{ form.status_value }}
 
         {{ form.tag_value }}
@@ -51,6 +54,7 @@
         text: option.text,
     }));
 
+    // Add a new condition when the button is clicked
     addConditionBtn.addEventListener('click', () => {
         const conditionRow = document.createElement('div');
         conditionRow.className = 'condition-row mb-3';
@@ -111,6 +115,7 @@
     });
 
     function updateConditionsField() {
+        // Get all the conditions from the form
         const conditions = Array.from(conditionsContainer.querySelectorAll('.condition-row')).map(row => ({
             type: row.querySelector('.condition-type').value,
             operation: row.querySelector('.condition-operation').value,
@@ -118,10 +123,13 @@
             logic: row.querySelector('.condition-logic').value,
         }));
 
+        // Update the hidden field with the conditions as a JSON string
         conditionsField.value = JSON.stringify(conditions);
     }
 
+    // Ensure conditions are updated before form submission
     document.getElementById('segment-form').addEventListener('submit', (e) => {
+        // Always update the conditions before submitting
         updateConditionsField();
     });
 </script>

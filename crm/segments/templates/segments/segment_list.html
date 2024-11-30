@@ -25,9 +25,9 @@
             <div class="px-4 text-sm text-gray-500">Total Segments: {{ segments.paginator.count }}</div>
         </div>
         <div class="flex-auto w-50 md-1/2 mb-4 flex items-center justify-end px-6">
-            <a href="{% url 'add_staff_user' %}"
+            <a href="{% url 'segments:create_segment' %}"
                 class="ml-2 text-sm bg-gray-600 text-white py-2 px-4 rounded hover:bg-gray-700">
-                Add New Team Member
+                Add New Segment
             </a>
         </div>
     </div>
@@ -58,7 +58,7 @@
             </td>
             <td class="py-2 px-4 border-r border-b border-gray-200 text-sm">
                <a href="{% url 'segments:edit_segment' segment.id %}" class="text-teal-600 hover:text-teal-800">Edit</a>
-               <a href="#" onclick="return confirmDelete();" class="btn btn-danger text-red-600 hover:text-red-800 ml-2">
+               <a href="{% url 'segments:delete_segment' segment.id %}" onclick="return confirmDelete();" class="btn btn-danger text-red-600 hover:text-red-800 ml-2">
                 Delete
                </a>
             </td>
