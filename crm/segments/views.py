@@ -29,6 +29,8 @@ def delete_segment(request, pk):
     messages.success(request, f" Segment has been successfully deleted.")
     return redirect('segments:segment_list')
 
+
+
 @role_required(['Admin'])
 def edit_segment(request, pk):
     # Get the segment object from the database
