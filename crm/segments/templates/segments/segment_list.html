@@ -58,7 +58,7 @@
             </td>
             <td class="py-2 px-4 border-r border-b border-gray-200 text-sm">
                <a href="{% url 'segments:edit_segment' segment.id %}" class="text-teal-600 hover:text-teal-800">Edit</a>
-               <a href="#" onclick="return confirmDelete();" class="btn btn-danger text-red-600 hover:text-red-800 ml-2">
+               <a href="{% url 'segments:delete_segment' segment.id %}" onclick="return confirmDelete();" class="btn btn-danger text-red-600 hover:text-red-800 ml-2">
                 Delete
                </a>
             </td>
