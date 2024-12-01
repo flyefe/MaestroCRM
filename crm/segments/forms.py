@@ -20,7 +20,7 @@ class SegmentForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['conditions'].widget = forms.HiddenInput(),
+        self.fields['conditions'].widget = forms.HiddenInput()
         self.fields['name'].widget.attrs.update({
            'class': 'form-select block w-full rounded border border-black p-2 mb-2',
             'style': 'background-color: #f5f5f5;',
