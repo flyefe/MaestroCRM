@@ -112,10 +112,10 @@
 
     function updateConditionsField() {
         const conditions = Array.from(conditionsContainer.querySelectorAll('.condition-row')).map(row => ({
+            logic: row.querySelector('.condition-logic').value,
             type: row.querySelector('.condition-type').value,
             operation: row.querySelector('.condition-operation').value,
             value: row.querySelector('.condition-value').value,
-            logic: row.querySelector('.condition-logic').value,
         }));
 
         conditionsField.value = JSON.stringify(conditions);

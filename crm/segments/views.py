@@ -38,7 +38,7 @@ def edit_segment(request, pk):
 
     # Retrieve the conditions (assuming it's a JSON field in the model)
     existing_conditions = segment.conditions  # Assuming `conditions` is a JSON field in your model
-
+    
     if request.method == 'POST':
         form = SegmentForm(request.POST, instance=segment)
 
@@ -46,7 +46,10 @@ def edit_segment(request, pk):
             # Extract the form data
             name = form.cleaned_data.get('name')
             description = form.cleaned_data.get('description')
-            conditions = json.loads(request.POST.get('conditions', '[]'))  # Extract conditions from POST data
+            # conditions = json.loads(request.POST.get('conditions', '[]'))  # Extract conditions from POST data
+            conditions = conditions
+            print(conditions)
+
 
             # Initialize the main Q object for filtering contacts
             q = Q()
