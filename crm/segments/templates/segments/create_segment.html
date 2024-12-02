@@ -56,6 +56,10 @@
         conditionRow.className = 'condition-row mb-3';
 
         conditionRow.innerHTML = `
+            <select class="condition-logic form-control mb-2">
+                <option value="and">AND</option>
+                <option value="or">OR</option>
+            </select>
             <select class="condition-type form-control mb-2">
                 <option value="status">Status</option>
                 <option value="tag">Tag</option>
@@ -66,10 +70,6 @@
             </select>
             <select class="condition-value form-control mb-2">
                 <!-- Options will be dynamically populated -->
-            </select>
-            <select class="condition-logic form-control mb-2">
-                <option value="and">AND</option>
-                <option value="or">OR</option>
             </select>
             <button type="button" class="remove-condition-btn btn btn-danger">Remove</button>
         `;

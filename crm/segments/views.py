@@ -4,9 +4,7 @@ from django.utils.timezone import now
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-
 from django.core.paginator import Paginator
-
 
 from .models import Segment
 from .forms import SegmentForm
@@ -15,9 +13,6 @@ from contacts.models import ContactDetail
 from contacts.forms import ContactDetailCreationForm, ContactFilterForm, ContactSearchForm
 
 from core.decorators import role_required
-
-import json
-
 
 @role_required(['Admin'])
 @login_required
@@ -29,18 +24,18 @@ def delete_segment(request, pk):
     messages.success(request, f" Segment has been successfully deleted.")
     return redirect('segments:list')
 
-
-
 @login_required
-def segments_bulk_action(request):
+def bulk_action(request):
     if request.method == "POST":
         action_type = request.POST.get("action_type")
         selected_segments = request.POST.get("selected_segments", "").split(',')
+
+        print(action_type)
         
         # Ensure segments are selected
         if not selected_segments:
             messages.error(request, "No segments selected.")
-            return redirect("segments:list")
+            return redirect("segments:list")       
         
         # Handle each action       
         if action_type == "delete":
@@ -56,7 +51,6 @@ def segments_bulk_action(request):
         return redirect("segments:list")
     return redirect('segments:list')
 
-
 @role_required(['Admin'])
 def edit_segment(request, pk):
     # Get the segment object from the database
@@ -70,8 +64,6 @@ def edit_segment(request, pk):
         description = request.POST.get('description')
         conditions = json.loads(request.POST.get('conditions', '[]'))
         print(conditions)
-        
-
 
         # Initialize the main Q object for filtering contacts
         q = Q()
@@ -138,7 +130,6 @@ def edit_segment(request, pk):
     }
 
     return render(request, 'segments/edit_segment.html', context)
-
 
 @role_required(['Admin'])
 @login_required
@@ -213,7 +204,6 @@ def add_segment(request):
 
     return render(request, 'segments/create_segment.html', context)
 
-
 @login_required
 def segment_list(request):
     segments = Segment.objects.all().order_by('-created_by')
@@ -247,4 +237,4 @@ def segment_contacts(request, pk):
         'filter_form': filter_form,
         'search_form' : search_form
     }
-    return render(request,'segments/segment_detail.html', context)
+    return render(request,'segments/segment_contacts.html', context)

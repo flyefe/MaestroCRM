@@ -47,7 +47,7 @@
         {% for segment in segments %}
         <tr class="hover:bg-gray-100 transition duration-200 text-center">
             <td class="py-2 px-4 border-r border-b border-gray-200 text-sm">
-                <input type="checkbox" name="selected_users" value="{{ user.user_id}}" class="rounded border-gray-300">
+                <input type="checkbox" name="selected_segments" value="{{ segment.id }}" class="rounded border-gray-300">
             </td>
             <td class="py-2 px-2 border-r border-b border-gray-200 text-sm">{{ segment.id }}</td>
             <td href="{% url 'segments:contacts' segment.id %}" class="py-2 px-4 border-r border-b border-gray-200 text-sm">
@@ -85,14 +85,14 @@
 <!-- Modals -->
 <div id="modal-container" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
     <!-- Delete Segments Modal -->
-    <div id="delete-users-modal" class="bg-white rounded-lg shadow-lg w-3/4 max-w-lg p-6 hidden">
+    <div id="delete-segments-modal" class="bg-white rounded-lg shadow-lg w-3/4 max-w-lg p-6 hidden">
         <h3 class="text-xl font-semibold mb-4 text-red-600">Delete Groups</h3>
-        <p class="mb-4">Are you sure you want to delete the selected users? This action cannot be undone.</p>
-        <form method="POST" action="{% url 'users_bulk_action' %}">
+        <p class="mb-4">Are you sure you want to delete the selected segments? This action cannot be undone.</p>
+        <form method="POST" action="{% url 'segments:bulk_action' %}">
             {% csrf_token %}
-            <!-- Hidden input for selected users -->
-            <input type="hidden" name="action_type" value="delete_users">
-            <input type="hidden" name="selected_users" id="delete-selected-users">
+            <!-- Hidden input for selected segments -->
+            <input type="hidden" name="action_type" value="delete">
+            <input type="hidden" name="selected_segments" id="delete-selected-segments">
 
             <div class="flex justify-end">
                 <button type="button" onclick="closeModal()"
@@ -131,23 +131,23 @@
     form.addEventListener('submit', (e) => {
         e.preventDefault();
         const action = actionSelect.value;
-        const selectedSegments = Array.from(document.querySelectorAll('input[name="selected_users"]:checked')).map(checkbox => checkbox.value);
+        const selectedSegments = Array.from(document.querySelectorAll('input[name="selected_segments"]:checked')).map(checkbox => checkbox.value);
 
         if (selectedSegments.length === 0) {
-            alert('No users selected.');
+            alert('No segments selected.');
             return;
         }
 
         // Populate hidden input fields in modals
         if (action === 'add_groups') {
-            document.getElementById('groups-selected-users').value = selectedSegments.join(',');
+            document.getElementById('groups-selected-segments').value = selectedSegments.join(',');
             openModal('add-groups-modal');
         } else if (action === 'remove_groups') {
-            document.getElementById('remove-groups-selected-users').value = selectedSegments.join(',');
+            document.getElementById('remove-groups-selected-segments').value = selectedSegments.join(',');
             openModal('remove-groups-modal');
         } else if (action === 'delete') {
-            document.getElementById('delete-selected-users').value = selectedSegments.join(',');
-            openModal('delete-users-modal');
+            document.getElementById('delete-selected-segments').value = selectedSegments.join(',');
+            openModal('delete-segments-modal');
         } else {
             alert('Invalid action selected.');
         }
@@ -155,7 +155,7 @@
 
 
     document.getElementById("select-all").addEventListener("change", function () {
-        const checkboxes = document.querySelectorAll('input[name="selected_users"]');
+        const checkboxes = document.querySelectorAll('input[name="selected_segments"]');
         checkboxes.forEach((checkbox) => {
             checkbox.checked = this.checked;
         });

@@ -471,3 +471,4 @@ def create_contact(request):
     else:
         form = ContactDetailCreationForm()
     return render(request, 'contact/create_contact.html', {'form': form})
+
