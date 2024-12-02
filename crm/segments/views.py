@@ -27,8 +27,34 @@ def delete_segment(request, pk):
 
     segment.delete()
     messages.success(request, f" Segment has been successfully deleted.")
-    return redirect('segments:segment_list')
+    return redirect('segments:list')
 
+
+
+@login_required
+def segments_bulk_action(request):
+    if request.method == "POST":
+        action_type = request.POST.get("action_type")
+        selected_segments = request.POST.get("selected_segments", "").split(',')
+        
+        # Ensure segments are selected
+        if not selected_segments:
+            messages.error(request, "No segments selected.")
+            return redirect("segments:list")
+        
+        # Handle each action       
+        if action_type == "delete":
+            segments=Segment.objects.filter(id__in=selected_segments)
+
+            for segment in segments:
+                segment.delete() #Delete the Segment Object
+            messages.success(request, "Selected segments deleted successfully!")
+        
+        else:
+            messages.error(request, "Invalid action selected.")
+        
+        return redirect("segments:list")
+    return redirect('segments:list')
 
 
 @role_required(['Admin'])
@@ -39,22 +65,6 @@ def edit_segment(request, pk):
     # Retrieve the conditions (assuming it's a JSON field in the model)
     existing_conditions = segment.conditions  # Assuming `conditions` is a JSON field in your model
     
-    # if request.method == 'POST':
-    #     form = SegmentForm(request.POST, instance=segment)
-    #     conditions_data = request.POST.get('conditions', '[]')
-    #     if isinstance(conditions_data, str):
-    #         conditions = json.loads(conditions_data)
-    #     else:
-    #         conditions = conditions_data
-
-    #     print(conditions)
-
-    #     if form.is_valid():
-    #         # Extract the form data
-    #         name = form.cleaned_data.get('name')
-    #         description = form.cleaned_data.get('description')
-    #         # conditions = json.loads(request.POST.get('conditions', '[]'))  # Extract conditions from POST data
-    #         # conditions = conditions
     if request.method == 'POST':
         name = request.POST.get('name')
         description = request.POST.get('description')
@@ -112,7 +122,7 @@ def edit_segment(request, pk):
             segment.contacts.add(contact)  # Assuming you have a ManyToMany relationship with contacts
 
         messages.success(request, "Segment updated successfully!")
-        return redirect('segments:segment_list')  # Redirect to the segment list or another appropriate page
+        return redirect('segments:list')  # Redirect to the segment list or another appropriate page
 
     else:
         # Handle GET request and pass initial data to the form
@@ -132,7 +142,7 @@ def edit_segment(request, pk):
 
 @role_required(['Admin'])
 @login_required
-def create_segment(request):
+def add_segment(request):
     if request.method == 'POST':
         name = request.POST.get('name')
         description = request.POST.get('description')
@@ -193,7 +203,7 @@ def create_segment(request):
         for contact in filtered_contacts:
             segment.contacts.add(contact)  # Assuming you have a ManyToMany relationship with contacts
 
-        return redirect('segments:segment_list')  # Redirect to a segment list page or detail view after saving
+        return redirect('segments:list')  # Redirect to a segment list page or detail view after saving
     else:
         form = SegmentForm()
 
@@ -202,83 +212,6 @@ def create_segment(request):
     }
 
     return render(request, 'segments/create_segment.html', context)
-
-
-# @role_required(['Admin'])
-# @login_required
-# def create_segment(request):
-#     if request.method == 'POST':
-#         name = request.POST.get('name')
-#         description = request.POST.get('description')
-#         conditions = json.loads(request.POST.get('conditions', '[]'))
-#         print(conditions)
-
-#         # Initialize the main Q object
-#         q = Q()
-
-#         # Variable to keep track of the current condition
-#         current_q = None
-
-#         for i, condition in enumerate(conditions):
-#             # Create a new Q object for each condition
-#             new_q = Q()
-            
-#             if condition['type'] == 'status':
-#                 if condition['operation'] == '=':
-#                     new_q &= Q(status=condition['value'])
-#                 elif condition['operation'] == '!=':
-#                     new_q &= ~Q(status=condition['value'])
-#             elif condition['type'] == 'tag':
-#                 if condition['operation'] == '=':
-#                     new_q &= Q(tags__name=condition['value'])
-#                 elif condition['operation'] == '!=':
-#                     new_q &= ~Q(tags__name=condition['value'])
-            
-#             # Logic for combining conditions
-#             if i == 0:
-#                 # For the first condition, just set it as the current condition
-#                 current_q = new_q
-#             else:
-#                 # Combine with the previous condition based on the logic
-#                 if condition['logic'] == 'and':
-#                     current_q &= new_q
-#                 elif condition['logic'] == 'or':
-#                     current_q |= new_q
-
-#         # After the loop, current_q holds the combined query
-#         if current_q:
-#             q = current_q
-
-#         # Filter contacts based on the Q object
-#         filtered_contacts = ContactDetail.objects.filter(q)
-
-#         # Save the segment
-#         segment = Segment.objects.create(
-#             name=name,
-#             description=description,
-#             created_by=request.user,  # Assuming you have a `created_by` field in the Segment model
-#             created_at=now(),
-#             modified_at=now(),
-#             conditions=conditions,
-#             # additional_rules=conditions,
-#         )
-
-
-#         print(conditions)
-
-#         # Optional: Save filtered contacts to the segment if needed
-#         for contact in filtered_contacts:
-#             segment.contacts.add(contact)  # Assuming you have a ManyToMany relationship with contacts
-
-#         return redirect('segments:segment_list')  # Redirect to a segment list page or detail view after saving
-#     else:
-#         form = SegmentForm()
-
-#         context = {
-#             'form': form
-#         }
-
-#     return render(request, 'segments/create_segment.html', context)
 
 
 @login_required
@@ -293,7 +226,7 @@ def segment_list(request):
     return render(request, 'segments/segment_list.html', {'segments': page_segments})
 
 @login_required
-def segment_detail(request, pk):
+def segment_contacts(request, pk):
     segment = get_object_or_404(Segment, pk=pk)
     # contacts = segment.get_contacts()
     contacts = segment.contacts.all()
