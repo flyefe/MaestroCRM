@@ -1,8 +1,7 @@
 {% extends "core/base.html" %}
 {% block content %}
-
 <div class="max-w-full mx-auto mt-10">
-    <h2 class="text-3xl font-bold mb-6 text-center">Edit {{segment.name}} Segment</h2>
+    <h2 class="text-3xl font-bold mb-6 text-center">Edit {{ segment.name }} Segment</h2>
     <form method="post" id="segment-form" class="p-10">
         {% csrf_token %}
         {{ form.non_field_errors }}
@@ -18,32 +17,28 @@
         </div>
 
         <div id="conditions-container" class="mb-4">
-            <!-- Placeholder for dynamic conditions -->
+            <!-- JavaScript will populate this -->
         </div>
 
-        <button type="button" id="add-condition-btn" class="btn btn-primary mb-4">
-            Add Condition
-        </button>
+        <button type="button" id="add-condition-btn" class="btn btn-primary mb-4">Add Condition</button>
 
         <input type="hidden" name="conditions" id="conditions-field" value="{{ form.conditions.value|default:'[]' }}">
 
         <div class="form-group hidden">
-            {{ form.conditions }}
             {{ form.status_value }}
             {{ form.tag_value }}
         </div>
 
         <button type="submit" class="btn btn-success">Save Segment</button>
     </form>
-
 </div>
+
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const addConditionBtn = document.getElementById('add-condition-btn');
         const conditionsContainer = document.getElementById('conditions-container');
         const conditionsField = document.getElementById('conditions-field');
 
-        // Get the options from status_value and tag_value fields
         const statusOptions = Array.from(document.querySelectorAll('[name="status_value"] option')).map(option => ({
             value: option.value,
             text: option.text,
@@ -53,119 +48,72 @@
             text: option.text,
         }));
 
-        // Prepopulate conditions container if there are existing conditions
-        const existingConditions = JSON.parse('{{ existing_conditions|escapejs }}');
-        existingConditions.forEach(condition => {
-            createConditionRow(condition);
-        });
+        // Load existing conditions
+        const existingConditions = JSON.parse(conditionsField.value || '[]');
+        existingConditions.forEach(createConditionRow);
 
-        // Add new condition row when the button is clicked
-        addConditionBtn.addEventListener('click', () => {
-            createConditionRow();
-        });
+        addConditionBtn.addEventListener('click', () => createConditionRow());
 
-        function createConditionRow(existingCondition = {}) {
-            const conditionRow = document.createElement('div');
-            conditionRow.className = 'condition-row mb-3';
+        function createConditionRow(condition = {}) {
+            const row = document.createElement('div');
+            row.className = 'condition-row mb-3';
 
-            conditionRow.innerHTML = `
-            <select class="condition-type form-control mb-2">
-                <option value="status">Status</option>
-                <option value="tag">Tag</option>
-            </select>
-            <select class="condition-operation form-control mb-2">
-                <option value="=">=</option>
-                <option value="!=">!=</option>
-            </select>
-            <select class="condition-value form-control mb-2">
-                <!-- Options will be dynamically populated -->
-            </select>
-            <select class="condition-logic form-control mb-2">
-                <option value="and">AND</option>
-                <option value="or">OR</option>
-            </select>
-            <button type="button" class="remove-condition-btn btn btn-danger">Remove</button>
-        `;
+            row.innerHTML = `
+                <select class="condition-logic form-control mb-2">
+                    <option value="and">AND</option>
+                    <option value="or">OR</option>
+                </select>
+                <select class="condition-type form-control mb-2">
+                    <option value="status">Status</option>
+                    <option value="tag">Tag</option>
+                </select>
+                <select class="condition-operation form-control mb-2">
+                    <option value="=">=</option>
+                    <option value="!=">!=</option>
+                </select>
+                <select class="condition-value form-control mb-2">
+                    <!-- Dynamic Options -->
+                </select>
+                <button type="button" class="remove-condition-btn btn btn-danger">Remove</button>
+            `;
 
-            // Populate the value dropdown based on the selected type
-            const typeSelect = conditionRow.querySelector('.condition-type');
-            const valueSelect = conditionRow.querySelector('.condition-value');
-            const logicSelect = conditionRow.querySelector('.condition-logic');
-            const operationSelect = conditionRow.querySelector('.condition-operation');
+            const typeSelect = row.querySelector('.condition-type');
+            const valueSelect = row.querySelector('.condition-value');
+            const logicSelect = row.querySelector('.condition-logic');
+            const operationSelect = row.querySelector('.condition-operation');
 
-            // Set default or existing condition values
-            if (existingCondition.type) {
-                typeSelect.value = existingCondition.type;
-            }
-            if (existingCondition.operation) {
-                operationSelect.value = existingCondition.operation;
-            }
-            if (existingCondition.logic) {
-                logicSelect.value = existingCondition.logic;
-            }
+            typeSelect.value = condition.type || 'status';
+            logicSelect.value = condition.logic || 'and';
+            operationSelect.value = condition.operation || '=';
 
-            // Function to populate the value options based on type
-            const populateValueOptions = () => {
-                const selectedType = typeSelect.value;
-                const options = selectedType === 'status' ? statusOptions : tagOptions;
-
-                // Clear existing options
-                valueSelect.innerHTML = '';
-
-                // Add new options
-                options.forEach(option => {
-                    const opt = document.createElement('option');
-                    opt.value = option.value;
-                    opt.textContent = option.text;
-                    valueSelect.appendChild(opt);
-                });
-
-                // Set the value based on the existing condition or leave it empty
-                if (existingCondition.value) {
-                    valueSelect.value = existingCondition.value;
-                    // Force the select dropdown to refresh after setting the value
-                    valueSelect.dispatchEvent(new Event('change'));  // Trigger change event to force UI update
-                }
+            const populateValues = () => {
+                const options = typeSelect.value === 'status' ? statusOptions : tagOptions;
+                valueSelect.innerHTML = options.map(opt => `<option value="${opt.value}">${opt.text}</option>`).join('');
+                valueSelect.value = condition.value || '';
             };
 
-            // Initialize the options for the condition value
-            populateValueOptions();
+            populateValues();
+            typeSelect.addEventListener('change', populateValues);
 
-            // Update options when type changes
-            typeSelect.addEventListener('change', () => {
-                populateValueOptions();
-            });
-
-            // Remove condition row when the remove button is clicked
-            conditionRow.querySelector('.remove-condition-btn').addEventListener('click', () => {
-                conditionRow.remove();
+            row.querySelector('.remove-condition-btn').addEventListener('click', () => {
+                row.remove();
                 updateConditionsField();
             });
 
-            conditionsContainer.appendChild(conditionRow);
-
-            // Update conditions field whenever a condition row is added or removed
-            updateConditionsField();
+            conditionsContainer.appendChild(row);
         }
 
         function updateConditionsField() {
-            const conditions = Array.from(conditionsContainer.querySelectorAll('.condition-row')).map(row => ({
+            const conditions = Array.from(conditionsContainer.children).map(row => ({
+                logic: row.querySelector('.condition-logic').value,
                 type: row.querySelector('.condition-type').value,
                 operation: row.querySelector('.condition-operation').value,
                 value: row.querySelector('.condition-value').value,
-                logic: row.querySelector('.condition-logic').value,
             }));
-
             conditionsField.value = JSON.stringify(conditions);
         }
 
-        // Update conditions field when the form is submitted
-        document.getElementById('segment-form').addEventListener('submit', (e) => {
-            updateConditionsField();
-        });
+        document.getElementById('segment-form').addEventListener('submit', () => updateConditionsField());
     });
-
 </script>
-
-
 {% endblock %}
