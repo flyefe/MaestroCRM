@@ -41,8 +41,6 @@ def contacts_by_assigned_staff(request, assigned_staff_id):
         'contacts': page_contacts,  # Pass paginated contacts if using pagination
     })
 
-
-
 def contacts_by_status(request, status_id):
     # Get the status by ID
     status = get_object_or_404(Status, id=status_id)
@@ -60,7 +58,6 @@ def contacts_by_status(request, status_id):
         'status': status,
         'contacts': page_contacts,  # Pass paginated contacts if using pagination
     })
-
 
 def contacts_by_tag(request, tag_id):
     tag = get_object_or_404(Tag, id=tag_id)  # Get the tag by ID
@@ -88,9 +85,6 @@ def delete_log(request, log_id):
     messages.success(request, f" Log has been successfully deleted.")
     return redirect ('contact_detail', contact_id)
 
-
-
-
 @login_required
 def update_log(request, log_id):
     log = get_object_or_404(Log, id=log_id)
@@ -113,7 +107,6 @@ def update_log(request, log_id):
     }
 
     return render(request, 'contact/update_log.html', context)
-
 
 @login_required
 def contact_detail(request, contact_id, log_id=None):
@@ -156,8 +149,6 @@ def contact_detail(request, contact_id, log_id=None):
     }
     return render(request, 'contact/contact_detail.html', context)
 
-
-
 @login_required
 def delete_contact(request, contact_id):
     # Check if the user has permission to delete a user (since deleting a contact also deletes the user)
@@ -181,8 +172,6 @@ def delete_contact(request, contact_id):
 
     messages.success(request, f"Contact '{contact.user.first_name}' and associated user account have been successfully deleted.")
     return redirect('contact_list')  # Redirect to contact list or another appropriate page
-
-
     
 @login_required
 def contact_list(request):
@@ -243,7 +232,6 @@ def search_contact(request):
 
     return render(request, 'contact/contact_list.html', context)
 
-
 @login_required
 def filter_contact(request):
     # Initialize form with GET data if available
@@ -282,8 +270,6 @@ def filter_contact(request):
     }
 
     return render(request, 'contact/contact_list.html', context)
-
-
 
 @login_required
 def contacts_bulk_action(request):
@@ -338,16 +324,20 @@ def contacts_bulk_action(request):
                     contact.user.delete()
                 contact.delete() #Delete the ContactDetail Object
             messages.success(request, "Selected contacts deleted successfully!")
+
+        elif action_type == "assign_staff":
+            assigned_staff_id = request.POST.get("assigned_staff")
+            if assigned_staff_id:
+                ContactDetail.objects.filter(id__in=selected_contacts).update(assigned_staff_id=assigned_staff_id)                  
+                messages.success(request, "Contacts assigned to staff successfully!")
+            else:
+                messages.error(request, "No staff provided or selected.")
         
         else:
             messages.error(request, "Invalid action selected.")
         
         return redirect("contact_list")
     return redirect('contact_list')
-
-
-
-
 
 @login_required
 def update_contact(request, contact_id):
@@ -403,8 +393,6 @@ def update_contact(request, contact_id):
         })
         
     return render(request, 'contact/update_contact_detail.html', {'form': form})
-
-
 
 @login_required
 @transaction.atomic

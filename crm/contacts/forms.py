@@ -9,6 +9,9 @@ from django import forms
 from django.contrib.auth.models import User, Group
 from .models import Status, Tag, Service, TrafickSource
 
+from django import forms
+from .models import Log, User, ContactDetail
+
 
 
 class ContactSearchForm(forms.Form):
@@ -165,19 +168,6 @@ class ContactDetailCreationForm(forms.ModelForm):
         self.fields['assigned_staff'].label_from_instance = lambda obj: f"{obj.first_name} {obj.last_name}"
 
 
-# class LogForm (forms.ModelForm):
-
-#     class Meta:
-#         model = Log
-#         fields = ['log_title', 'log_type', 'log_description']
-#         widget = {
-#             'log_title': forms.TextInput(attrs={'class': 'form-input block w-full rounded border-gray-300'}),
-#             'log_type': forms.Select(attrs={'class': 'form-select block w-full rounded border-gray-300'}),
-#             'lod_description': forms.TextInput(attrs={'class': 'form-input block w-full rounded border-gray-300'}),
-#         }
-
-from django import forms
-from .models import Log, User, ContactDetail
 
 class LogForm(forms.ModelForm):
     class Meta:
