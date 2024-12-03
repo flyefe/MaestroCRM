@@ -10,19 +10,33 @@ from django.contrib.auth.models import User, Group
 from .forms import ContactDetailCreationForm, LogForm, ContactFilterForm, ContactSearchForm
 from .models import ContactDetail, Log
 # from .utility import filter_contacts
-from settings.models import Tag, Status
+from settings.models import Tag, Status, TrafickSource
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
-
-
-
 from django.core.paginator import Paginator
 
 
 
+@login_required
+def contacts_by_trafick_source(request, trafick_source_id):
+    # Get the trafick_source ID
+    trafick_source = get_object_or_404(TrafickSource, id=trafick_source_id)
+    
+    # Filter contacts by trafick_source
+    contacts = ContactDetail.objects.filter(trafick_source=trafick_source)
+    
+    # Add pagination (Optional)
+    paginator = Paginator(contacts, 2)  # Show 10 contacts per page
+    page_number = request.GET.get('page')
+    page_contacts = paginator.get_page(page_number)
+    
+    # Render the filtered contacts
+    return render(request, 'contact/contacts_by_filter.html', {
+        'trafick_source': trafick_source,
+        'contacts': page_contacts,  # Pass paginated contacts if using pagination
+    })
 
-
-
+@login_required
 def contacts_by_assigned_staff(request, assigned_staff_id):
     # Get the staff by ID
     assigned_staff = get_object_or_404(User, id=assigned_staff_id)
@@ -41,6 +55,7 @@ def contacts_by_assigned_staff(request, assigned_staff_id):
         'contacts': page_contacts,  # Pass paginated contacts if using pagination
     })
 
+@login_required
 def contacts_by_status(request, status_id):
     # Get the status by ID
     status = get_object_or_404(Status, id=status_id)
@@ -59,6 +74,7 @@ def contacts_by_status(request, status_id):
         'contacts': page_contacts,  # Pass paginated contacts if using pagination
     })
 
+@login_required
 def contacts_by_tag(request, tag_id):
     tag = get_object_or_404(Tag, id=tag_id)  # Get the tag by ID
     contacts = ContactDetail.objects.filter(tags=tag)  # Filter contacts by tag

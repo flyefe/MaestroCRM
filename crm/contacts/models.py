@@ -14,7 +14,7 @@ class ContactDetail(models.Model):
     assigned_staff = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='assigned_contacts')
     phone_number = models.CharField(max_length=15, blank=True)
 
-    trafick_source = models.ForeignKey(TrafickSource, on_delete=models.SET_NULL, null=True, blank=True)
+    trafick_source = models.ForeignKey(TrafickSource, on_delete=models.SET_NULL, null=True, blank=True, related_name='trafick_source_contact')
     services = models.ForeignKey(Service, on_delete=models.SET_NULL, null=True, blank=True)
     open_date = models.DateTimeField(blank=True, null=True)
     close_date = models.DateTimeField(blank=True, null=True)

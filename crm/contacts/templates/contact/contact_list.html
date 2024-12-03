@@ -78,6 +78,7 @@
                             <th class="py-3 px-4 text-left text-sm font-semibold w-40">Status</th>
                             <th class="py-3 px-4 text-left text-sm font-semibold w-40">Tags</th>
                             <th class="py-3 px-4 text-left text-sm font-semibold w-60">Assigned Staff</th>
+                            <th class="py-3 px-4 text-left text-sm font-semibold w-60">Trafick Source</th>
                             <th class="py-3 px-4 text-left text-sm font-semibold w-40">Last Update</th>
                         </tr>
                     </thead>
@@ -137,7 +138,16 @@
                                     {{ contact.assigned_staff.get_full_name }}
                                 </a>
                                 {% else %}
-                                <span>Not Assigned</span>
+                                <span class="text-xs">Not Assigned</span>
+                                {% endif %}
+                            </td>
+                            <td class="py-2 px-4 border-b border-gray-200 text-sm">
+                                {% if contact.trafick_source %}
+                                <a href="{% url 'contacts_by_trafick_source' contact.trafick_source.id %}" class="text-gray-600 hover:underline">
+                                    {{ contact.trafick_source.name }}
+                                </a>
+                                {% else %}
+                                <span class="text-xs">No Source</span>
                                 {% endif %}
                             </td>
                             <!-- Last Updated -->

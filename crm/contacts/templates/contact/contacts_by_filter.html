@@ -19,6 +19,8 @@
         Contact Tagged "{{tag.name}}"
         {% elif assigned_staff %}
         Contact Assigned To "{{assigned_staff.get_full_name}}"
+        {% elif trafick_source %}
+        Contacts From "{{trafick_source.name}}"
         {% endif %}
     </h2>
 
@@ -34,6 +36,7 @@
                     <th class="py-3 px-4 text-left text-sm font-semibold">Status</th>
                     <th class="py-3 px-4 text-left text-sm font-semibold">Tags</th>
                     <th class="py-3 px-4 text-left text-sm font-semibold">Assigned Staff</th>
+                    <th class="py-3 px-4 text-left text-sm font-semibold">Traffick Source</th>
                     <th class="py-3 px-4 text-left text-sm font-semibold">Last Update</th>
                 </tr>
             </thead>
@@ -78,6 +81,15 @@
                         </a>
                         {% else %}
                         <span>Not Assigned</span>
+                        {% endif %}
+                    </td>
+                    <td class="py-2 px-4 border-b border-gray-200">
+                        {% if contact.trafick_source %}
+                        <a href="{% url 'contacts_by_trafick_source' contact.trafick_source.id %}" class="text-teal-600 hover:underline">
+                            {{ contact.trafick_source.name }}
+                        </a>
+                        {% else %}
+                        <span>No Source</span>
                         {% endif %}
                     </td>
                     <td class="py-2 px-4 border-b border-gray-200">
