@@ -21,6 +21,8 @@ urlpatterns = [
     
     #Django Admin
     path("admin-site/", admin.site.urls),
+    path('select2/', include('django_select2.urls')),
+    
 
 
 

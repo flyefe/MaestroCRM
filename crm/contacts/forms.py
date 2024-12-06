@@ -5,6 +5,7 @@ from .models import ContactDetail, Log
 from settings.models import TrafficSource, Service, Status,Tag
 
 
+
 from django import forms
 from django.contrib.auth.models import User, Group
 from .models import Status, Tag, Service, TrafficSource
@@ -111,9 +112,11 @@ class ContactDetailCreationForm(forms.ModelForm):
         label="Assigned Staff",
         empty_label="Select Staff",
         to_field_name="id",  # This is important to keep the correct ID
-        widget=forms.Select(attrs={
+        widget=Select2Widget(attrs={
             'class': 'form-select block w-full rounded border border-black p-2 mb-2',
             'style': 'background-color: #f5f5f5;'
+            'data-placeholder': 'Select a reference...',  # Placeholder for the dropdown
+            'data-allow-clear': 'true',  # Allow the user to clear their selection
         }),
         required=False
     )
