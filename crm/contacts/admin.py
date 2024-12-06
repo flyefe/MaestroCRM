@@ -3,7 +3,7 @@ from .models import ContactDetail, Log
 
 @admin.register(ContactDetail)
 class ContactDetailAdmin(admin.ModelAdmin):
-    list_display = ('user', 'status', 'assigned_staff', 'phone_number', 'trafick_source', 'services', 'created_at', 'modified_at')
+    list_display = ('user', 'status', 'assigned_staff', 'phone_number', 'traffic_source', 'services', 'created_at', 'modified_at')
     search_fields = ('user__username', 'user__first_name', 'user__last_name', 'phone_number', 'tags')
 
 @admin.register(Log)

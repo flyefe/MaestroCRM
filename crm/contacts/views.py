@@ -18,12 +18,12 @@ from django.core.paginator import Paginator
 
 
 @login_required
-def contacts_by_trafick_source(request, trafick_source_id):
-    # Get the trafick_source ID
-    trafick_source = get_object_or_404(TrafickSource, id=trafick_source_id)
+def contacts_by_traffic_source(request, traffic_source_id):
+    # Get the traffic_source ID
+    traffic_source = get_object_or_404(TrafickSource, id=traffic_source_id)
     
-    # Filter contacts by trafick_source
-    contacts = ContactDetail.objects.filter(trafick_source=trafick_source)
+    # Filter contacts by traffic_source
+    contacts = ContactDetail.objects.filter(traffic_source=traffic_source)
     
     # Add pagination (Optional)
     paginator = Paginator(contacts, 2)  # Show 10 contacts per page
@@ -32,7 +32,7 @@ def contacts_by_trafick_source(request, trafick_source_id):
     
     # Render the filtered contacts
     return render(request, 'contact/contacts_by_filter.html', {
-        'trafick_source': trafick_source,
+        'traffic_source': traffic_source,
         'contacts': page_contacts,  # Pass paginated contacts if using pagination
     })
 
@@ -231,7 +231,7 @@ def search_contact(request):
             Q(status__name__icontains=query) |
             Q(tags__name__icontains=query) |
             Q(services__name__icontains=query) |
-            Q(trafick_source__name__icontains=query)
+            Q(traffic_source__name__icontains=query)
         ).distinct()
 
     # Pagination
@@ -269,8 +269,8 @@ def filter_contact(request):
             contacts = contacts.filter(tags=filter_form.cleaned_data['tags'])
         if filter_form.cleaned_data['services']:
             contacts = contacts.filter(services=filter_form.cleaned_data['services'])
-        if filter_form.cleaned_data['trafick_source']:
-            contacts = contacts.filter(trafick_source=filter_form.cleaned_data['trafick_source'])
+        if filter_form.cleaned_data['traffic_source']:
+            contacts = contacts.filter(traffic_source=filter_form.cleaned_data['traffic_source'])
         if filter_form.cleaned_data['assigned_staff']:
             contacts = contacts.filter(assigned_staff=filter_form.cleaned_data['assigned_staff'])
 

@@ -45,7 +45,7 @@ class ContactFilterForm(forms.Form):
         empty_label="All Services",
         widget=forms.Select(attrs={"class": "text-sm border-gray-300 rounded py-2 px-3"})
     )
-    trafick_source = forms.ModelChoiceField(
+    traffic_source = forms.ModelChoiceField(
         queryset=TrafickSource.objects.all(),
         required=False,
         empty_label="All Traffic Sources",
@@ -121,7 +121,7 @@ class ContactDetailCreationForm(forms.ModelForm):
     class Meta:
         model = ContactDetail
         fields = ['first_name', 'last_name', 'email', 'status', 'tags', 'assigned_staff', 
-                  'phone_number', 'trafick_source', 'services']
+                  'phone_number', 'traffic_source', 'services']
         widgets = {
             'status': forms.Select(attrs={
                 'class': 'form-select block w-full rounded border border-black p-2 mb-2',
@@ -137,7 +137,7 @@ class ContactDetailCreationForm(forms.ModelForm):
                 'style': 'background-color: #f5f5f5;'
             }),
 
-            'trafick_source': forms.Select(attrs={
+            'traffic_source': forms.Select(attrs={
                 'class': 'form-select block w-full rounded border border-black p-2 mb-2',
                 'style': 'background-color: #f5f5f5;'
             }),

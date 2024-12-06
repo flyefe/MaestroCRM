@@ -142,9 +142,9 @@
                                 {% endif %}
                             </td>
                             <td class="py-2 px-4 border-b border-gray-200 text-sm">
-                                {% if contact.trafick_source %}
-                                <a href="{% url 'contacts_by_trafick_source' contact.trafick_source.id %}" class="text-gray-600 hover:underline">
-                                    {{ contact.trafick_source.name }}
+                                {% if contact.traffic_source %}
+                                <a href="{% url 'contacts_by_traffic_source' contact.traffic_source.id %}" class="text-gray-600 hover:underline">
+                                    {{ contact.traffic_source.name }}
                                 </a>
                                 {% else %}
                                 <span class="text-xs">No Source</span>

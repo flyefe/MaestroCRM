@@ -11,7 +11,7 @@ urlpatterns = [
     path('contacts-by-tag/<int:tag_id>/', views.contacts_by_tag, name='contacts_by_tag'),
     path('contacts-by-status/<int:status_id>/', views.contacts_by_status, name='contacts_by_status'),
     path('contacts-by-staff/<int:assigned_staff_id>/', views.contacts_by_assigned_staff, name='contacts_by_assigned_staff'),
-    path('contacts-trafick-source/<int:trafick_source_id>/', views.contacts_by_trafick_source, name='contacts_by_trafick_source'),
+    path('contacts-trafick-source/<int:traffic_source_id>/', views.contacts_by_traffic_source, name='contacts_by_traffic_source'),
     path('contact/', views.filter_contact, name='filter_contact'),
     path('contact-query/', views.search_contact, name='search_contact'),
 
