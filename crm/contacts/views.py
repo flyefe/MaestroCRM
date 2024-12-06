@@ -10,7 +10,7 @@ from django.contrib.auth.models import User, Group
 from .forms import ContactDetailCreationForm, LogForm, ContactFilterForm, ContactSearchForm
 from .models import ContactDetail, Log
 # from .utility import filter_contacts
-from settings.models import Tag, Status, TrafickSource
+from settings.models import Tag, Status, TrafficSource
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
 from django.core.paginator import Paginator
@@ -20,7 +20,7 @@ from django.core.paginator import Paginator
 @login_required
 def contacts_by_traffic_source(request, traffic_source_id):
     # Get the traffic_source ID
-    traffic_source = get_object_or_404(TrafickSource, id=traffic_source_id)
+    traffic_source = get_object_or_404(TrafficSource, id=traffic_source_id)
     
     # Filter contacts by traffic_source
     contacts = ContactDetail.objects.filter(traffic_source=traffic_source)

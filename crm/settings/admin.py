@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Status, Service, TrafickSource, Tag
+from .models import Status, Service, TrafficSource, Tag
 
 # Register your models here.
 @admin.register(Status)
@@ -11,8 +11,8 @@ class StatusAdmin(admin.ModelAdmin):
 class ServiceAdmin(admin.ModelAdmin):
     list_display = ('id', 'name')  # Customize the displayed fields as needed
 
-@admin.register(TrafickSource)
-class TrafickSourceAdmin(admin.ModelAdmin):
+@admin.register(TrafficSource)
+class TrafficSourceAdmin(admin.ModelAdmin):
     list_display = ('id', 'name')  # Customize the displayed fields as needed
 
 

@@ -3,7 +3,7 @@ from django.contrib.auth.models import User, Group
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils import timezone  # Import this at the top
-from settings.models import Status, Service, TrafickSource, Tag
+from settings.models import Status, Service, TrafficSource, Tag
 
 
 
@@ -14,7 +14,7 @@ class ContactDetail(models.Model):
     assigned_staff = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='assigned_contacts')
     phone_number = models.CharField(max_length=15, blank=True)
 
-    traffic_source = models.ForeignKey(TrafickSource, on_delete=models.SET_NULL, null=True, blank=True, related_name='trafick_source_contact')
+    traffic_source = models.ForeignKey(TrafficSource, on_delete=models.SET_NULL, null=True, blank=True, related_name='trafick_source_contact')
     services = models.ForeignKey(Service, on_delete=models.SET_NULL, null=True, blank=True)
     open_date = models.DateTimeField(blank=True, null=True)
     close_date = models.DateTimeField(blank=True, null=True)

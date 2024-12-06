@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from .forms import UpdateSettingsForm
-from .models import Status, Service, TrafickSource
+from .models import Status, Service, TrafficSource
 
 def update_settings(request):
     if request.method == 'POST':
@@ -9,7 +9,7 @@ def update_settings(request):
             # Clear all previous data
             Status.objects.all().delete()
             Service.objects.all().delete()
-            TrafickSource.objects.all().delete()
+            TrafficSource.objects.all().delete()
 
             # Process and add new Statuses
             statuses = form.cleaned_data['statuses']
@@ -30,14 +30,14 @@ def update_settings(request):
             if traffic_sources:
                 traffic_source_names = {name.strip().title() for name in traffic_sources.split(',') if name.strip()}
                 for name in traffic_source_names:
-                    TrafickSource.objects.create(name=name)
+                    TrafficSource.objects.create(name=name)
 
             return redirect('contact_list')  # Redirect to the desired page
     else:
         # Query existing values for editing
         existing_statuses = ', '.join(Status.objects.values_list('name', flat=True))
         existing_services = ', '.join(Service.objects.values_list('name', flat=True))
-        existing_traffic_sources = ', '.join(TrafickSource.objects.values_list('name', flat=True))
+        existing_traffic_sources = ', '.join(TrafficSource.objects.values_list('name', flat=True))
 
         # Prepopulate the form with existing data
         form = UpdateSettingsForm(initial={

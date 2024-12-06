@@ -1,5 +1,5 @@
 from django import forms
-from .models import Status, Service, TrafickSource
+from .models import Status, Service, TrafficSource
 
 class UpdateSettingsForm(forms.Form):
     statuses = forms.CharField(

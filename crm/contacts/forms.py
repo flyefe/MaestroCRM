@@ -2,12 +2,12 @@ from django import forms
 from django.contrib.auth.models import User, Group
 from django.db.models import Q  # Import Q here
 from .models import ContactDetail, Log
-from settings.models import TrafickSource, Service, Status,Tag
+from settings.models import TrafficSource, Service, Status,Tag
 
 
 from django import forms
 from django.contrib.auth.models import User, Group
-from .models import Status, Tag, Service, TrafickSource
+from .models import Status, Tag, Service, TrafficSource
 
 from django import forms
 from .models import Log, User, ContactDetail
@@ -46,7 +46,7 @@ class ContactFilterForm(forms.Form):
         widget=forms.Select(attrs={"class": "text-sm border-gray-300 rounded py-2 px-3"})
     )
     traffic_source = forms.ModelChoiceField(
-        queryset=TrafickSource.objects.all(),
+        queryset=TrafficSource.objects.all(),
         required=False,
         empty_label="All Traffic Sources",
         widget=forms.Select(attrs={"class": "text-sm border-gray-300 rounded py-2 px-3"})
