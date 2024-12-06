@@ -121,7 +121,7 @@ class ContactDetailCreationForm(forms.ModelForm):
     class Meta:
         model = ContactDetail
         fields = ['first_name', 'last_name', 'email', 'status', 'tags', 'assigned_staff', 
-                  'phone_number', 'traffic_source', 'services']
+                  'phone_number', 'traffic_source', 'services', 'referred_by', 'date_of_birth']
         widgets = {
             'status': forms.Select(attrs={
                 'class': 'form-select block w-full rounded border border-black p-2 mb-2',
@@ -141,11 +141,15 @@ class ContactDetailCreationForm(forms.ModelForm):
                 'class': 'form-select block w-full rounded border border-black p-2 mb-2',
                 'style': 'background-color: #f5f5f5;'
             }),
+            'referred_by': forms.Select(attrs={
+                'class': 'form-select block w-full rounded border border-black p-2 mb-2',
+                'style': 'background-color: #f5f5f5;'
+            }),
             'services': forms.Select(attrs={
                 'class': 'form-select block w-full rounded border border-black p-2 mb-2',
                 'style': 'background-color: #f5f5f5;'
             }),
-            'open_date': forms.DateTimeInput(attrs={
+            'date_of_birth': forms.DateTimeInput(attrs={
                 'type': 'datetime-local', 
                 'class': 'form-input block w-full rounded border border-black p-2 mb-2', 
                 'style': 'background-color:#f5f5f5'

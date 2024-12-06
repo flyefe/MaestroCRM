@@ -16,8 +16,9 @@ class ContactDetail(models.Model):
 
     traffic_source = models.ForeignKey(TrafficSource, on_delete=models.SET_NULL, null=True, blank=True, related_name='trafick_source_contact')
     services = models.ForeignKey(Service, on_delete=models.SET_NULL, null=True, blank=True)
-    open_date = models.DateTimeField(blank=True, null=True)
+    date_of_birth = models.DateTimeField(blank=True, null=True)
     close_date = models.DateTimeField(blank=True, null=True)
+    referred_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='referee_contacts')
 
     created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='created_contacts')
     created_at = models.DateTimeField(auto_now_add=True)
