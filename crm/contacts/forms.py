@@ -4,6 +4,8 @@ from django.db.models import Q  # Import Q here
 from .models import ContactDetail, Log
 from settings.models import TrafficSource, Service, Status,Tag
 
+from django_select2.forms import Select2Widget, ModelSelect2Widget
+
 
 
 from django import forms
@@ -107,16 +109,34 @@ class ContactDetailCreationForm(forms.ModelForm):
         label="Assign Tags"
     )
 
-    assigned_staff = forms.ModelChoiceField(
-        queryset=User.objects.filter(Q(is_staff=True) | Q(groups__name="Staff")).distinct(),
-        label="Assigned Staff",
-        empty_label="Select Staff",
+    # assigned_staff = forms.ModelChoiceField(
+    #     queryset=User.objects.filter(Q(is_staff=True) | Q(groups__name="Staff")).distinct(),
+    #     label="Assigned Staff",
+    #     empty_label="Select Staff",
+    #     to_field_name="id",  # This is important to keep the correct ID
+    #     widget=Select2Widget(
+    #         attrs={
+    #         'class': 'form-select block w-full rounded border border-teal-700 p-2 mb-2',
+    #         'style': 'background-color: #f5f5f5;',
+    #         'data-placeholder': 'Select a reference...',  # Placeholder for the dropdown
+    #         'data-allow-clear': 'true',  # Allow the user to clear their selection
+    #         'data-minimum-results-for-search': '0',
+    #     }),
+    #     required=False
+    # )
+
+    referred_by = forms.ModelChoiceField(
+        queryset=User.objects.all(),
+        label="Referred By",
+        empty_label="Referred By",
         to_field_name="id",  # This is important to keep the correct ID
-        widget=Select2Widget(attrs={
-            'class': 'form-select block w-full rounded border border-black p-2 mb-2',
-            'style': 'background-color: #f5f5f5;'
+        widget=Select2Widget(
+            attrs={
+            'class': 'form-select block w-full rounded border border-teal-700 p-2 mb-2',
+            'style': 'background-color: #f5f5f5;',
             'data-placeholder': 'Select a reference...',  # Placeholder for the dropdown
             'data-allow-clear': 'true',  # Allow the user to clear their selection
+            'data-minimum-results-for-search': '0',
         }),
         required=False
     )
@@ -130,10 +150,10 @@ class ContactDetailCreationForm(forms.ModelForm):
                 'class': 'form-select block w-full rounded border border-black p-2 mb-2',
                 'style': 'background-color: #f5f5f5;'
             }),
-            # 'assigned_staff': forms.Select(attrs={
-            #     'class': 'form-select block w-full rounded border border-black p-2 mb-2',
-            #     'style': 'background-color: #f5f5f5;'
-            # }),
+            'assigned_staff': Select2Widget(attrs={
+                'class': 'form-select block w-full rounded border border-black p-2 mb-2',
+                'style': 'background-color: #f5f5f5;'
+            }),
             
             'phone_number': forms.TextInput(attrs={
                 'class': 'form-input block w-full rounded border border-black p-2 mb-2',
@@ -144,10 +164,10 @@ class ContactDetailCreationForm(forms.ModelForm):
                 'class': 'form-select block w-full rounded border border-black p-2 mb-2',
                 'style': 'background-color: #f5f5f5;'
             }),
-            'referred_by': forms.Select(attrs={
-                'class': 'form-select block w-full rounded border border-black p-2 mb-2',
-                'style': 'background-color: #f5f5f5;'
-            }),
+            # 'referred_by': Select2Widget(attrs={
+            #     'class': 'form-select block w-full rounded border border-black p-2 mb-2',
+            #     'style': 'background-color: #f5f5f5;',
+            # }),
             'services': forms.Select(attrs={
                 'class': 'form-select block w-full rounded border border-black p-2 mb-2',
                 'style': 'background-color: #f5f5f5;'
@@ -164,6 +184,11 @@ class ContactDetailCreationForm(forms.ModelForm):
             }),
         }
 
+         # Set referred_by field to be not required within the Meta class
+        # required = {
+        #     'referred_by': False
+        # }
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         
@@ -173,6 +198,8 @@ class ContactDetailCreationForm(forms.ModelForm):
             Q(is_staff=True) | Q(groups=specific_group)
         ).distinct()
         self.fields['assigned_staff'].label_from_instance = lambda obj: f"{obj.first_name} {obj.last_name}"
+        self.fields['referred_by'].label_from_instance = lambda obj: f"{obj.first_name} {obj.last_name}"
+
 
 
 
