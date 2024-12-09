@@ -49,10 +49,10 @@
                         All</a>
                     <a href="{% url 'add_contact' %}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Add
                         Contact</a>
+                    <a href="{% url 'status_list' %}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Status</a>
+                    <a href="{% url 'tag_list' %}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Tags</a>
                     <a href="{% url 'segments:list' %}"
-                        class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Segment List</a>
-                    <a href="{% url 'segments:add' %}"
-                        class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Create Segment</a>
+                        class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Segments</a>
                 </div>
             </div>            
             {% endif %}
@@ -72,8 +72,8 @@
 
                     <a href="{% url 'staff_list' %}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Staffs</a>
                     <a href="{% url 'user_list' %}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Users</a>
-                    <a href="{% url 'create_group' %}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Add
-                        Role</a>
+                    <a href="{% url 'create_group' %}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">
+                        Roles</a>
                     <a href="{% url 'update_settings' %}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Update
                         Settings</a>
                 </div>

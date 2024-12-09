@@ -1,10 +1,9 @@
 from django.urls import path
 # from . import views
-from . import views
+from . import views, views_status, views_tags
 
 #Urls patterns
 urlpatterns = [
-    path('delete-contact/<int:contact_id>/delete', views.delete_contact, name='delete_contact'),
     path('update-log/<int:log_id>/delete', views.delete_log, name='delete_log'),
     path('update-log/<int:log_id>/', views.update_log, name='update_log'),
 
@@ -19,12 +18,26 @@ urlpatterns = [
 
     # path('contacts/filter/<str:filter_type>/<int:filter_id>/', filter_contacts, name='filter_contacts'),
 
-
+    path('delete-contact/<int:contact_id>/delete', views.delete_contact, name='delete_contact'),
     path('update-contact/<int:contact_id>/update', views.update_contact, name='update_contact'),
     path('contact_deatil/<int:contact_id>/', views.contact_detail, name='contact_detail'),
     path('add-contact', views.create_contact, name='add_contact'),
     path("contact-list/", views.contact_list, name='contact_list'),
     path("contacts-bulk-action/", views.contacts_bulk_action, name='contacts_bulk_action'),
+
+    #Statuses
+    path('status-list', views_status.status_list, name='status_list'),
+    path('edit-status/<int:status_id>/', views_status.edit_status, name='edit_status'),
+    path('delete-status/<int:status_id>/', views_status.delete_status, name='delete_status'),
+
+
+    #Tags
+    path('tag-list', views_tags.tag_list, name='tag_list'),
+    path('edit-tag/<int:tag_id>/', views_tags.edit_tag, name='edit_tag'),
+    path('delete-tag/<int:tag_id>/', views_tags.delete_tag, name='delete_tag'),
+
+
+
 
 ]
 

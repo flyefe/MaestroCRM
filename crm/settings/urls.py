@@ -1,8 +1,10 @@
 from django.urls import path
-from .views import update_settings
+from . import views
 
 
 
 urlpatterns = [
-    path('update_settings/', update_settings, name='update_settings'),
+    path('update-settings/', views.update_settings, name='update_settings'),
+    # path('status-settings/', views.update_status, name='status_settings'),
+
 ]

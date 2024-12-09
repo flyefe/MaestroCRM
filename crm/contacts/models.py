@@ -9,8 +9,8 @@ from settings.models import Status, Service, TrafficSource, Tag
 
 class ContactDetail(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    status = models.ForeignKey(Status, on_delete=models.SET_NULL, null=True, blank=True)
-    tags = models.ManyToManyField(Tag, blank=True, related_name='contact')
+    status = models.ForeignKey(Status, on_delete=models.SET_NULL, related_name='contacts', null=True, blank=True)
+    tags = models.ManyToManyField(Tag, blank=True, related_name='contacts')
     assigned_staff = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='assigned_contacts')
     phone_number = models.CharField(max_length=15, blank=True)
 

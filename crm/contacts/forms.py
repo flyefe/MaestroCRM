@@ -72,9 +72,6 @@ class ContactFilterForm(forms.Form):
         self.fields['assigned_staff'].queryset = User.objects.filter(assigned_contacts__isnull=False).distinct()
         self.fields['assigned_staff'].label_from_instance = lambda obj: f"{obj.get_full_name()}" if obj.get_full_name() else obj.username
 
-
-
-
 class ContactDetailCreationForm(forms.ModelForm):
     first_name = forms.CharField(max_length=30, label="First Name", required=True, widget=forms.TextInput(attrs={
         'class': 'form-input block w-full rounded border border-black p-2 mb-2',
@@ -200,9 +197,6 @@ class ContactDetailCreationForm(forms.ModelForm):
         self.fields['assigned_staff'].label_from_instance = lambda obj: f"{obj.first_name} {obj.last_name}"
         self.fields['referred_by'].label_from_instance = lambda obj: f"{obj.first_name} {obj.last_name}"
 
-
-
-
 class LogForm(forms.ModelForm):
     class Meta:
         model = Log
@@ -232,3 +226,30 @@ class LogForm(forms.ModelForm):
         super(LogForm, self).__init__(*args, **kwargs)
         # self.fields['contact'].queryset = ContactDetail.objects.all()
         # self.fields['created_by'].queryset = User.objects.all()
+
+class StatusForm(forms.ModelForm):
+    name = forms.CharField(
+        label='Status Name',
+        widget=forms.TextInput(attrs={
+            'placeholder': 'Customers',
+            'class': 'form-input block w-full rounded border border-black p-2 mb-2',
+            'style': 'background-color: #f5f5f5;'}
+        )
+    )
+    class Meta:
+        model = Status  # Link the form to the Status model
+        fields = ['name']  # List of fields to include in the form
+
+class TagForm(forms.ModelForm):
+    name = forms.CharField(
+        label='Tag Name',
+        widget=forms.TextInput(attrs={
+            'placeholder': 'VIP',
+            'class': 'form-input block w-full rounded border border-black p-2 mb-2',
+            'style': 'background-color: #f5f5f5;'}
+        )
+    )
+    class Meta:
+        model = Tag  # Link the form to the Status model
+        fields = ['name']  # List of fields to include in the form
+
