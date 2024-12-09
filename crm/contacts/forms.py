@@ -232,7 +232,8 @@ class StatusForm(forms.ModelForm):
         label='Status Name',
         widget=forms.TextInput(attrs={
             'placeholder': 'Customers',
-            'class': 'form-input block w-full rounded border border-black p-2 mb-2',
+            'class': 'form-input block w-full rounded border border-black p-2 mb-2 focus:ring focus:ring-teal-500',
+            # 'class' : "border rounded-lg p-2 w-full focus:ring focus:ring-teal-200",
             'style': 'background-color: #f5f5f5;'}
         )
     )

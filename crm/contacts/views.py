@@ -348,6 +348,22 @@ def contacts_bulk_action(request):
                 messages.success(request, "Contacts assigned to staff successfully!")
             else:
                 messages.error(request, "No staff provided or selected.")
+
+        elif action_type == "traffic_source":
+            traffic_source_id = request.POST.get("traffic_source")
+            if traffic_source_id:
+                ContactDetail.objects.filter(id__in=selected_contacts).update(traffic_source_id=traffic_source_id)                  
+                messages.success(request, "Contacts traffic sources updated successfully!")
+            else:
+                messages.error(request, "No staff provided or selected.")
+
+        elif action_type == "services":
+            services_id = request.POST.get("services")
+            if services_id:
+                ContactDetail.objects.filter(id__in=selected_contacts).update(services_id=services_id)                  
+                messages.success(request, "Contacts services updated successfully!")
+            else:
+                messages.error(request, "No staff provided or selected.")
         
         else:
             messages.error(request, "Invalid action selected.")

@@ -1,6 +1,6 @@
 {% extends 'core/base.html' %}
 
-{% block title %}Status List{% endblock %}
+{% block title %}Tags List{% endblock %}
 
 {% block content %}
 <div class="max-w-6xl mx-auto px-4 mt-10">
@@ -53,7 +53,7 @@
                 </tr>
                 {% empty %}
                 <tr>
-                    <td colspan="4" class="py-4 text-center text-gray-500">No Status Created yet.</td>
+                    <td colspan="4" class="py-4 text-center text-gray-500">No Tags Created yet.</td>
                 </tr>
                 {% endfor %}
             </tbody>
@@ -71,32 +71,26 @@
     </div>
 </div>
 
-<!-- Create Status Form -->
+<!-- Create Tags Form -->
 <div class="mb-6 bg-gray-100 p-4 rounded-lg shadow-md">
-    <h3 class="text-xl font-semibold mb-4">Create New Status</h3>
+
     <hr class="my-6">
 
-    <h2 class="text-2xl font-semibold text-center text-teal-500">Create New Role</h2>
-    <form method="POST" class="space-y-6 mt-4">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit"
-            class="w-full py-2 bg-teal-500 hover:bg-teal-600 text-white font-semibold rounded-lg focus:outline-none focus:ring focus:ring-teal-300">
-            Create Role
-        </button>
-    </form>
+    <h2 class="text-2xl font-semibold text-center text-teal-500">Create New Tag</h2>
+    
     <form method="POST" action="" class="flex space-x-4 items-center">
         {% csrf_token %}
-        <!-- Render Status Form -->
+        <!-- Render Tags Form -->
         {{ form.non_field_errors }}
         <div>
-            <label for="name" class="block text-sm font-medium text-gray-700">Status Name</label>
-            <input type="text" name="name" id="name" class="border rounded-lg p-2 w-full focus:ring focus:ring-teal-200"
-                required>
+            <!-- <label for="name" class="block text-sm font-medium text-gray-700">Tags Name</label> -->
+            <!-- <input type="text" name="name" id="name" class="border rounded-lg p-2 w-full focus:ring focus:ring-teal-200" required> -->
+            {{ form.as_p }}
+    
         </div>
         <button type="submit"
-            class="bg-teal-600 text-white px-4 py-2 rounded-lg hover:bg-teal-700 transition duration-200">
-            Add Status
+            class="mt-2 bg-teal-600 text-white px-4 py-2 rounded-lg hover:bg-teal-700 transition duration-200">
+            Add Tags
         </button>
     </form>
 </div>

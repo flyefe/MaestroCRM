@@ -15,6 +15,7 @@
                     <option value="update_status">Update Status</option>
                     <option value="add_tags">Add Tags</option>
                     <option value="remove_tag">Remove Tags</option>
+                    <option value="add_traffic">Add Traffic</option>
                     <option value="remove_tag">Delete</option>
                 </select>
                 <button type="submit" class="ml-2 bg-gray-600 text-white py-2 px-4 rounded hover:bg-gray-700">
@@ -239,6 +240,28 @@
         </form>
     </div>
 
+    <!-- Add Traffic Modal -->
+    <div id="add-traffic-modal" class="bg-white rounded-lg shadow-lg w-3/4 max-w-lg p-6 hidden">
+        <h3 class="text-xl font-semibold mb-4">Add Traffic</h3>
+        <form method="POST" action="{% url 'add_traffic' %}">
+            {% csrf_token %}
+            <input type="hidden" name="selected_contacts" id="traffic-selected-contacts">
+            <label for="traffic-count" class="block text-sm font-medium mb-2">Enter Traffic Count:</label>
+            <input type="number" name="traffic_count" id="traffic-count" min="1"
+                class="w-full border border-gray-300 rounded py-2 px-3 mb-4" required>
+            <div class="flex justify-end">
+                <button type="button" onclick="closeModal()"
+                    class="bg-gray-500 text-white py-2 px-4 rounded hover:bg-gray-600 mr-2">
+                    Cancel
+                </button>
+                <button type="submit" class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600">
+                    Add Traffic
+                </button>
+            </div>
+        </form>
+    </div>
+
+
     <!-- Delete Contacts Modal -->
     <div id="delete-contacts-modal" class="bg-white rounded-lg shadow-lg w-3/4 max-w-lg p-6 hidden">
         <h3 class="text-xl font-semibold mb-4 text-red-600">Delete Contacts</h3>
@@ -298,6 +321,9 @@
                 break;
             case 'remove_tag':
                 openModal('remove-tags-modal');
+                break;
+            case 'add_traffic':
+                openModal('add-traffic-modal');
                 break;
             case 'delete':
                 openModal('delete-contacts-modal');

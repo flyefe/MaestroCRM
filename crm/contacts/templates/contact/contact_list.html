@@ -24,6 +24,8 @@
                                 <option value="remove_tag">Remove Tags</option>
                                 <option value="delete">Delete</option>
                                 <option value="assign_staff">Assign Staff</option>
+                                <option value="update_traffic">Add Traffic</option>
+                                <option value="update_services">Services</option>
                             </select>
                             <button type="submit" class="ml-2 bg-gray-600 text-white py-2 px-4 rounded hover:bg-gray-700">
                                 Apply
@@ -297,6 +299,53 @@
             </div>
         </form>
     </div>
+
+    <!-- Traffic Source Modal -->
+    
+    <div id="traffic-source-modal" class="bg-white rounded-lg shadow-lg w-3/4 max-w-lg p-6 hidden">
+        <h3 class="text-xl font-semibold mb-4">Update Traffic Source</h3>
+        <form method="POST" action="{% url 'contacts_bulk_action' %}">
+            {% csrf_token %}
+            <!-- Hidden input for selected contacts -->
+            <input type="hidden" name="action_type" value="traffic_source">
+            <input type="hidden" name="selected_contacts" id="traffic-source-selected-contacts">
+            <label for="traffic_source" class="block text-sm font-medium mb-2">Select Traffic Source:</label>
+            {{ form.traffic_source|safe }} <!-- Ensure this renders correctly -->
+            <div class="flex justify-end">
+                <button type="button" onclick="closeModal()"
+                    class="bg-gray-500 text-white py-2 px-4 rounded hover:bg-gray-600 mr-2">
+                    Cancel
+                </button>
+                <button type="submit" class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600">
+                    Update
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Service Modal -->
+    
+    <div id="services-source-modal" class="bg-white rounded-lg shadow-lg w-3/4 max-w-lg p-6 hidden">
+        <h3 class="text-xl font-semibold mb-4">Update Service</h3>
+        <form method="POST" action="{% url 'contacts_bulk_action' %}">
+            {% csrf_token %}
+            <!-- Hidden input for selected contacts -->
+            <input type="hidden" name="action_type" value="services">
+            <input type="hidden" name="selected_contacts" id="services-selected-contacts">
+            <label for="services" class="block text-sm font-medium mb-2">Select Service:</label>
+            {{ form.services|safe }} <!-- Ensure this renders correctly -->
+            <div class="flex justify-end">
+                <button type="button" onclick="closeModal()"
+                    class="bg-gray-500 text-white py-2 px-4 rounded hover:bg-gray-600 mr-2">
+                    Cancel
+                </button>
+                <button type="submit" class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600">
+                    Update
+                </button>
+            </div>
+        </form>
+    </div>
+
 </div>
 
 <!-- Javascript -->
@@ -342,6 +391,12 @@
                 break;
             case 'assign_staff':
                 openModal('assign-staff-modal');
+                break;
+            case 'update_traffic':
+                openModal('traffic-source-modal');
+                break;
+            case 'update_services':
+                openModal('services-source-modal');
                 break;
             default:
                 alert('Invalid action selected.');
