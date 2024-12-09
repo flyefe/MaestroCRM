@@ -33,6 +33,7 @@ urlpatterns = [
     path('', include('core.urls')),
     #Backend URLs (admin view)
     path('contacts/', include('contacts.urls')),
+    path('dashboard/', include('dashboard.urls')),
     path('contacts/segments/', include('segments.urls')),
     path('admin/user/', include('users.urls')),
     path('admin/settings/', include('settings.urls')),

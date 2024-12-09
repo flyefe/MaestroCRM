@@ -33,6 +33,7 @@
             <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Client Portal</a>
 
             {% if 'Staff' in user_roles %}
+            <a href="{% url 'dashboard' %}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Dashboard</a>
             <!-- Staff Dropdown -->
             <div class="relative group">
                 <button class="flex items-center py-1 px-4 text-gray-600 focus:outline-none">

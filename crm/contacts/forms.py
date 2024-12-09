@@ -254,3 +254,5 @@ class TagForm(forms.ModelForm):
         model = Tag  # Link the form to the Status model
         fields = ['name']  # List of fields to include in the form
 
+class ContactImportForm(forms.Form):
+    file = forms.FileField()
