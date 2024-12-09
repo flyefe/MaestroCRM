@@ -8,7 +8,7 @@
     <form method="post">
         {% csrf_token %}
         {{ form.as_p }}
-        <button type="submit" class="py-2 px-4 bg-teal-500 text-white rounded-xl">Search</button>
+        <button type="submit" class="py-2 px-4 bg-gray-500 text-white rounded-xl">Search</button>
     </form>
     
 
@@ -19,7 +19,7 @@
         {% for user in users %}
         <li class="mb-6">
             <strong>Username :</strong> {{ user.username }}
-            <a href="{% url 'team:add_to_team' user.id %}" class="py-2 px-4 bg-teal-500 text-white rounded-xl ml-4 text-blue-500" 
+            <a href="{% url 'team:add_to_team' user.id %}" class="py-2 px-4 bg-gray-500 text-white rounded-xl ml-4 text-blue-500" 
                 onclick="return confirm('Are you sure you want to add {{ user.username }} to your team?');">Add to Team</a>
         </li>
         {% endfor %}

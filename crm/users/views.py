@@ -395,7 +395,7 @@ def change_password(request, user_id):
          # Customize widgets for password_form fields
         for field_name, field in password_form.fields.items():
             field.widget.attrs.update({
-                'class': 'w-full py-2 px-4 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-teal-300',
+                'class': 'w-full py-2 px-4 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-300',
                 'placeholder': f'Enter {field.label}'
             })
 

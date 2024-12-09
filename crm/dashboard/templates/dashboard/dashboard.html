@@ -25,7 +25,8 @@
     <!-- Traffic Source Chart -->
     <div class="bg-white p-6 rounded-lg shadow-md mb-8">
         <h3 class="text-xl font-bold mb-4">Traffic Sources</h3>
-        <canvas id="trafficChart"></canvas>
+        <canvas id="trafficChart" class="mb-4"></canvas>
+        <canvas id="trafficSourceChart"></canvas>
     </div>
 
     <!-- Services Overview -->
@@ -72,18 +73,42 @@
 <!-- Chart.js Script -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-    const ctx = document.getElementById('trafficChart').getContext('2d');
-    const trafficData = {
-        labels: {{ traffic_sources.keys| safe }},
+    // Pie Chart for Traffic Sources
+    const ctxPie = document.getElementById('trafficChart').getContext('2d');
+    const trafficDataPie = {
+        labels: {{ traffic_sources.keys| safe }}, // Array of traffic sources
     datasets: [{
         label: 'Traffic Sources',
-        data: {{ traffic_sources.values | safe }},
-        backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0'],
+        data: {{ traffic_sources.values | safe }}, // Array of values
+        backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0'], // Colors for the pie chart
         }]
     };
-    new Chart(ctx, {
+    new Chart(ctxPie, {
         type: 'pie',
-        data: trafficData
+        data: trafficDataPie
+    });
+
+    // Bar Chart for Traffic Source Breakdown
+    const ctxBar = document.getElementById('trafficSourceChart').getContext('2d');
+    const trafficDataBar = {
+        labels: {{ traffic_sources_data.labels| safe }}, // Labels for bar chart
+    datasets: [{
+        label: 'Traffic Sources',
+        data: {{ traffic_sources_data.values | safe }}, // Values for bar chart
+        backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'], // Colors for bars
+        }]
+    };
+    new Chart(ctxBar, {
+        type: 'bar',
+        data: trafficDataBar,
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
     });
 </script>
 {% endblock %}

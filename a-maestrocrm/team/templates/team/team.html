@@ -13,10 +13,10 @@
 
             {% if team == active_team %}
             <a href="{% url 'team:detail' team.id %}"
-                class="inline-block py-4 px-6 bg-teal-600 rounded-xl text-white">Team details</a>
+                class="inline-block py-4 px-6 bg-gray-600 rounded-xl text-white">Team details</a>
             {% else %}
             <a href="{% url 'team:activate' team.id %}"
-                class="inline-block py-4 px-6 bg-teal-600 rounded-xl text-white">Activate team</a>
+                class="inline-block py-4 px-6 bg-gray-600 rounded-xl text-white">Activate team</a>
             {% endif %}
         </div>
         {% endfor %}

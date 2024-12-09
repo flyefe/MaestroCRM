@@ -23,7 +23,7 @@ class ContactSearchForm(forms.Form):
         max_length=255,
         required=False,
         widget=forms.TextInput(attrs={
-            'class': 'w-full py-2 px-4 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-teal-300',
+            'class': 'w-full py-2 px-4 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-300',
             'placeholder': 'Search for contacts...'
         })
     )
@@ -100,7 +100,7 @@ class ContactDetailCreationForm(forms.ModelForm):
     tags = forms.ModelMultipleChoiceField(
         queryset=Tag.objects.all(),
         widget=forms.CheckboxSelectMultiple(attrs={
-            'class': 'p-2 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-teal-300'
+            'class': 'p-2 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-300'
         }),
         required=False,
         label="Assign Tags"
@@ -113,7 +113,7 @@ class ContactDetailCreationForm(forms.ModelForm):
     #     to_field_name="id",  # This is important to keep the correct ID
     #     widget=Select2Widget(
     #         attrs={
-    #         'class': 'form-select block w-full rounded border border-teal-700 p-2 mb-2',
+    #         'class': 'form-select block w-full rounded border border-gray-700 p-2 mb-2',
     #         'style': 'background-color: #f5f5f5;',
     #         'data-placeholder': 'Select a reference...',  # Placeholder for the dropdown
     #         'data-allow-clear': 'true',  # Allow the user to clear their selection
@@ -129,7 +129,7 @@ class ContactDetailCreationForm(forms.ModelForm):
         to_field_name="id",  # This is important to keep the correct ID
         widget=Select2Widget(
             attrs={
-            'class': 'form-select block w-full rounded border border-teal-700 p-2 mb-2',
+            'class': 'form-select block w-full rounded border border-gray-700 p-2 mb-2',
             'style': 'background-color: #f5f5f5;',
             'data-placeholder': 'Select a reference...',  # Placeholder for the dropdown
             'data-allow-clear': 'true',  # Allow the user to clear their selection
@@ -232,8 +232,8 @@ class StatusForm(forms.ModelForm):
         label='Status Name',
         widget=forms.TextInput(attrs={
             'placeholder': 'Customers',
-            'class': 'form-input block w-full rounded border border-black p-2 mb-2 focus:ring focus:ring-teal-500',
-            # 'class' : "border rounded-lg p-2 w-full focus:ring focus:ring-teal-200",
+            'class': 'form-input block w-full rounded border border-black p-2 mb-2 focus:ring focus:ring-gray-500',
+            # 'class' : "border rounded-lg p-2 w-full focus:ring focus:ring-gray-200",
             'style': 'background-color: #f5f5f5;'}
         )
     )

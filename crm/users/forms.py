@@ -63,15 +63,15 @@
 #         fields = ['username', 'email', 'password']
 #         widgets = {
 #             'username': forms.TextInput(attrs={
-#                 'class': 'w-full py-2 px-4 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-teal-300',
+#                 'class': 'w-full py-2 px-4 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-300',
 #                 'placeholder': 'Enter your username'
 #             }),
 #             'email': forms.EmailInput(attrs={
-#                 'class': 'w-full py-2 px-4 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-teal-300',
+#                 'class': 'w-full py-2 px-4 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-300',
 #                 'placeholder': 'Enter your email'
 #             }),
 #             'password': forms.PasswordInput(attrs={
-#                 'class': 'w-full py-2 px-4 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-teal-300',
+#                 'class': 'w-full py-2 px-4 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-300',
 #                 'placeholder': 'Enter your password'
 #             }),
 #         }
@@ -86,7 +86,7 @@ class UserEditForm(forms.ModelForm):
         queryset=Group.objects.all(),
         required=False,
         widget=forms.CheckboxSelectMultiple(attrs={
-            'class': 'w-full p-2 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:ring- focus:ring-teal-300'
+            'class': 'w-full p-2 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:ring- focus:ring-gray-300'
         }),
         label="Roles (Groups)"
     )
@@ -96,19 +96,19 @@ class UserEditForm(forms.ModelForm):
         fields = ['username', 'email', 'first_name', 'last_name', 'groups']
         widgets = {
             'username': forms.TextInput(attrs={
-                'class': 'w-full py-2 px-4 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-teal-300',
+                'class': 'w-full py-2 px-4 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-300',
                 'placeholder': 'Enter username'
             }),
             'email': forms.EmailInput(attrs={
-                'class': 'w-full py-2 px-4 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-teal-300',
+                'class': 'w-full py-2 px-4 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-300',
                 'placeholder': 'Enter email'
             }),
             'first_name': forms.TextInput(attrs={
-                'class': 'w-full py-2 px-4 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-teal-300',
+                'class': 'w-full py-2 px-4 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-300',
                 'placeholder': 'Enter first name'
             }),
             'last_name': forms.TextInput(attrs={
-                'class': 'w-full py-2 px-4 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-teal-300',
+                'class': 'w-full py-2 px-4 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-300',
                 'placeholder': 'Enter last name'
             }),
         }
@@ -118,7 +118,7 @@ class RoleEditForm(forms.ModelForm):
     permissions = forms.ModelMultipleChoiceField(
         queryset=Permission.objects.all(),
         widget=forms.CheckboxSelectMultiple(attrs={
-            'class': 'p-2 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-teal-300'
+            'class': 'p-2 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-300'
         }),
         required=False,
         label="Assign Permissions"
@@ -129,7 +129,7 @@ class RoleEditForm(forms.ModelForm):
         fields = ['name', 'permissions']
         widgets = {
             'name': forms.TextInput(attrs={
-                'class': 'w-full py-2 px-4 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-teal-300',
+                'class': 'w-full py-2 px-4 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-300',
                 'placeholder': 'Enter role name'
             }),
         }
@@ -143,7 +143,7 @@ class RoleCreationForm(forms.ModelForm):
     permissions = forms.ModelMultipleChoiceField(
         queryset=Permission.objects.all(),
         widget=forms.CheckboxSelectMultiple(attrs={
-            'class': 'p-2 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-teal-300'
+            'class': 'p-2 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-300'
         }),
         required=False,
         label="Assign Permissions"
@@ -154,7 +154,7 @@ class RoleCreationForm(forms.ModelForm):
         fields = ['name', 'permissions']
         widgets = {
             'name': forms.TextInput(attrs={
-                'class': 'w-full py-2 px-4 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-teal-300',
+                'class': 'w-full py-2 px-4 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-300',
                 'placeholder': 'Enter role name'
             }),
         }
@@ -166,12 +166,12 @@ class RoleCreationForm(forms.ModelForm):
 
 class RegisterForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput(attrs={
-        'class': 'w-full py-2 px-4 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-teal-300',
+        'class': 'w-full py-2 px-4 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-300',
         'placeholder': 'Enter your password'
     }))
     
     confirm_password = forms.CharField(widget=forms.PasswordInput(attrs={
-        'class': 'w-full py-2 px-4 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-teal-300',
+        'class': 'w-full py-2 px-4 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-300',
         'placeholder': 'Confirm your password'
     }))
 
@@ -180,7 +180,7 @@ class RegisterForm(forms.ModelForm):
         fields = ['email']
         widgets = {
             'email': forms.EmailInput(attrs={
-                'class': 'w-full py-2 px-4 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-teal-300',
+                'class': 'w-full py-2 px-4 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-300',
                 'placeholder': 'Enter your email'
             }),
         }

@@ -25,7 +25,7 @@
 
     <hr class="my-4">
 
-    <a href=" {% url 'clients:edit' client.id %} " class="py-2 px-4 rounded-xl bg-teal-500 text-white">Update Customer</a>
+    <a href=" {% url 'clients:edit' client.id %} " class="py-2 px-4 rounded-xl bg-gray-500 text-white">Update Customer</a>
     <a href="{% url 'clients:delete' client.id %}" class="py-2 px-4 rounded-xl bg-red-500 text-white">Delete Customer</a>
     <a href=" /" class="py-2 px-4 rounded-xl bg-blue-500 text-white">Convert back to
         lead</a>
@@ -63,7 +63,7 @@
                 <div>
                     <p>
                         <a href=" {% url 'clients:edit_comment' pk=comment.pk %} "
-                            class="py-2 px-4 rounded-xl bg-teal-500 text-white">Edit</a>
+                            class="py-2 px-4 rounded-xl bg-gray-500 text-white">Edit</a>
                         <a href=" {% url 'clients:delete_comment' pk=comment.pk %}"
                             class="py-2 px-4 rounded-xl bg-red-500 text-white">Delet</a>
                     </p>

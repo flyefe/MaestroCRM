@@ -26,7 +26,7 @@
 
     <div class="overflow-x-auto rounded-lg shadow-lg">
         <table class="min-w-full bg-white border border-gray-300">
-            <thead class="bg-teal-600 text-white">
+            <thead class="bg-gray-600 text-white">
                 <tr>
                     <th class="py-3 px-4 text-left text-sm font-semibold">Added On</th>
                     <th class="py-3 px-4 text-left text-sm font-semibold">Name</th>
@@ -42,10 +42,10 @@
             </thead>
             <tbody>
                 {% for contact in contacts %}
-                <tr class="hover:bg-teal-100 transition duration-200">
+                <tr class="hover:bg-gray-100 transition duration-200">
                     <td class="py-2 px-4 border-b border-gray-200">{{ contact.created_at }}</td>
                     <td class="py-2 px-4 border-b border-gray-200">
-                        <a href="{% url 'contact_detail' contact.id %}" class="text-teal-600 hover:underline">
+                        <a href="{% url 'contact_detail' contact.id %}" class="text-gray-600 hover:underline">
                             {{ contact.user.first_name }} {{ contact.user.last_name }}
                         </a>
                     </td>
@@ -54,7 +54,7 @@
                     <td class="py-2 px-4 border-b border-gray-200">{{ contact.services }}</td>
                     <td class="py-2 px-4 border-b border-gray-200">
                         {% if contact.status %}
-                        <a href="{% url 'contacts_by_status' contact.status.id %}" class="text-teal-600 hover:underline">
+                        <a href="{% url 'contacts_by_status' contact.status.id %}" class="text-gray-600 hover:underline">
                             {{ contact.status }}
                         </a>
                         {% else %}
@@ -65,7 +65,7 @@
                     <td class="py-2 px-4 border-b border-gray-200 text-blue-500">
                         {% for tag in contact.tags.all %}
                         <p>
-                            <a href="{% url 'contacts_by_tag' tag.id %}" class="text-teal-600 hover:underline">
+                            <a href="{% url 'contacts_by_tag' tag.id %}" class="text-gray-600 hover:underline">
                                 {{ tag.name }}
                             </a>
                         </p>
@@ -76,7 +76,7 @@
                     <td class="py-2 px-4 border-b border-gray-200">
                         {% if contact.assigned_staff %}
                         <a href="{% url 'contacts_by_assigned_staff' contact.assigned_staff.id %}"
-                            class="text-teal-600 hover:underline">
+                            class="text-gray-600 hover:underline">
                             {{ contact.assigned_staff.get_full_name }}
                         </a>
                         {% else %}
@@ -85,7 +85,7 @@
                     </td>
                     <td class="py-2 px-4 border-b border-gray-200">
                         {% if contact.traffic_source %}
-                        <a href="{% url 'contacts_by_traffic_source' contact.traffic_source.id %}" class="text-teal-600 hover:underline">
+                        <a href="{% url 'contacts_by_traffic_source' contact.traffic_source.id %}" class="text-gray-600 hover:underline">
                             {{ contact.traffic_source.name }}
                         </a>
                         {% else %}
@@ -104,13 +104,13 @@
                 {% endfor %}
             </tbody>
         </table>
-        <div class="bg-teal-600 py-2 px-4 border-b border-gray-200">
+        <div class="bg-gray-600 py-2 px-4 border-b border-gray-200">
             <span>Page {{ contacts.number }} of {{ contacts.paginator.num_pages }}</span>
             {% if contacts.has_previous %}
-            <a href="?page={{ contacts.previous_page_number }}" class="text-teal-300 hover:underline">Previous</a>
+            <a href="?page={{ contacts.previous_page_number }}" class="text-gray-300 hover:underline">Previous</a>
             {% endif %}
             {% if contacts.has_next %}
-            <a href="?page={{ contacts.next_page_number }}" class="text-teal-300 hover:underline">Next</a>
+            <a href="?page={{ contacts.next_page_number }}" class="text-gray-300 hover:underline">Next</a>
             {% endif %}
         </div>
     </div>

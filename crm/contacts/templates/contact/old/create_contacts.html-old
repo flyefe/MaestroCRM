@@ -10,10 +10,10 @@
         {{ form.as_p|safe }} <!-- Render the form with Tailwind styles -->
 
         <button type="submit"
-            class="mt-4 w-full py-2 px-4 bg-teal-600 text-white font-semibold rounded-lg hover:bg-teal-700 focus:outline-none focus:ring focus:ring-teal-300">Save
+            class="mt-4 w-full py-2 px-4 bg-gray-600 text-white font-semibold rounded-lg hover:bg-gray-700 focus:outline-none focus:ring focus:ring-gray-300">Save
             Contact</button>
     </form>
-    <a href="{% url 'contact_list' %}" class="mt-4 block text-center text-teal-600 hover:underline">Back to Contact
+    <a href="{% url 'contact_list' %}" class="mt-4 block text-center text-gray-600 hover:underline">Back to Contact
         List</a>
 </div>
 {% endblock %}

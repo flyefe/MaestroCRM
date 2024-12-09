@@ -5,18 +5,18 @@
 {% block content %}
 <div class="max-w-4xl mx-auto bg-white rounded-lg shadow-lg overflow-hidden mt-8">
     <!-- Header with Profile Picture, Full Name, and Status -->
-    <div class="bg-teal-600 text-white p-6 flex justify-between items-center">
+    <div class="bg-gray-600 text-white p-6 flex justify-between items-center">
         <div class="flex items-center space-x-4">
             <!-- Profile Image -->
             <img src="https://via.placeholder.com/100" alt="Contact Photo" class="rounded-full border-4 border-white">
             <div>
                 <!-- Contact Full Name -->
                 <h2 class="text-3xl font-semibold">{{ contact.user.first_name }} {{ contact.user.last_name }}</h2>
-                <p class="text-teal-200">{{ contact.status }}</p>
+                <p class="text-gray-200">{{ contact.status }}</p>
             </div>
         </div>
         <!-- Latest Activities -->
-        <div class="text-sm bg-white text-teal-600 rounded-lg shadow-lg p-4 max-w-xs">
+        <div class="text-sm bg-white text-gray-600 rounded-lg shadow-lg p-4 max-w-xs">
             <h3 class="font-bold mb-2">Recent Activity</h3>
             <ul class="space-y-2">
                 {% for activity in recent_activities %}
@@ -77,7 +77,7 @@
         <!-- Action Buttons -->
         <div class="flex justify-between mt-8">
             <a href="{% url 'update_contact' contact.id %}"
-                class="bg-teal-500 text-white py-2 px-6 rounded hover:bg-teal-600">Edit</a>
+                class="bg-gray-500 text-white py-2 px-6 rounded hover:bg-gray-600">Edit</a>
             <form action="{% url 'delete_contact' contact.id %}" method="POST" class="inline">
                 {% csrf_token %}
                 <button onclick="return confirmDelete();" type="submit"
@@ -87,12 +87,12 @@
 
         <!-- Back to List Link -->
         <div class="mt-6 text-center">
-            <a href="{% url 'contact_list' %}" class="text-teal-500 hover:underline">Back to Contact List</a>
+            <a href="{% url 'contact_list' %}" class="text-gray-500 hover:underline">Back to Contact List</a>
         </div>
     </div>
 
 
-    <div class="text-sm bg-white text-teal-600 rounded-lg shadow-lg p-4 max-w-l">
+    <div class="text-sm bg-white text-gray-600 rounded-lg shadow-lg p-4 max-w-l">
     </div>
 
     
@@ -101,7 +101,7 @@
     <!-- Activity Log Section -->
     <div class="mt-2 bg-white shadow-md rounded-lg p-10">
 
-        <div class="mb-10 text-sm bg-white text-teal-600 rounded-lg shadow-lg p-4 max-w-l mx-10">
+        <div class="mb-10 text-sm bg-white text-gray-600 rounded-lg shadow-lg p-4 max-w-l mx-10">
             <h3 class="font-bold mb-2">Log</h3>
             <ul class="space-y-4">
                 {% for log in logs %}
@@ -117,7 +117,7 @@
                         <span>Last Updated</span> <span class="text-gray-500 text-xs">{{ log.created_at|date:"Y-m-d h:i a" }}</span>
 
                         <!-- Edit and Delete Buttons -->
-                        <a href="{% url 'update_log' log.id %}" class="bg-teal-500 text-white py-1 px-2 rounded hover:bg-teal-600">
+                        <a href="{% url 'update_log' log.id %}" class="bg-gray-500 text-white py-1 px-2 rounded hover:bg-gray-600">
                             <i class="fas fa-edit"></i>
                         </a>
                         <!-- Delete Log -->

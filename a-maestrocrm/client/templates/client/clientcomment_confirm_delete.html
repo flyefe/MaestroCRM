@@ -8,9 +8,9 @@
     <p>{{ object.first_name }}</p>
     <form method="post">
         {% csrf_token %}
-        <button type="submit" class="py-4 px-8 bg-teal-500 text-white rounded-xl">Confirm Delete</button>
+        <button type="submit" class="py-4 px-8 bg-gray-500 text-white rounded-xl">Confirm Delete</button>
         <a href="{% url 'clients:detail' pk=object.client_id %}"
-            class="py-4 px-8 bg-teal-500 text-white rounded-xl">Cancel</a>
+            class="py-4 px-8 bg-gray-500 text-white rounded-xl">Cancel</a>
     </form>
 </div>
 {% endblock %}
