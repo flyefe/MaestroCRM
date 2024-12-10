@@ -256,3 +256,17 @@ class TagForm(forms.ModelForm):
 
 class ContactImportForm(forms.Form):
     file = forms.FileField()
+
+
+
+# Fetch all contact fields dynamically
+contact_fields = ['first_name', 'last_name', 'email'] + [field.name for field in ContactDetail._meta.get_fields()]
+class FieldMappingForm(forms.Form):
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+            for header in csv_headers:
+                self.fields[header] = forms.ChoiceField(
+                    choices=[('', '----')] + [(field, field) for field in contact_fields],
+                    required=False,
+                    label=header
+                )

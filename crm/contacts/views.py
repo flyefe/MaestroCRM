@@ -194,7 +194,7 @@ def contact_list(request):
     contacts = ContactDetail.objects.select_related('user').all().order_by('-modified_at')  # Retrieves Profile and related User data in a single query
   
     # Add pagination (Optional)
-    paginator = Paginator(contacts, 5)  # Show 10 contacts per page
+    paginator = Paginator(contacts, 100)  # Show 10 contacts per page
     page_number = request.GET.get('page')
     page_contacts = paginator.get_page(page_number)
 
