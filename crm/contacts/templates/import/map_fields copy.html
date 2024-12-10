@@ -8,15 +8,20 @@
 <form method="POST">
     {% csrf_token %}
     <div class="space-y-4">
-        {% for field in form %}
+        {% for header in csv_headers %}
         <div class="mb-4">
-            <label for="{{ field.id_for_label }}" class="block text-sm font-medium">{{ field.label }}</label>
-            {{ field }}
+            <label for="{{ header }}" class="block text-sm font-medium">{{ header }}</label>
+            <select name="{{ header }}" id="{{ header }}" class="block border border-gray-300 rounded py-2 px-3 w-full">
+                <option value="">-- Select Contact Field --</option>
+                {% for field in form.fields[header].choices %}
+                <option value="{{ field.0 }}">{{ field.0 }}</option>
+                {% endfor %}
+            </select>
         </div>
         {% endfor %}
     </div>
     <button type="submit" class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600">
-        Save Mappings
+        Map Fields
     </button>
 </form>
 

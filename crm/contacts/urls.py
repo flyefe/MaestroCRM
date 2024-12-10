@@ -38,7 +38,7 @@ urlpatterns = [
 
     #Imports
     #Tags
-    path('import-contact', views_import.import_contacts, name='import_contact'),
+    path('import-contact', views_import.import_contacts, name='import_contacts'),
     path('map_fields/', views_import.map_fields, name='map_fields'),
     path('save_mapped_data/', views_import.save_mapped_data, name='save_mapped_data'),
 ]
